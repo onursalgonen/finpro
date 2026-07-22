@@ -1,4 +1,4 @@
-const CACHE_NAME = 'finpro-v8-cache-v1';
+const CACHE_NAME = 'finpro-v82-cache-v1';
 
 const CORE_ASSETS = [
   './',

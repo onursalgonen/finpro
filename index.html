@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.8.1) - Ultimate Master</title>
+    <title>FinPro (V.8.2) - Ultimate Master</title>
     
     <!-- PWA VE APPLE META ETİKETLERİ -->
     <link rel="manifest" href="./manifest.json">
@@ -16,7 +16,6 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- EXCELJS (FORMÜLLÜ EXCEL İÇİN GEREKLİ) -->
     <script src="https://cdn.jsdelivr.net/npm/exceljs/dist/exceljs.min.js"></script>
     
     <style>
@@ -68,7 +67,7 @@
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.8.1 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.8.2 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -104,6 +103,10 @@
             <button id="nav-subtrack" onclick="switchTab('subtrack', this)" class="btn-sidebar w-full flex items-center p-3 hover:bg-slate-800 hover:text-white rounded-lg transition" title="Mikro Bütçe Radarı">
                 <span class="material-icons mr-3 nav-icon text-cyan-400">radar</span> <span class="nav-text whitespace-nowrap text-ellipsis">Mikro Bütçe Radarı</span>
             </button>
+            <!-- YENİ: YARDIM VE KILAVUZ BUTONU -->
+            <button id="nav-help" onclick="switchTab('help', this)" class="btn-sidebar w-full flex items-center p-3 hover:bg-slate-800 hover:text-white rounded-lg transition" title="Nasıl Kullanılır?">
+                <span class="material-icons mr-3 nav-icon text-rose-400">menu_book</span> <span class="nav-text whitespace-nowrap text-ellipsis">Nasıl Kullanılır?</span>
+            </button>
         </nav>
         <div class="p-4 border-t border-slate-700 space-y-2">
             <button onclick="exportData()" class="btn-sidebar w-full flex items-center p-2 text-slate-300 hover:bg-slate-700 hover:text-white rounded-lg transition text-sm"><span class="material-icons text-sm mr-2 nav-icon">data_object</span> <span class="nav-text">Yedek Al (JSON)</span></button>
@@ -135,6 +138,58 @@
 
         <div class="p-4 md:p-8 flex-1" id="views-container">
             
+            <!-- YENİ: YARDIM & KILAVUZ BÖLÜMÜ -->
+            <section id="view-help" class="view-section space-y-6">
+                <div class="card bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 md:p-8 rounded-2xl border-none shadow-xl">
+                    <h2 class="text-2xl font-black mb-2 flex items-center"><span class="material-icons mr-3 text-rose-400 text-3xl">menu_book</span> FinPro Master - Kullanım Kılavuzu</h2>
+                    <p class="text-slate-300 text-sm">Bu sistem, internet gerektirmeyen (PWA) gelişmiş bir finansal takip uygulamasıdır. Aşağıda temel özellikleri ve sık karşılaşılan durumların çözümlerini bulabilirsiniz.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Yedekleme ve iPad -->
+                    <div class="card border-t-4 border-indigo-500 shadow-md">
+                        <h3 class="text-lg font-bold text-indigo-700 mb-3 flex items-center"><span class="material-icons mr-2">save</span> iPad'de Yedekleme Nasıl Yapılır?</h3>
+                        <p class="text-sm text-slate-600 mb-3 leading-relaxed">iPad'de uygulamayı "Ana Ekrana Ekle" diyerek indirdiğinizde, standart indirme butonları güvenlik nedeniyle çalışmaz. Sisteme <strong>Web Share API</strong> entegre edilmiştir:</p>
+                        <ul class="text-sm space-y-2 text-slate-700 font-medium">
+                            <li class="flex items-start"><span class="material-icons text-emerald-500 text-base mr-2">check_circle</span> Sol menüden <strong>Yedek Al (JSON)</strong> veya <strong>Gelişmiş Excel</strong> butonuna basın.</li>
+                            <li class="flex items-start"><span class="material-icons text-emerald-500 text-base mr-2">check_circle</span> iPad'in kendi <strong>Paylaş (Share)</strong> menüsü alttan açılacaktır.</li>
+                            <li class="flex items-start"><span class="material-icons text-emerald-500 text-base mr-2">check_circle</span> Açılan menüden <span class="bg-slate-200 px-1 rounded mx-1">Dosyalara Kaydet</span> (Save to Files) seçeneğini seçin ve kaydedin. İsterseniz AirDrop ile de gönderebilirsiniz.</li>
+                        </ul>
+                    </div>
+
+                    <!-- İsteğe Bağlı Raporlar -->
+                    <div class="card border-t-4 border-rose-500 shadow-md">
+                        <h3 class="text-lg font-bold text-rose-700 mb-3 flex items-center"><span class="material-icons mr-2">query_builder</span> İsteğe Bağlı Raporlar Nasıl Çalışır?</h3>
+                        <p class="text-sm text-slate-600 mb-3 leading-relaxed">Kendi özel filtrelerinizi yaratarak sadece görmek istediğiniz verilerin toplamını alabilirsiniz (Raporlar sekmesi).</p>
+                        <ul class="text-sm space-y-2 text-slate-700 font-medium">
+                            <li class="flex items-start"><span class="material-icons text-rose-500 text-base mr-2">arrow_right</span> Örneğin: Sadece <strong>Banka</strong> hesabından çıkan <strong>Fatura</strong> giderlerini görmek için bir şablon oluşturabilirsiniz.</li>
+                            <li class="flex items-start"><span class="material-icons text-rose-500 text-base mr-2">arrow_right</span> Oluşturduğunuz raporlar kaydedilir ve her veri girdiğinizde <strong>otomatik güncellenir</strong>. İstediğiniz zaman silebilir veya düzenleyebilirsiniz.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Bütçe ve Doğrulama -->
+                    <div class="card border-t-4 border-emerald-500 shadow-md">
+                        <h3 class="text-lg font-bold text-emerald-700 mb-3 flex items-center"><span class="material-icons mr-2">verified</span> Bütçe ve Cüzdan Doğrulama</h3>
+                        <p class="text-sm text-slate-600 mb-3 leading-relaxed">Sistemin temel amacı girdiğiniz gelir/gider kayıtları ile elinizdeki fiziksel verileri karşılaştırmaktır.</p>
+                        <ul class="text-sm space-y-2 text-slate-700 font-medium">
+                            <li class="flex items-start"><span class="material-icons text-emerald-500 text-base mr-2">account_balance_wallet</span> <strong>Cüzdan Farkı:</strong> Günlük girdiğiniz Nakit (Cüzdan) kayıtlarının toplamı ile, "Cüzdan Sayımı" sayfasında saydığınız banknotların toplamı arasındaki farktır.</li>
+                            <li class="flex items-start"><span class="material-icons text-emerald-500 text-base mr-2">shopping_cart</span> <strong>Alışveriş Farkı:</strong> Bankadan harcandı gösterdiğiniz "Online Shopping/Amazon" kayıtları ile, gerçekten "Online Alışveriş" sekmesine tek tek girdiğiniz kargo siparişleri arasındaki farktır.</li>
+                            <li class="flex items-start"><span class="material-icons text-emerald-500 text-base mr-2">send</span> <strong>Dış Transfer Farkı:</strong> Bankadan "Transfer/Dina" olarak çıkış yaptığınız miktar ile, Dış Gönderim sekmesindeki listelenen havalelerin farkıdır.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Altın ve Gümüş -->
+                    <div class="card border-t-4 border-amber-500 shadow-md">
+                        <h3 class="text-lg font-bold text-amber-600 mb-3 flex items-center"><span class="material-icons mr-2">currency_exchange</span> Altın & Gümüş Platformu</h3>
+                        <p class="text-sm text-slate-600 mb-3 leading-relaxed">Gemi ortamında çevrimdışı çalışırken fiyatları nasıl güncellersiniz?</p>
+                        <ul class="text-sm space-y-2 text-slate-700 font-medium">
+                            <li class="flex items-start"><span class="material-icons text-amber-500 text-base mr-2">wifi_off</span> İnternetiniz yoksa (PWA çevrimdışı ise), ekranın sağ üst köşesindeki <strong>Manuel Fiyat</strong> kutusuna güncel fiyatı yazarak portföy değerinizi görebilirsiniz.</li>
+                            <li class="flex items-start"><span class="material-icons text-amber-500 text-base mr-2">backup</span> Portföyünüzün yedeğini "Kodu Kopyala" diyerek metin olarak saklayabilir veya Excel olarak (yine Paylaş menüsüyle) indirebilirsiniz.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
             <!-- VIEW: DASHBOARD -->
             <section id="view-dashboard" class="view-section active">
                 <div id="active-contract-banner" class="mb-6 card p-5 flex flex-col md:flex-row justify-between items-center bg-slate-900 shadow-xl border-none"></div>
@@ -151,10 +206,8 @@
                 </div>
             </section>
 
-            <!-- VIEW: RAPORLAR (İSTEĞE BAĞLI ÖZEL RAPORLAR BURAYA EKLENDİ) -->
+            <!-- VIEW: RAPORLAR -->
             <section id="view-reports" class="view-section space-y-8">
-                
-                <!-- YENİ: İSTEĞE BAĞLI ÖZEL RAPORLAR BÖLÜMÜ -->
                 <div class="card p-0 border-t-4 border-rose-500 overflow-hidden shadow-md">
                     <div class="p-4 border-b bg-slate-50 flex items-center justify-between">
                         <h3 class="font-bold text-slate-700 flex items-center" id="cr-form-title">
@@ -187,7 +240,6 @@
                                 <label class="text-xs font-bold text-slate-500 block mb-1">Kategori Filtresi</label>
                                 <select id="cr-cat" class="w-full border p-2.5 rounded bg-slate-50 font-bold text-sm">
                                     <option value="ALL">Tüm Kategoriler</option>
-                                    <!-- Kategoriler JS ile doldurulacak -->
                                 </select>
                             </div>
                         </div>
@@ -212,7 +264,6 @@
                 <div class="card p-0 overflow-hidden border-t-4 border-blue-500"><div class="p-4 border-b bg-slate-50 flex items-center"><span class="material-icons mr-2 text-blue-500">grid_on</span><h3 class="font-bold text-slate-700">Aylık Gider Matrisi (Main Tracking)</h3></div><div class="overflow-x-auto"><table class="excel-table" id="expense-matrix-table"><thead><tr><th>Ay / Month</th><th>Cash Deposits</th><th>Internet Access</th><th>Bar</th><th>Water</th><th>Market</th><th>Tips</th><th>Amazon</th><th>Total Spend</th></tr></thead><tbody></tbody><tfoot id="expense-matrix-foot"></tfoot></table></div></div>
             </section>
 
-            <!-- DİĞER V8 SEKMELERİ (Dokunulmadı, var olanlar aynen eklendi) -->
             <!-- VIEW: ALTIN & GÜMÜŞ PLATFORMU -->
             <section id="view-goldsilver" class="view-section">
                 <!-- Modülü kapsayan ana div (Karanlık tema) -->
@@ -364,7 +415,7 @@
                 </div>
             </section>
 
-            <!-- DİĞER SEKMELER (Aynen korundu) -->
+            <!-- DİĞER SEKMELER -->
             <section id="view-subtrack" class="view-section"><div class="card p-0 border-t-4 border-cyan-500 overflow-hidden flex flex-col h-[700px]"><div class="p-4 border-b bg-slate-50 flex flex-col md:flex-row justify-between items-center gap-4"><div><h3 class="font-bold text-slate-800 flex items-center text-lg"><span class="material-icons text-cyan-500 mr-2">radar</span> Mikro Bütçe Radarı</h3><p class="text-[10px] text-slate-500 uppercase font-bold mt-1">Alt Grup (Detay) Aylık Matris Analizi</p></div><div class="flex items-center space-x-3 bg-white p-2 border rounded-lg shadow-sm"><span class="text-[10px] font-black text-slate-400 uppercase">Gösterim Tipi:</span><select id="subtrack-type" onchange="renderSubMatrix()" class="bg-slate-50 border border-slate-200 text-sm font-bold text-slate-700 rounded p-1.5 outline-none"><option value="OUTGOING">Sadece Giderler (-)</option><option value="INCOME">Sadece Gelirler (+)</option></select></div></div><div class="bg-cyan-50 p-3 border-b text-xs text-cyan-800 font-semibold flex items-center"><span class="material-icons text-cyan-600 text-sm mr-2">lightbulb</span> Sistem, günlük girişlerdeki "Alt Grup / Detay" alanına yazdığın her kelimeyi otomatik olarak yakalayıp matriste aylara böler.</div><div class="overflow-x-auto flex-1 overflow-y-auto"><table class="excel-table text-center w-full"><thead id="sub-matrix-thead" class="bg-slate-800 text-white sticky top-0 shadow-sm z-10"></thead><tbody id="sub-matrix-tbody"></tbody><tfoot id="sub-matrix-tfoot" class="bg-slate-100 font-black sticky bottom-0 border-t-2 border-slate-300"></tfoot></table></div></div></section>
             <section id="view-ext" class="view-section"><div class="mb-6 card p-0 border-t-4 border-indigo-500 flex flex-col md:flex-row items-center justify-between bg-white shadow-sm overflow-hidden"><div class="p-4 md:w-1/3 bg-indigo-50 flex items-center justify-between h-full"><div class="flex items-center"><span class="material-icons text-indigo-500 text-3xl mr-3">verified</span><div><h3 class="font-bold text-indigo-800 text-sm">Hesap Doğrulama</h3><p class="text-[9px] text-indigo-600 uppercase font-bold">Ana Kayıtlar vs Dış Transferler</p></div></div><button onclick="testExtValidation()" class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded shadow transition flex items-center"><span class="material-icons text-sm mr-1">play_arrow</span> Test Et</button></div><div class="p-4 flex-1 flex flex-row items-center justify-around w-full"><div class="text-center"><p class="text-[9px] text-slate-400 uppercase font-bold">Kayıtlı Gider</p><p class="text-xl font-black text-slate-700" id="ext-ver-entries">$0.00</p></div><div class="text-lg font-black text-slate-300">-</div><div class="text-center"><p class="text-[9px] text-slate-400 uppercase font-bold">Gönderim Toplamı</p><p class="text-xl font-black text-indigo-600" id="ext-ver-list">$0.00</p></div><div class="text-lg font-black text-slate-300">=</div><div class="text-center px-4 py-2 rounded bg-slate-100"><p class="text-[9px] font-bold uppercase text-slate-500">FARK</p><p class="text-xl font-black text-slate-800" id="ext-ver-diff-val">$0.00</p></div></div></div><div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6"><div class="xl:col-span-1 card border-t-4 border-indigo-400"><h3 class="font-bold text-slate-800 mb-4 border-b pb-2 flex items-center justify-between"><span class="flex items-center"><span class="material-icons mr-2 text-indigo-500">send</span> Yeni Gönderim (Wire)</span><button id="btn-cancel-ext-edit" onclick="cancelExtEdit()" class="hidden text-xs bg-red-100 text-red-600 px-2 py-1 rounded font-bold">İptal</button></h3><input type="hidden" id="edit-ext-id"><div class="space-y-3"><div><label class="block text-xs font-bold text-slate-500 mb-1">Tarih</label><input type="date" id="ext-date" class="w-full border p-2 rounded bg-slate-50 font-bold"></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Kime / Referans</label><select id="ext-ref" class="w-full border p-2 rounded bg-slate-50 font-bold text-slate-700"><option value="DİNA">DİNA</option><option value="ONUR">ONUR</option><option value="BABA">BABA</option><option value="OTHER">OTHER</option></select></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Gemi / Kontrat</label><input list="ship-datalist-ext" id="ext-ship" placeholder="Seçim..." class="w-full border p-2 rounded bg-slate-50 font-bold uppercase text-sm transition-colors"><datalist id="ship-datalist-ext"></datalist></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Açıklama (Comment)</label><input type="text" id="ext-comment" class="w-full border p-2 rounded bg-slate-50 text-xs font-semibold" placeholder="Fatura, Kira, Katılış vb."></div><div class="grid grid-cols-2 gap-2"><div><label class="block text-xs font-bold text-slate-500 mb-1">Tutar (Sub Total) $</label><input type="number" id="ext-sub" step="0.01" oninput="calcExtTotal()" class="w-full border p-2 rounded bg-white text-center font-bold text-indigo-700" placeholder="0.00"></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Masraf (TR Fee) $</label><input type="number" id="ext-fee" step="0.01" oninput="calcExtTotal()" class="w-full border p-2 rounded bg-white text-center font-bold text-red-500" placeholder="0.00"></div></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Genel Toplam (Total) $</label><input type="text" id="ext-tot" readonly class="w-full border border-indigo-200 p-3 rounded bg-indigo-50 text-lg font-black text-indigo-800 shadow-inner"></div><button onclick="saveExtTransfer()" id="btn-save-ext" class="w-full btn bg-indigo-600 hover:bg-indigo-500 text-white py-3 shadow-lg">Transferi Kaydet</button></div></div><div class="xl:col-span-2 space-y-6 flex flex-col"><div class="card p-0 overflow-hidden"><div class="p-4 border-b bg-slate-50"><h3 class="font-bold text-slate-700">Gönderim Özeti (Seçili Filtreye Göre)</h3></div><div class="overflow-x-auto"><table class="excel-table text-center w-full"><thead class="bg-indigo-100 text-indigo-800"><tr><th>LİSTE (KİŞİ)</th><th>VALUE (ADET)</th><th>SUB TOTAL (TUTAR)</th><th>TOTAL (GENEL TOPLAM)</th><th>TR FEE (MASRAF)</th></tr></thead><tbody id="ext-summary-tbody"></tbody><tfoot id="ext-summary-tfoot" class="bg-indigo-50 font-black"></tfoot></table></div></div><div class="card p-0 overflow-hidden flex-1"><div class="p-4 border-b bg-slate-50 flex justify-between items-center"><h3 class="font-bold text-slate-700">Dış Transfer Listesi</h3></div><div class="overflow-x-auto max-h-[350px] overflow-y-auto"><table class="excel-table text-left" id="ext-table"><thead class="sticky top-0 z-10 bg-white shadow-sm"><tr><th>NO</th><th>DATE</th><th>GEMİ</th><th>REFERANS</th><th>COMMENT</th><th>SUB TOTAL</th><th>TR FEE</th><th>TOTAL</th><th>AYAR</th></tr></thead><tbody id="ext-list-tbody"></tbody></table></div></div></div></div></section>
             <section id="view-entries" class="view-section"><div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><div class="lg:col-span-1"><div class="card bg-white border-t-4 border-emerald-500 p-0 overflow-hidden" id="entry-form-card"><div class="flex border-b bg-slate-50"><button class="flex-1 py-3 font-bold text-sm text-emerald-600 bg-white border-r transition" id="tab-btn-normal" onclick="switchEntryTab('normal')">Giriş / Çıkış</button><button class="flex-1 py-3 font-bold text-sm text-slate-500 hover:bg-slate-100 transition" id="tab-btn-transfer" onclick="switchEntryTab('transfer')">İçi Transfer</button></div><div id="tab-content-normal" class="p-5 tab-content active"><h3 class="font-bold text-slate-800 mb-4 pb-2 flex items-center justify-between border-b"><span class="flex items-center" id="entry-form-title"><span class="material-icons mr-2 text-emerald-500">add_circle</span> Yeni İşlem</span><button id="btn-cancel-edit" onclick="cancelEdit()" class="hidden text-xs bg-red-100 text-red-600 px-2 py-1 rounded font-bold">İptal</button></h3><input type="hidden" id="edit-record-id"><div class="space-y-4"><div><label class="block text-xs font-bold text-slate-500 mb-1">Tarih</label><input type="date" id="entry-date" class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm"></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Hesap</label><div class="grid grid-cols-3 gap-2"><label class="cursor-pointer"><input type="radio" name="entry-account" value="FOLIO" checked class="peer hidden" onchange="updateCategorySelect()"><div class="text-center p-2 border rounded-lg text-xs font-bold peer-checked:bg-blue-500 peer-checked:text-white transition bg-slate-50">Folio</div></label><label class="cursor-pointer"><input type="radio" name="entry-account" value="BANK" class="peer hidden" onchange="updateCategorySelect()"><div class="text-center p-2 border rounded-lg text-xs font-bold peer-checked:bg-purple-500 peer-checked:text-white transition bg-slate-50">Banka</div></label><label class="cursor-pointer"><input type="radio" name="entry-account" value="WALLET" class="peer hidden" onchange="updateCategorySelect()"><div class="text-center p-2 border rounded-lg text-xs font-bold peer-checked:bg-emerald-500 peer-checked:text-white transition bg-slate-50">Cüzdan</div></label></div></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Ana Kategori</label><select id="entry-category" class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm"></select></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Alt Grup / Detay</label><input list="subcat-list" id="entry-subcat" placeholder="İsteğe Bağlı Alt Başlık" class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm"><datalist id="subcat-list"></datalist></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Gemi / Kontrat Adı</label><input list="ship-datalist-form" id="entry-cruise" placeholder="Seçim..." class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm uppercase transition-colors"><datalist id="ship-datalist-form"></datalist></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Tutar ($)</label><input type="number" id="entry-value" step="0.01" placeholder="0.00" class="w-full border p-3 rounded-lg bg-white text-lg font-black text-slate-800 shadow-inner"></div><button id="btn-save-entry" onclick="saveEntry()" class="w-full btn bg-slate-800 text-white hover:bg-slate-700 py-3 shadow-lg">İşlemi Kaydet</button></div></div><div id="tab-content-transfer" class="p-5 tab-content"><h3 class="font-bold text-slate-800 mb-4 pb-2 flex items-center border-b"><span class="material-icons mr-2 text-indigo-500">currency_exchange</span> Kendi Hesaplarım Arası Transfer</h3><div class="space-y-4"><div><label class="block text-xs font-bold text-slate-500 mb-1">Tarih</label><input type="date" id="tr-date" class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm"></div><div class="grid grid-cols-1 gap-3 relative"><div><label class="block text-[10px] font-bold text-red-500 uppercase tracking-wider mb-1">Kimden (Çıkış)</label><select id="tr-from" class="w-full border-2 border-red-200 p-2.5 rounded-lg bg-red-50 font-bold text-sm text-red-700"><option value="BANK">Banka (Kart)</option><option value="WALLET">Cüzdan (Nakit)</option><option value="FOLIO">Folio (Gemi)</option></select></div><div class="flex justify-center -my-2 z-10"><span class="material-icons bg-white border rounded-full p-1 text-slate-400">arrow_downward</span></div><div><label class="block text-[10px] font-bold text-emerald-500 uppercase tracking-wider mb-1">Kime (Giriş)</label><select id="tr-to" class="w-full border-2 border-emerald-200 p-2.5 rounded-lg bg-emerald-50 font-bold text-sm text-emerald-700"><option value="WALLET">Cüzdan (Nakit)</option><option value="FOLIO">Folio (Gemi)</option><option value="BANK">Banka (Kart)</option></select></div></div><div><label class="block text-xs font-bold text-slate-500 mb-1 mt-2">Transfer Tutarı ($)</label><input type="number" id="tr-value" step="0.01" placeholder="0.00" class="w-full border p-3 rounded-lg bg-white text-lg font-black text-indigo-700 shadow-inner"></div><button onclick="saveTransfer()" class="w-full btn bg-indigo-600 text-white hover:bg-indigo-500 py-3 shadow-lg">Transfer Et</button></div></div></div></div><div class="lg:col-span-2 card p-0 overflow-hidden flex flex-col"><div class="p-4 border-b bg-slate-50"><h3 class="font-bold text-slate-700">Kayıtlar (Filtreye Göre)</h3></div><div class="overflow-x-auto flex-1 max-h-[650px] overflow-y-auto"><table class="w-full text-left text-sm whitespace-nowrap"><thead class="bg-white sticky top-0 border-b z-10"><tr class="text-slate-500 uppercase text-[10px] tracking-wider"><th class="p-3">Tarih</th><th class="p-3">Hesap</th><th class="p-3">Kategori</th><th class="p-3">Alt Grup</th><th class="p-3">Gemi</th><th class="p-3 text-right">Tutar</th><th class="p-3 text-center">İşlem</th></tr></thead><tbody id="entries-table"></tbody></table></div></div></div></section>
@@ -391,7 +442,7 @@
 
     <script>
         // ==========================================
-        // V8 ANA İŞLEVLER (İSTEĞE BAĞLI RAPORLAR VE GELİŞMİŞ EXCEL DAHİL)
+        // UI & NAVIGATION
         // ==========================================
         let isSidebarCollapsed = false;
         function toggleSidebar() { isSidebarCollapsed = !isSidebarCollapsed; const sb = document.getElementById('sidebar'); isSidebarCollapsed ? sb.classList.add('sidebar-collapsed') : sb.classList.remove('sidebar-collapsed'); }
@@ -401,7 +452,7 @@
             document.querySelectorAll('.btn-sidebar').forEach(b => { b.classList.remove('bg-slate-800','text-white'); b.classList.add('hover:bg-slate-800','hover:text-white','text-slate-300'); });
             document.getElementById('view-' + tabId).classList.add('active');
             if(el) { el.classList.remove('hover:bg-slate-800','hover:text-white','text-slate-300'); el.classList.add('bg-slate-800','text-white');
-                const titleMap = {'dashboard': 'Dashboard & Raporlar', 'entries': 'Günlük Giriş & İçi Transfer', 'ext': 'Dış Transfer & Maaş Gönderimi', 'wallet': 'Cüzdan & Bütçe Simülasyonu', 'shopping': 'Online Alışveriş Takibi', 'categories': 'Hesap & Kategori Yönetimi', 'reports': 'Raporlar & Matrisler', 'safak': 'Kontrat Şafak Takibi & Geçmiş', 'subtrack': 'Mikro Bütçe Radarı (Alt Grup Analizi)', 'goldsilver': 'Altın & Gümüş Platformu'};
+                const titleMap = {'dashboard': 'Dashboard & Raporlar', 'entries': 'Günlük Giriş & İçi Transfer', 'ext': 'Dış Transfer & Maaş Gönderimi', 'wallet': 'Cüzdan & Bütçe Simülasyonu', 'shopping': 'Online Alışveriş Takibi', 'categories': 'Hesap & Kategori Yönetimi', 'reports': 'Raporlar & Matrisler', 'safak': 'Kontrat Şafak Takibi & Geçmiş', 'subtrack': 'Mikro Bütçe Radarı (Alt Grup Analizi)', 'goldsilver': 'Altın & Gümüş Platformu', 'help': 'Kullanım Kılavuzu & Yardım'};
                 document.getElementById('page-title').innerText = titleMap[tabId];
             }
             if(tabId !== 'goldsilver') { refreshAllViews(); } else { updateGsUIForAsset(); }
@@ -414,7 +465,9 @@
             else { btnT.className = "flex-1 py-3 font-bold text-sm text-indigo-600 bg-white transition"; btnN.className = "flex-1 py-3 font-bold text-sm text-slate-500 hover:bg-slate-100 border-r transition"; }
         }
 
-        // VERİTABANI DEĞİŞKENLERİ
+        // ==========================================
+        // VERİTABANI VE İLK YÜKLEME
+        // ==========================================
         const DB_REC = 'finAppV79_Records'; const DB_CAT = 'finAppV79_Categories'; const DB_SHOP = 'finAppV79_Shopping'; const DB_WAL = 'finAppV79_WalletNotes'; const DB_SIM = 'finAppV79_Sim'; const DB_SFK = 'finAppV79_Safak'; const DB_PAST = 'finAppV79_PastContracts'; const DB_EXT = 'finAppV79_ExtTransfers'; const DB_CR = 'finAppV81_CustomReports';
         
         let records = JSON.parse(localStorage.getItem(DB_REC)) || [];
@@ -438,247 +491,112 @@
             if(safakData.isActive) { document.getElementById('global-ship').value = safakData.name; if(safakData.start) document.getElementById('global-year').value = safakData.start.substring(0,4); }
             document.getElementById('sf-name').value = safakData.name; if(safakData.start) document.getElementById('sf-start').value = safakData.start; if(safakData.end) document.getElementById('sf-end').value = safakData.end;
             
-            // Popüler Özel Rapor Kategorileri Select Doldurma
-            let crCatStr = '<option value="ALL">Tüm Kategoriler</option>';
-            categories.forEach(c => crCatStr += `<option value="${c.id}">${c.name}</option>`);
-            document.getElementById('cr-cat').innerHTML = crCatStr;
-
+            let crCatStr = '<option value="ALL">Tüm Kategoriler</option>'; categories.forEach(c => crCatStr += `<option value="${c.id}">${c.name}</option>`); document.getElementById('cr-cat').innerHTML = crCatStr;
             refreshAllViews();
         }
-
         function saveData() { try { localStorage.setItem(DB_REC, JSON.stringify(records)); localStorage.setItem(DB_CAT, JSON.stringify(categories)); localStorage.setItem(DB_SHOP, JSON.stringify(shoppingRecords)); localStorage.setItem(DB_WAL, JSON.stringify(walletNotes)); localStorage.setItem(DB_SIM, JSON.stringify(simulation)); localStorage.setItem(DB_SFK, JSON.stringify(safakData)); localStorage.setItem(DB_PAST, JSON.stringify(pastContracts)); localStorage.setItem(DB_EXT, JSON.stringify(extTransfers)); localStorage.setItem(DB_CR, JSON.stringify(customReports)); } catch (e) {} }
-        function exportData() { const data = { records, categories, shoppingRecords, walletNotes, simulation, safakData, pastContracts, extTransfers, customReports }; const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data)); a.download = "finans_yedek_v8_1.json"; a.click(); }
+        
+        // ==========================================
+        // YENİ: IPAD WEB SHARE API İLE EXPORT/YEDEKLEME
+        // ==========================================
+        async function exportData() {
+            const data = { records, categories, shoppingRecords, walletNotes, simulation, safakData, pastContracts, extTransfers, customReports }; 
+            const jsonString = JSON.stringify(data);
+            const fileName = "finans_yedek_v8_2.json";
+
+            // iPad PWA Web Share API kontrolü
+            if (navigator.canShare) {
+                const file = new File([jsonString], fileName, { type: "application/json" });
+                if (navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({ files: [file], title: 'FinPro Veritabanı Yedeği', text: 'FinPro JSON yedeği.' });
+                        return; // Paylaşım başarılı
+                    } catch (err) {
+                        console.log("Paylaşım iptal edildi veya başarısız.", err);
+                    }
+                }
+            }
+
+            // Fallback (Masaüstü veya desteklenmeyen cihazlar)
+            const a = document.createElement('a'); 
+            a.href = "data:text/json;charset=utf-8," + encodeURIComponent(jsonString); 
+            a.download = fileName; 
+            a.click(); 
+        }
+
         function importData(e) { if(!e.target.files[0]) return; const r = new FileReader(); r.onload = (evt) => { try { const d = JSON.parse(evt.target.result); if(d.records) records = d.records; if(d.shoppingRecords) shoppingRecords = d.shoppingRecords; if(d.categories) categories = d.categories; if(d.walletNotes) walletNotes = d.walletNotes; if(d.simulation) simulation = d.simulation; if(d.safakData) safakData = d.safakData; if(d.pastContracts) pastContracts = d.pastContracts; if(d.extTransfers) extTransfers = d.extTransfers; if(d.customReports) customReports = d.customReports; saveData(); alert("Yedek yüklendi!"); refreshAllViews(); } catch(error) { alert("Format hatası!"); } }; r.readAsText(e.target.files[0]); e.target.value = ''; }
 
-        // ==========================================
-        // İSTEĞE BAĞLI ÖZEL RAPORLAR (YENİ ÖZELLİK)
-        // ==========================================
-        let editCRId = null;
-        function saveCR() {
-            const name = document.getElementById('cr-name').value.trim();
-            const acc = document.getElementById('cr-acc').value;
-            const type = document.getElementById('cr-type').value;
-            const cat = document.getElementById('cr-cat').value;
-            
-            if(!name) return alert('Lütfen rapor için bir isim giriniz.');
-            if(editCRId) {
-                const idx = customReports.findIndex(c => c.id === editCRId);
-                if(idx > -1) customReports[idx] = { id: editCRId, name, acc, type, cat };
-                cancelCR();
-            } else {
-                customReports.push({ id: Date.now(), name, acc, type, cat });
-                document.getElementById('cr-name').value = '';
-            }
-            saveData(); refreshAllViews();
-        }
-        function cancelCR() {
-            editCRId = null;
-            document.getElementById('cr-name').value = '';
-            document.getElementById('cr-acc').value = 'ALL';
-            document.getElementById('cr-type').value = 'ALL';
-            document.getElementById('cr-cat').value = 'ALL';
-            document.getElementById('btn-save-cr').innerText = "Rapor Şablonunu Kaydet";
-            document.getElementById('btn-cr-cancel').classList.add('hidden');
-            document.getElementById('cr-form-title').innerHTML = '<span class="material-icons mr-2 text-rose-500">query_builder</span> İsteğe Bağlı Özel Rapor Oluşturucu';
-        }
-        function editCR(id) {
-            const cr = customReports.find(c => c.id === id); if(!cr) return;
-            editCRId = cr.id;
-            document.getElementById('cr-name').value = cr.name;
-            document.getElementById('cr-acc').value = cr.acc;
-            document.getElementById('cr-type').value = cr.type;
-            document.getElementById('cr-cat').value = cr.cat;
-            document.getElementById('btn-save-cr').innerText = "Raporu Güncelle";
-            document.getElementById('btn-cr-cancel').classList.remove('hidden');
-            document.getElementById('cr-form-title').innerHTML = '<span class="material-icons mr-2 text-yellow-500">edit</span> Özel Raporu Düzenle';
-            document.getElementById('view-reports').scrollIntoView({behavior: "smooth"});
-        }
-        function deleteCR(id) {
-            if(confirm('Bu rapor şablonu silinecektir, emin misiniz?')) {
-                customReports = customReports.filter(c => c.id !== id);
-                saveData(); refreshAllViews();
-            }
-        }
-        function renderCustomReports() {
-            const tbody = document.getElementById('cr-tbody'); tbody.innerHTML = '';
-            if(customReports.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center italic text-slate-400">Henüz isteğe bağlı rapor oluşturmadınız.</td></tr>'; return;
-            }
-            
-            const baseRecords = getFilteredRecords(records); // Yıl ve Gemi filtresi uygulanmış ana datalar
-
-            customReports.forEach(cr => {
-                // Filtreleme
-                let filtered = baseRecords;
-                if(cr.acc !== 'ALL') filtered = filtered.filter(r => r.account === cr.acc);
-                if(cr.type !== 'ALL') filtered = filtered.filter(r => r.type === cr.type);
-                if(cr.cat !== 'ALL') filtered = filtered.filter(r => String(r.categoryId) === String(cr.cat));
-
-                let totalVal = 0;
-                filtered.forEach(r => {
-                    // Gelir/Gider ayarı (Eğer "Hepsi" seçiliyse net toplamı hesaplarız, Gelir + Gider -)
-                    if(cr.type === 'ALL') {
-                        if(r.type === 'INCOME') totalVal += r.value; else totalVal -= r.value;
-                    } else {
-                        // Eğer sadece Gelir veya sadece Gider seçiliyse mutlak değer topla
-                        totalVal += r.value;
-                    }
-                });
-
-                let filterText = `[H: ${cr.acc}] [T: ${cr.type}] [K: ${cr.cat==='ALL'?'Tümü':(categories.find(c=>c.id==cr.cat)?.name||cr.cat)}]`;
-                let valColor = totalVal >= 0 ? (cr.type==='OUTGOING'?'text-red-500':'text-emerald-600') : 'text-red-600';
-                
-                tbody.innerHTML += `
-                    <tr class="border-b hover:bg-slate-50">
-                        <td class="p-3 font-bold text-rose-700">${cr.name}</td>
-                        <td class="p-3 text-[10px] uppercase font-bold">${cr.acc}</td>
-                        <td class="p-3 text-[10px] uppercase font-bold">${cr.type}</td>
-                        <td class="p-3 text-xs font-semibold text-slate-600">${filterText}</td>
-                        <td class="p-3 text-lg font-black ${valColor}">$${Math.abs(totalVal).toFixed(2)}</td>
-                        <td class="p-3 space-x-1">
-                            <button onclick="editCR(${cr.id})" class="text-yellow-600 p-1 hover:bg-yellow-100 rounded"><span class="material-icons text-sm">edit</span></button>
-                            <button onclick="deleteCR(${cr.id})" class="text-red-500 p-1 hover:bg-red-100 rounded"><span class="material-icons text-sm">delete</span></button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        // ==========================================
-        // V8.1 GELİŞMİŞ FORMÜLLÜ EXCEL ÇIKTISI (MASTER EXCEL EXPORT)
-        // ==========================================
         async function exportAdvancedExcel(event) {
             if (typeof ExcelJS === 'undefined') { alert("ExcelJS yüklenemedi. İnternet bağlantınızı kontrol edin."); return; }
-            
             const btn = event.currentTarget; const originalHTML = btn.innerHTML;
             btn.innerHTML = `<span class="material-icons text-sm mr-2 nav-icon animate-spin">sync</span> <span class="nav-text">Hesaplanıyor...</span>`;
             btn.disabled = true;
 
             try {
                 const wb = new ExcelJS.Workbook();
-                wb.creator = 'FinPro V8.1 Master';
-                wb.created = new Date();
-
+                wb.creator = 'FinPro V8.2 Master'; wb.created = new Date();
                 const headerFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E293B' } };
                 const headerFont = { bold: true, color: { argb: 'FFFFFFFF' } };
 
-                // 1. DASHBOARD & ÖZET
+                // 1. DASHBOARD
                 const wsDash = wb.addWorksheet('Dashboard');
                 wsDash.columns = [ { width: 5 }, { width: 30 }, { width: 25 }, { width: 25 } ];
                 wsDash.mergeCells('B2:D2');
-                const titleCell = wsDash.getCell('B2');
-                titleCell.value = 'FINPRO V8.1 - MASTER BÜTÇE RAPORU';
-                titleCell.font = { size: 16, bold: true, color: { argb: 'FFFFFFFF' } };
-                titleCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0F172A' } };
-                titleCell.alignment = { vertical: 'middle', horizontal: 'center' };
-                
-                wsDash.getCell('B4').value = 'Aktif Kontrat (Gemi):'; wsDash.getCell('B4').font = { bold: true };
-                wsDash.getCell('C4').value = safakData.isActive ? safakData.name : 'Aktif Değil';
-                wsDash.getCell('B5').value = 'Rapor Oluşturulma:'; wsDash.getCell('B5').font = { bold: true };
-                wsDash.getCell('C5').value = new Date().toLocaleDateString('tr-TR');
-                wsDash.getCell('B7').value = 'BİLGİ: Tüm sekmelerde Excel formülleri (=SUM, =A*B) aktiftir.'; wsDash.getCell('B7').font = { italic: true, color: { argb: 'FF64748B' } };
+                const titleCell = wsDash.getCell('B2'); titleCell.value = 'FINPRO V8.2 - MASTER BÜTÇE RAPORU'; titleCell.font = { size: 16, bold: true, color: { argb: 'FFFFFFFF' } }; titleCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0F172A' } }; titleCell.alignment = { vertical: 'middle', horizontal: 'center' };
+                wsDash.getCell('B4').value = 'Aktif Kontrat (Gemi):'; wsDash.getCell('B4').font = { bold: true }; wsDash.getCell('C4').value = safakData.isActive ? safakData.name : 'Aktif Değil';
+                wsDash.getCell('B5').value = 'Rapor Oluşturulma:'; wsDash.getCell('B5').font = { bold: true }; wsDash.getCell('C5').value = new Date().toLocaleDateString('tr-TR');
 
-                // 2. KAYITLAR (ENTRIES)
+                // 2. KAYITLAR
                 const wsRec = wb.addWorksheet('Tüm Kayıtlar');
-                wsRec.columns = [
-                    { header: 'Tarih', key: 'date', width: 15 }, { header: 'Hesap', key: 'acc', width: 15 },
-                    { header: 'Kategori', key: 'cat', width: 25 }, { header: 'Alt Detay', key: 'sub', width: 30 },
-                    { header: 'Gemi / Kontrat', key: 'ship', width: 20 }, { header: 'Tür', key: 'type', width: 15 },
-                    { header: 'Tutar ($)', key: 'val', width: 15 }
-                ];
-                wsRec.getRow(1).font = headerFont; wsRec.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF10B981' } };
-                wsRec.autoFilter = 'A1:G1';
-                records.forEach(r => {
-                    const row = wsRec.addRow({ date: r.date, acc: r.account, cat: r.categoryName, sub: r.subCategory, ship: r.cruise, type: r.type === 'INCOME' ? 'Gelir' : 'Gider', val: r.value });
-                    row.getCell('val').numFmt = '"$"#,##0.00';
-                    row.getCell('val').font = { color: r.type === 'INCOME' ? { argb: 'FF059669' } : { argb: 'FFDC2626' } };
-                });
+                wsRec.columns = [ { header: 'Tarih', key: 'date', width: 15 }, { header: 'Hesap', key: 'acc', width: 15 }, { header: 'Kategori', key: 'cat', width: 25 }, { header: 'Alt Detay', key: 'sub', width: 30 }, { header: 'Gemi / Kontrat', key: 'ship', width: 20 }, { header: 'Tür', key: 'type', width: 15 }, { header: 'Tutar ($)', key: 'val', width: 15 } ];
+                wsRec.getRow(1).font = headerFont; wsRec.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF10B981' } }; wsRec.autoFilter = 'A1:G1';
+                records.forEach(r => { const row = wsRec.addRow({ date: r.date, acc: r.account, cat: r.categoryName, sub: r.subCategory, ship: r.cruise, type: r.type === 'INCOME' ? 'Gelir' : 'Gider', val: r.value }); row.getCell('val').numFmt = '"$"#,##0.00'; row.getCell('val').font = { color: r.type === 'INCOME' ? { argb: 'FF059669' } : { argb: 'FFDC2626' } }; });
 
                 // 3. DIŞ TRANSFERLER
                 const wsExt = wb.addWorksheet('Dış Transfer (Wire)');
-                wsExt.columns = [
-                    { header: 'Tarih', key: 'd', width: 15 }, { header: 'Kime', key: 'r', width: 15 },
-                    { header: 'Gemi', key: 's', width: 20 }, { header: 'Açıklama', key: 'c', width: 35 },
-                    { header: 'Sub Total ($)', key: 'sub', width: 15 }, { header: 'Masraf ($)', key: 'fee', width: 15 },
-                    { header: 'Genel Toplam ($)', key: 'tot', width: 20 }
-                ];
-                wsExt.getRow(1).font = headerFont; wsExt.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4F46E5' } };
-                wsExt.autoFilter = 'A1:G1';
-                extTransfers.forEach(e => {
-                    const r = wsExt.addRow({ d: e.date, r: e.ref, s: e.ship, c: e.comment, sub: e.subTotal, fee: e.fee });
-                    const rn = r.number;
-                    r.getCell('tot').value = { formula: `E${rn}+F${rn}`, result: e.total }; // Native Formula
-                    r.getCell('sub').numFmt = '"$"#,##0.00'; r.getCell('fee').numFmt = '"$"#,##0.00'; r.getCell('tot').numFmt = '"$"#,##0.00';
-                    r.getCell('tot').font = { bold: true };
-                });
+                wsExt.columns = [ { header: 'Tarih', key: 'd', width: 15 }, { header: 'Kime', key: 'r', width: 15 }, { header: 'Gemi', key: 's', width: 20 }, { header: 'Açıklama', key: 'c', width: 35 }, { header: 'Sub Total ($)', key: 'sub', width: 15 }, { header: 'Masraf ($)', key: 'fee', width: 15 }, { header: 'Genel Toplam ($)', key: 'tot', width: 20 } ];
+                wsExt.getRow(1).font = headerFont; wsExt.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4F46E5' } }; wsExt.autoFilter = 'A1:G1';
+                extTransfers.forEach(e => { const r = wsExt.addRow({ d: e.date, r: e.ref, s: e.ship, c: e.comment, sub: e.subTotal, fee: e.fee }); const rn = r.number; r.getCell('tot').value = { formula: `E${rn}+F${rn}`, result: e.total }; r.getCell('sub').numFmt = '"$"#,##0.00'; r.getCell('fee').numFmt = '"$"#,##0.00'; r.getCell('tot').numFmt = '"$"#,##0.00'; r.getCell('tot').font = { bold: true }; });
 
-                // 4. CÜZDAN & SİMÜLASYON (FORMÜLLÜ)
+                // 4. CÜZDAN & SİMÜLASYON
                 const wsWal = wb.addWorksheet('Cüzdan ve Simülasyon');
                 wsWal.columns = [ { header: 'Banknot', width: 15 }, { header: 'Adet', width: 15 }, { header: 'Toplam Değer ($)', width: 20 } ];
                 wsWal.getRow(1).font = headerFont; wsWal.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF059669' } };
                 const bills = [100, 50, 20, 10, 5, 2, 1];
-                bills.forEach((b, idx) => {
-                    const cnt = walletNotes[b] || 0;
-                    const r = wsWal.addRow([`$${b}`, cnt, 0]);
-                    const rn = r.number;
-                    // Formula: Adet * BanknotDeğeri
-                    r.getCell(3).value = { formula: `B${rn}*${b}`, result: cnt * b };
-                    r.getCell(3).numFmt = '"$"#,##0.00';
-                });
-                const totalRow = wsWal.addRow(['GENEL TOPLAM', '', { formula: 'SUM(C2:C8)' }]);
-                totalRow.font = { bold: true, size: 14 }; totalRow.getCell(3).numFmt = '"$"#,##0.00';
-                
-                wsWal.addRow([]); wsWal.addRow(['BÜTÇE SİMÜLASYONU', '', '']);
-                const simStart = wsWal.lastRow.number;
-                wsWal.getCell(`A${simStart}`).font = { bold: true };
-                wsWal.addRow(['Açıklama', 'Tutar ($)', 'Tutar (TL)']);
+                bills.forEach((b, idx) => { const cnt = walletNotes[b] || 0; const r = wsWal.addRow([`$${b}`, cnt, 0]); const rn = r.number; r.getCell(3).value = { formula: `B${rn}*${b}`, result: cnt * b }; r.getCell(3).numFmt = '"$"#,##0.00'; });
+                const totalRow = wsWal.addRow(['GENEL TOPLAM', '', { formula: 'SUM(C2:C8)' }]); totalRow.font = { bold: true, size: 14 }; totalRow.getCell(3).numFmt = '"$"#,##0.00';
+                wsWal.addRow([]); wsWal.addRow(['BÜTÇE SİMÜLASYONU', '', '']); const simStart = wsWal.lastRow.number; wsWal.getCell(`A${simStart}`).font = { bold: true }; wsWal.addRow(['Açıklama', 'Tutar ($)', 'Tutar (TL)']);
                 const rate = parseFloat(document.getElementById('sim-rate').value) || 40;
-                simulation.forEach(s => {
-                    const r = wsWal.addRow([s.desc, s.val, 0]);
-                    const rn = r.number;
-                    // Formula: USD * Rate
-                    r.getCell(3).value = { formula: `B${rn}*${rate}`, result: s.val * rate };
-                    r.getCell(2).numFmt = '"$"#,##0.00'; r.getCell(3).numFmt = '"₺"#,##0.00';
-                });
+                simulation.forEach(s => { const r = wsWal.addRow([s.desc, s.val, 0]); const rn = r.number; r.getCell(3).value = { formula: `B${rn}*${rate}`, result: s.val * rate }; r.getCell(2).numFmt = '"$"#,##0.00'; r.getCell(3).numFmt = '"₺"#,##0.00'; });
 
-                // 5. ALTIN VE GÜMÜŞ PLATFORMU (DB'DEN FORMÜLLÜ)
-                const wsGsGold = wb.addWorksheet('Altın Portföyü');
-                wsGsGold.columns = [
-                    { header: 'Tarih', width: 15 }, { header: 'İşlem', width: 15 }, { header: 'Miktar (Gr)', width: 15 }, 
-                    { header: 'Alış Fiyatı (₺)', width: 15 }, { header: 'Toplam Maliyet (₺)', width: 20 },
-                    { header: 'Anlık Fiyat (₺)', width: 15 }, { header: 'Güncel Değer (₺)', width: 20 }, { header: 'Net Kâr/Zarar (₺)', width: 20 }
-                ];
-                wsGsGold.getRow(1).font = headerFont; wsGsGold.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF59E0B' } };
-                
-                // GS data'yı bellekten (gsState) okuyoruz
-                if (typeof gsState !== 'undefined' && gsState.portfolio) {
-                    const currGold = gsState.prices.gold.gram;
-                    gsState.portfolio.gold.filter(g => g.type === 'buy').forEach(g => {
-                        const r = wsGsGold.addRow([g.date, 'ALIM', g.amount, g.price, 0, currGold, 0, 0]);
-                        const rn = r.number;
-                        // Formüller!
-                        r.getCell(5).value = { formula: `C${rn}*D${rn}`, result: g.amount * g.price }; // Maliyet = Miktar * Alış
-                        r.getCell(7).value = { formula: `C${rn}*F${rn}`, result: g.amount * currGold }; // Güncel = Miktar * Anlık
-                        r.getCell(8).value = { formula: `G${rn}-E${rn}`, result: (g.amount * currGold) - (g.amount * g.price) }; // Kar = Güncel - Maliyet
-                        
-                        r.getCell(4).numFmt = '"₺"#,##0.00'; r.getCell(5).numFmt = '"₺"#,##0.00';
-                        r.getCell(6).numFmt = '"₺"#,##0.00'; r.getCell(7).numFmt = '"₺"#,##0.00'; r.getCell(8).numFmt = '"₺"#,##0.00';
-                        r.getCell(8).font = { bold: true };
-                    });
-                }
-
-                // 6. ALIŞVERİŞ VE DİĞER RAPORLAR
+                // 5. ALIŞVERİŞ
                 const wsShop = wb.addWorksheet('Alışveriş');
                 wsShop.columns = [ { header: 'Tarih', key: 'd', width:15 }, { header: 'Platform', key: 'p', width:15 }, { header: 'Gemi', key: 's', width:20 }, { header: 'Durum', key: 'st', width:15 }, { header: 'Açıklama', key: 'desc', width:40 }, { header: 'Tutar ($)', key: 'tot', width:15 } ];
                 wsShop.getRow(1).font = headerFont; wsShop.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0284C7' } };
                 shoppingRecords.forEach(s => { const r = wsShop.addRow({ d: s.date, p: s.platform, s: s.ship, st: s.status, desc: s.desc, tot: s.total }); r.getCell('tot').numFmt = '"$"#,##0.00'; });
 
-                // Dosyayı oluştur
+                // Buffer üretimi
                 const buffer = await wb.xlsx.writeBuffer();
                 const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const fileName = `FinPro_V8.2_Master_Export_${new Date().toISOString().split('T')[0]}.xlsx`;
+                
+                // IPAD WEB SHARE API KONTROLÜ
+                if (navigator.canShare) {
+                    const file = new File([blob], fileName, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                    if (navigator.canShare({ files: [file] })) {
+                        try {
+                            await navigator.share({ files: [file], title: 'Gelişmiş Excel Raporu' });
+                            setTimeout(() => { btn.innerHTML = originalHTML; btn.disabled = false; }, 500);
+                            return; // Başarılı
+                        } catch (e) {
+                            console.log("Paylaşım başarısız, normal indirme deneniyor.");
+                        }
+                    }
+                }
+
+                // Fallback indirme yöntemi
                 const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-                a.download = `FinPro_V8.1_Master_Export_${new Date().toISOString().split('T')[0]}.xlsx`;
-                document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);
+                a.download = fileName; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);
 
                 setTimeout(() => { btn.innerHTML = originalHTML; btn.disabled = false; }, 1000);
             } catch(e) {
@@ -687,9 +605,33 @@
             }
         }
 
+        // ==========================================
+        // İSTEĞE BAĞLI RAPORLAR
+        // ==========================================
+        let editCRId = null;
+        function saveCR() {
+            const name = document.getElementById('cr-name').value.trim(); const acc = document.getElementById('cr-acc').value; const type = document.getElementById('cr-type').value; const cat = document.getElementById('cr-cat').value;
+            if(!name) return alert('Lütfen rapor için bir isim giriniz.');
+            if(editCRId) { const idx = customReports.findIndex(c => c.id === editCRId); if(idx > -1) customReports[idx] = { id: editCRId, name, acc, type, cat }; cancelCR(); } else { customReports.push({ id: Date.now(), name, acc, type, cat }); document.getElementById('cr-name').value = ''; }
+            saveData(); refreshAllViews();
+        }
+        function cancelCR() { editCRId = null; document.getElementById('cr-name').value = ''; document.getElementById('cr-acc').value = 'ALL'; document.getElementById('cr-type').value = 'ALL'; document.getElementById('cr-cat').value = 'ALL'; document.getElementById('btn-save-cr').innerText = "Rapor Şablonunu Kaydet"; document.getElementById('btn-cr-cancel').classList.add('hidden'); document.getElementById('cr-form-title').innerHTML = '<span class="material-icons mr-2 text-rose-500">query_builder</span> İsteğe Bağlı Özel Rapor Oluşturucu'; }
+        function editCR(id) { const cr = customReports.find(c => c.id === id); if(!cr) return; editCRId = cr.id; document.getElementById('cr-name').value = cr.name; document.getElementById('cr-acc').value = cr.acc; document.getElementById('cr-type').value = cr.type; document.getElementById('cr-cat').value = cr.cat; document.getElementById('btn-save-cr').innerText = "Raporu Güncelle"; document.getElementById('btn-cr-cancel').classList.remove('hidden'); document.getElementById('cr-form-title').innerHTML = '<span class="material-icons mr-2 text-yellow-500">edit</span> Özel Raporu Düzenle'; document.getElementById('view-reports').scrollIntoView({behavior: "smooth"}); }
+        function deleteCR(id) { if(confirm('Bu rapor şablonu silinecektir, emin misiniz?')) { customReports = customReports.filter(c => c.id !== id); saveData(); refreshAllViews(); } }
+        function renderCustomReports() {
+            const tbody = document.getElementById('cr-tbody'); tbody.innerHTML = ''; if(customReports.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center italic text-slate-400">Henüz isteğe bağlı rapor oluşturmadınız.</td></tr>'; return; }
+            const baseRecords = getFilteredRecords(records);
+            customReports.forEach(cr => {
+                let filtered = baseRecords; if(cr.acc !== 'ALL') filtered = filtered.filter(r => r.account === cr.acc); if(cr.type !== 'ALL') filtered = filtered.filter(r => r.type === cr.type); if(cr.cat !== 'ALL') filtered = filtered.filter(r => String(r.categoryId) === String(cr.cat));
+                let totalVal = 0; filtered.forEach(r => { if(cr.type === 'ALL') { if(r.type === 'INCOME') totalVal += r.value; else totalVal -= r.value; } else { totalVal += r.value; } });
+                let filterText = `[H: ${cr.acc}] [T: ${cr.type}] [K: ${cr.cat==='ALL'?'Tümü':(categories.find(c=>c.id==cr.cat)?.name||cr.cat)}]`;
+                let valColor = totalVal >= 0 ? (cr.type==='OUTGOING'?'text-red-500':'text-emerald-600') : 'text-red-600';
+                tbody.innerHTML += `<tr class="border-b hover:bg-slate-50"><td class="p-3 font-bold text-rose-700">${cr.name}</td><td class="p-3 text-[10px] uppercase font-bold">${cr.acc}</td><td class="p-3 text-[10px] uppercase font-bold">${cr.type}</td><td class="p-3 text-xs font-semibold text-slate-600">${filterText}</td><td class="p-3 text-lg font-black ${valColor}">$${Math.abs(totalVal).toFixed(2)}</td><td class="p-3 space-x-1"><button onclick="editCR(${cr.id})" class="text-yellow-600 p-1 hover:bg-yellow-100 rounded"><span class="material-icons text-sm">edit</span></button><button onclick="deleteCR(${cr.id})" class="text-red-500 p-1 hover:bg-red-100 rounded"><span class="material-icons text-sm">delete</span></button></td></tr>`;
+            });
+        }
 
         // ==========================================
-        // DİĞER FONKSİYONLAR (V8 Standartları - Aynen korundu)
+        // DİĞER FONKSİYONLAR 
         // ==========================================
         function confirmNewContract() { const name = document.getElementById('nc-name').value.trim().toUpperCase(); const start = document.getElementById('nc-start').value; const end = document.getElementById('nc-end').value; if(!name || !start || !end) return alert('Lütfen Gemi Adı ve Tarihleri eksiksiz doldurun.'); safakData = { isActive: true, name, start, end }; walletNotes = {100:0, 50:0, 20:0, 10:0, 5:0, 2:0, 1:0}; document.getElementById('global-ship').value = name; document.getElementById('global-year').value = start.substring(0,4); document.getElementById('sf-name').value = name; document.getElementById('sf-start').value = start; document.getElementById('sf-end').value = end; document.getElementById('contract-modal').classList.add('hidden'); saveData(); refreshAllViews(); }
         function endActiveContract() { if(confirm('Mevcut kontratı sonlandırmak istediğinize emin misiniz? Gemi arşive alınacak.')) { if(safakData.name) pastContracts.push({ id: Date.now(), name: safakData.name, start: safakData.start, end: safakData.end }); safakData = { isActive: false, name: '', start: '', end: '' }; document.getElementById('global-ship').value = 'ALL'; saveData(); refreshAllViews(); } }
@@ -700,21 +642,7 @@
         function checkActiveContractForms() { const eCruise = document.getElementById('entry-cruise'); const sShip = document.getElementById('sh-ship'); const extShip = document.getElementById('ext-ship'); if(safakData.isActive) { if(eCruise) { eCruise.value = safakData.name; eCruise.readOnly = true; eCruise.classList.add('bg-indigo-50', 'text-indigo-800'); } if(sShip) { sShip.value = safakData.name; sShip.readOnly = true; sShip.classList.add('bg-indigo-50', 'text-indigo-800'); } if(extShip) { extShip.value = safakData.name; extShip.readOnly = true; extShip.classList.add('bg-indigo-50', 'text-indigo-800'); } } else { if(eCruise) { eCruise.readOnly = false; eCruise.classList.remove('bg-indigo-50', 'text-indigo-800'); if(!editRecordId) eCruise.value = ''; } if(sShip) { sShip.readOnly = false; sShip.classList.remove('bg-indigo-50', 'text-indigo-800'); if(!editShopId) sShip.value = ''; } if(extShip) { extShip.readOnly = false; extShip.classList.remove('bg-indigo-50', 'text-indigo-800'); if(!editExtId) extShip.value = ''; } } }
         
         function refreshAllViews() { 
-            try { checkActiveContractForms(); } catch(e){} 
-            try { updateCategorySelect(); } catch(e){} 
-            try { renderCategoriesTable(); } catch(e){} 
-            try { renderEntriesTable(); } catch(e){} 
-            try { renderDashboard(); } catch(e){} 
-            try { renderShopping(); } catch(e){} 
-            try { renderExtTransfers(); } catch(e){} 
-            try { initWalletDenominations(); } catch(e){} 
-            try { updateDatalists(); } catch(e){} 
-            try { calcSimulation(); } catch(e){} 
-            try { renderReportsTab(); } catch(e){} 
-            try { renderCustomReports(); } catch(e){} // Yeni Eklendi
-            try { calcSafak(); } catch(e){} 
-            try { renderPastContracts(); } catch(e){} 
-            try { renderSubMatrix(); } catch(e){} 
+            try { checkActiveContractForms(); } catch(e){} try { updateCategorySelect(); } catch(e){} try { renderCategoriesTable(); } catch(e){} try { renderEntriesTable(); } catch(e){} try { renderDashboard(); } catch(e){} try { renderShopping(); } catch(e){} try { renderExtTransfers(); } catch(e){} try { initWalletDenominations(); } catch(e){} try { updateDatalists(); } catch(e){} try { calcSimulation(); } catch(e){} try { renderReportsTab(); } catch(e){} try { renderCustomReports(); } catch(e){} try { calcSafak(); } catch(e){} try { renderPastContracts(); } catch(e){} try { renderSubMatrix(); } catch(e){} 
         }
 
         function updateDatalists() { const uniqueCruises = [...new Set(records.map(r => r.cruise).filter(c => c && c !== 'INVALID'))]; ['ship-datalist', 'ship-datalist-form', 'ship-datalist-shop', 'ship-datalist-ext'].forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = uniqueCruises.map(c => `<option value="${c}">`).join(''); }); const uniqueSubCats = [...new Set(records.map(r => r.subCategory).filter(c => c && c.trim() !== ''))]; const subList = document.getElementById('subcat-list'); if(subList) subList.innerHTML = uniqueSubCats.map(c => `<option value="${c}">`).join(''); }
@@ -738,18 +666,8 @@
         // ==========================================
         // ALTIN & GÜMÜŞ PLATFORMU JS KODLARI
         // ==========================================
-        let gsState = {
-            activeAsset: 'gold', 
-            prices: { gold: { gram: 3000, ons: 2350 }, silver: { gram: 35, ons: 29.50 }, usdTry: 33.20 },
-            portfolio: { gold: [], silver: [] },
-            rsi: { gold: { current: 55, target: 70 }, silver: { current: 50, target: 65 } },
-            contacts: [],
-            priceHistory: { labels: [], gold: [], silver: [] }
-        };
-
-        const GS_DB_NAME = "GoldSilverPlatformDB"; const GS_DB_VERSION = 1; const GS_STORE_NAME = "app_state"; let gsDb;
-        let gsChartInstance = null; let gsTrendChartInstance = null; let gsPendingMailData = null;
-
+        let gsState = { activeAsset: 'gold', prices: { gold: { gram: 3000, ons: 2350 }, silver: { gram: 35, ons: 29.50 }, usdTry: 33.20 }, portfolio: { gold: [], silver: [] }, rsi: { gold: { current: 55, target: 70 }, silver: { current: 50, target: 65 } }, contacts: [], priceHistory: { labels: [], gold: [], silver: [] } };
+        const GS_DB_NAME = "GoldSilverPlatformDB"; const GS_DB_VERSION = 1; const GS_STORE_NAME = "app_state"; let gsDb; let gsChartInstance = null; let gsTrendChartInstance = null; let gsPendingMailData = null;
         const gsConfirmModal = document.getElementById('gsCustomConfirmModal'); const gsConfirmModalTitle = document.getElementById('gsConfirmModalTitle'); const gsConfirmModalMessage = document.getElementById('gsConfirmModalMessage'); const gsConfirmModalIcon = document.getElementById('gsConfirmModalIcon'); const btnGsConfirmAction = document.getElementById('btnGsConfirmAction'); let gsCurrentModalResolve = null;
 
         function initGS_DB() { return new Promise((resolve, reject) => { const request = indexedDB.open(GS_DB_NAME, GS_DB_VERSION); request.onupgradeneeded = function(e) { const database = e.target.result; if (!database.objectStoreNames.contains(GS_STORE_NAME)) database.createObjectStore(GS_STORE_NAME); }; request.onsuccess = function(e) { gsDb = e.target.result; resolve(gsDb); }; request.onerror = function(e) { reject(e.target.error); }; }); }
@@ -889,15 +807,39 @@
         async function confirmClearGsPortfolio() { const asset = gsState.activeAsset; const assetName = asset === 'gold' ? 'Altın' : 'Gümüş'; if (await showGsCustomConfirm(`${assetName} Temizle`, `Tüm ${assetName} geçmişi silinecektir.`, "🗑️", true)) { gsState.portfolio[asset] = []; saveGsDataToStorage(); updateGsUIForAsset(); } }
         function calculateGsRsiSimulation() { const asset = gsState.activeAsset; if (asset === 'portfolio') return; document.getElementById('simulatedPrice').innerText = '₺' + (gsState.prices[asset].gram * (1 + ((gsState.rsi[asset].target - gsState.rsi[asset].current) * 0.0086))).toLocaleString('tr-TR', { minimumFractionDigits: 2 }); }
 
+        // IPAD WEB SHARE API EXCEL YEDEKLEME (GOLDSILVER)
         async function exportGsToExcel() {
             try {
                 const wb = XLSX.utils.book_new(); const currentUsdRate = gsState.prices.usdTry; const headers = ["SN", "TARİH", "ADET", "ALIŞ", "ŞU ANKİ FİYAT", "TOPLAM ALINAN", "ŞUAN", "KAR", "DEĞİŞİM YÜZDESİ", "O ANKİ DOLAR KURU", "DOLAR ÜZERİNDEN", "DOLAR KURU", "TOPLAM", "KAR", "FARK YÜZDE", "ALTIN İLE ARASINDAKİ FARK"];
                 const goldRows = [headers]; calculateGsPortfolioStats('gold').processedTransactions.forEach((item, idx) => { goldRows.push([idx + 1, item.date, item.amount, item.price, gsState.prices.gold.gram, item.amount * item.price, item.amount * gsState.prices.gold.gram, (item.amount * gsState.prices.gold.gram) - (item.amount * item.price), (gsState.prices.gold.gram - item.price) / item.price, item.purchaseUsdRate, (item.amount * item.price) / item.purchaseUsdRate, currentUsdRate, ((item.amount * item.price) / item.purchaseUsdRate) * currentUsdRate, (((item.amount * item.price) / item.purchaseUsdRate) * currentUsdRate) - (item.amount * item.price), (currentUsdRate - item.purchaseUsdRate) / item.purchaseUsdRate, ((gsState.prices.gold.gram - item.price) / item.price) - ((currentUsdRate - item.purchaseUsdRate) / item.purchaseUsdRate)]); }); XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(goldRows), "Altın Portföyü");
                 const silverRows = [headers]; calculateGsPortfolioStats('silver').processedTransactions.forEach((item, idx) => { silverRows.push([idx + 1, item.date, item.amount, item.price, gsState.prices.silver.gram, item.amount * item.price, item.amount * gsState.prices.silver.gram, (item.amount * gsState.prices.silver.gram) - (item.amount * item.price), (gsState.prices.silver.gram - item.price) / item.price, item.purchaseUsdRate, (item.amount * item.price) / item.purchaseUsdRate, currentUsdRate, ((item.amount * item.price) / item.purchaseUsdRate) * currentUsdRate, (((item.amount * item.price) / item.purchaseUsdRate) * currentUsdRate) - (item.amount * item.price), (currentUsdRate - item.purchaseUsdRate) / item.purchaseUsdRate, ((gsState.prices.silver.gram - item.price) / item.price) - ((currentUsdRate - item.purchaseUsdRate) / item.purchaseUsdRate)]); }); XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(silverRows), "Gümüş Portföyü");
+                
                 const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
                 function s2ab(s) { const buf = new ArrayBuffer(s.length); const view = new Uint8Array(buf); for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; return buf; }
-                const blob = new Blob([s2ab(wbout)], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }); const objectUrl = URL.createObjectURL(blob); const existingIframe = document.getElementById('backup-download-iframe'); if (existingIframe) document.body.removeChild(existingIframe);
-                const iframe = document.createElement('iframe'); iframe.id = 'backup-download-iframe'; iframe.style.display = 'none'; document.body.appendChild(iframe); const a = document.createElement("a"); a.href = objectUrl; a.download = "altin_gumus_karsilastirmali_yedek.xlsx"; iframe.contentDocument.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(objectUrl); if(iframe.parentNode) document.body.removeChild(iframe); }, 500);
+                const blob = new Blob([s2ab(wbout)], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                const fileName = "altin_gumus_karsilastirmali_yedek.xlsx";
+                
+                // IPAD WEB SHARE API KONTROLÜ
+                if (navigator.canShare) {
+                    const file = new File([blob], fileName, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                    if (navigator.canShare({ files: [file] })) {
+                        try {
+                            await navigator.share({ files: [file], title: 'Altın Gümüş Portföy Yedeği' });
+                            return; // Başarılı, e-posta sorusuna gerek kalmadı (kullanıcı zaten paylaştı)
+                        } catch (e) {
+                            console.log("Paylaşım iptal edildi.", e);
+                        }
+                    }
+                }
+
+                // Fallback (Masaüstü veya desteklenmeyen tarayıcı)
+                const objectUrl = URL.createObjectURL(blob); 
+                const existingIframe = document.getElementById('backup-download-iframe'); if (existingIframe) document.body.removeChild(existingIframe);
+                const iframe = document.createElement('iframe'); iframe.id = 'backup-download-iframe'; iframe.style.display = 'none'; document.body.appendChild(iframe); 
+                const a = document.createElement("a"); a.href = objectUrl; a.download = fileName; iframe.contentDocument.body.appendChild(a); a.click(); 
+                setTimeout(() => { URL.revokeObjectURL(objectUrl); if(iframe.parentNode) document.body.removeChild(iframe); }, 500);
+                
+                // Fallback indirmeden sonra e-posta ile yedek sorusunu göster (iPad'de Share API çalışmazsa ekstra önlem)
                 await buildAndAskGsEmailBackup();
             } catch (err) { alert("Yedek hatası: " + err.message); }
         }
