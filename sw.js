@@ -1,4 +1,4 @@
-const CACHE_NAME = 'finpro-v8.2-offline-cache-v3';
+const CACHE_NAME = 'finpro-v8.2-full-cache-v4';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
