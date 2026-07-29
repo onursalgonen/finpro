@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.8.2) - Cruise Edition</title>
+    <title>FinPro (V.8.2) - Master Edition</title>
     
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#0f172a">
@@ -14,6 +13,8 @@
     <script src="./libs/tailwindcss.js"></script>
     <link href="./libs/material-icons.css" rel="stylesheet">
     <script src="./libs/chart.min.js"></script>
+    <script src="./libs/exceljs.min.js"></script>
+    <script src="./libs/peerjs.min.js"></script>
     
     <script>
         if ('serviceWorker' in navigator) {
@@ -24,7 +25,7 @@
     </script>
 
     <style>
-        body { background-color: #f8fafc; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, sans-serif; overflow-x: hidden; }
+        body { background-color: #f8fafc; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, sans-serif; overflow-x: hidden; transition: all 0.3s; }
         .card { background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); padding: 1.5rem; border: 1px solid #e2e8f0; }
         .btn { transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; }
         .btn:active { transform: scale(0.95); }
@@ -33,9 +34,19 @@
         .excel-table { border-collapse: collapse; width: 100%; font-size: 0.85rem; text-align: center; }
         .excel-table th, .excel-table td { border: 1px solid #cbd5e1; padding: 8px; white-space: nowrap; }
         .excel-table th { background-color: #f1f5f9; font-weight: bold; color: #475569; }
+        
+        /* Tema: Retro */
+        body.theme-retro { background-color: #050505; color: #39ff14; }
+        body.theme-retro .card, body.theme-retro header, body.theme-retro aside, body.theme-retro input, body.theme-retro select { background-color: #050505; border: 1px solid #1a5e0b; color: #39ff14; font-family: 'Courier New', monospace; }
+        body.theme-retro .btn { background-color: #0a2405; border: 1px solid #39ff14; color: #39ff14; }
+        
+        /* Tema: Cyber */
+        body.theme-cyber { background-color: #0a0414; color: #00f0ff; }
+        body.theme-cyber .card, body.theme-cyber header, body.theme-cyber aside, body.theme-cyber input, body.theme-cyber select { background-color: #120424; border: 1px solid #ff007f; color: #00f0ff; box-shadow: 0 0 10px rgba(255,0,127,0.2); }
+        body.theme-cyber .btn { background-color: rgba(255,0,127,0.1); border: 1px solid #00f0ff; color: #fff; text-shadow: 0 0 5px #00f0ff; }
     </style>
 </head>
-<body class="flex h-screen w-full">
+<body class="flex h-screen w-full theme-default">
 
     <!-- Sidebar -->
     <aside class="w-20 bg-slate-900 text-white flex flex-col items-center py-6 shadow-xl z-20">
@@ -43,20 +54,22 @@
             <span class="material-icons text-3xl">sailing</span>
         </div>
         <nav class="flex flex-col gap-4 w-full px-2">
-            <button onclick="switchTab('view-dashboard')" class="btn bg-slate-800 text-slate-300 hover:text-white w-full"><span class="material-icons">dashboard</span></button>
-            <button onclick="switchTab('view-add')" class="btn bg-slate-800 text-slate-300 hover:text-white w-full"><span class="material-icons">add_circle</span></button>
-            <button onclick="switchTab('view-reports')" class="btn bg-slate-800 text-slate-300 hover:text-white w-full"><span class="material-icons">analytics</span></button>
+            <button onclick="switchTab('view-dashboard')" class="btn bg-slate-800 text-slate-300 hover:text-white w-full" title="Dashboard"><span class="material-icons">dashboard</span></button>
+            <button onclick="switchTab('view-add')" class="btn bg-slate-800 text-slate-300 hover:text-white w-full" title="Kayıt Ekle"><span class="material-icons">add_circle</span></button>
+            <button onclick="switchTab('view-reports')" class="btn bg-slate-800 text-slate-300 hover:text-white w-full" title="Cruise Matrisi"><span class="material-icons">directions_boat</span></button>
+            <button onclick="switchTab('view-market')" class="btn bg-slate-800 text-slate-300 hover:text-white w-full" title="Altın/Gümüş Piyasa"><span class="material-icons">trending_up</span></button>
+            <button onclick="switchTab('view-settings')" class="btn bg-slate-800 text-slate-300 hover:text-white w-full" title="Ayarlar"><span class="material-icons">settings</span></button>
         </nav>
     </aside>
 
     <!-- Ana İçerik -->
     <main class="flex-1 flex flex-col h-screen overflow-hidden">
         
-        <!-- Header API Kontrol -->
-        <header class="bg-white border-b border-slate-200 p-4 flex justify-between items-center shadow-sm z-10">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 p-4 flex justify-between items-center shadow-sm z-10 transition-colors">
             <h2 class="text-xl font-bold text-slate-800" id="page-title">Gösterge Paneli</h2>
             <div class="flex items-center gap-2">
-                <span id="lastUpdated" class="text-xs text-slate-500 font-mono">Veri Bekleniyor</span>
+                <span id="lastUpdated" class="text-xs font-mono opacity-70">Veri Bekleniyor</span>
                 <button id="btnFetchPrices" onclick="fetchGsLivePrices()" class="btn bg-indigo-50 text-indigo-600 text-sm border border-indigo-200">
                     <span class="material-icons text-sm mr-1">sync</span> Fiyatları Çek
                 </button>
@@ -64,9 +77,9 @@
         </header>
 
         <!-- İçerik Alanı -->
-        <div class="flex-1 overflow-y-auto p-6 bg-slate-50">
+        <div class="flex-1 overflow-y-auto p-6 transition-colors" style="background: inherit;">
             
-            <!-- Dashboard -->
+            <!-- 1. DASHBOARD -->
             <section id="view-dashboard" class="view-section active">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div class="card border-t-4 border-emerald-500 text-center">
@@ -78,62 +91,62 @@
                         <p id="totalFolio" class="text-2xl font-black text-rose-600 mt-2">$0.00</p>
                     </div>
                     <div class="card border-t-4 border-indigo-500 text-center">
-                        <h3 class="text-slate-500 text-sm font-bold">Son Maaş Yatırımı</h3>
+                        <h3 class="text-slate-500 text-sm font-bold">Aylık Net Maaş</h3>
                         <p class="text-2xl font-black text-indigo-600 mt-2">$3,600.00</p>
                     </div>
                 </div>
             </section>
 
-            <!-- Yeni Kayıt (Cruise Odaklı) -->
+            <!-- 2. İŞLEM EKLE -->
             <section id="view-add" class="view-section">
                 <div class="card max-w-lg mx-auto">
                     <h3 class="text-lg font-bold mb-4 flex items-center"><span class="material-icons mr-2">edit_document</span> Yeni İşlem Ekle</h3>
                     <div class="space-y-4">
                         <div>
-                            <label class="text-xs font-bold text-slate-500">İşlem Tipi</label>
-                            <select id="entryType" class="w-full p-2 border rounded mt-1 bg-slate-50">
+                            <label class="text-xs font-bold opacity-70">İşlem Tipi</label>
+                            <select id="entryType" class="w-full p-2 border rounded mt-1">
                                 <option value="INCOME">Gelir (Örn: Bahşiş / Tip)</option>
                                 <option value="OUTGOING">Gider (Örn: Folyo Harcaması)</option>
                             </select>
                         </div>
                         <div>
-                            <label class="text-xs font-bold text-slate-500">Kategori Adı</label>
+                            <label class="text-xs font-bold opacity-70">Kategori Adı</label>
                             <input type="text" id="entryCategory" placeholder="Örn: Nakit Tip, Folio Bar" class="w-full p-2 border rounded mt-1">
                         </div>
                         <div>
-                            <label class="text-xs font-bold text-slate-500">Tutar ($)</label>
+                            <label class="text-xs font-bold opacity-70">Tutar ($)</label>
                             <input type="number" id="entryAmount" placeholder="0.00" class="w-full p-2 border rounded mt-1 font-mono">
                         </div>
                         <div>
-                            <label class="text-xs font-bold text-slate-500">Hesap</label>
-                            <select id="entryAccount" class="w-full p-2 border rounded mt-1 bg-slate-50">
+                            <label class="text-xs font-bold opacity-70">Hesap Tipi</label>
+                            <select id="entryAccount" class="w-full p-2 border rounded mt-1">
                                 <option value="CASH">Nakit</option>
                                 <option value="FOLIO">Gemi Folyo</option>
                                 <option value="BANK">Banka / Maaş</option>
                             </select>
                         </div>
                         <div>
-                            <label class="text-xs font-bold text-slate-500">Gemi / Cruise Kontratı</label>
-                            <input type="text" id="entryCruise" placeholder="Örn: Carnival Contract" value="Carnival Contract" class="w-full p-2 border rounded mt-1 font-bold text-indigo-700">
+                            <label class="text-xs font-bold opacity-70">Gemi / Cruise Kontratı</label>
+                            <input type="text" id="entryCruise" placeholder="Örn: Carnival Contract" value="Carnival Contract" class="w-full p-2 border rounded mt-1 font-bold">
                         </div>
                         <button onclick="saveRecord()" class="btn bg-indigo-600 text-white w-full mt-4 py-3">Kaydet</button>
                     </div>
                 </div>
             </section>
 
-            <!-- Raporlar ve Matris -->
+            <!-- 3. CRUISE MATRİSİ -->
             <section id="view-reports" class="view-section">
                 <div class="card p-0 border-t-4 border-indigo-500 overflow-hidden">
-                    <div class="p-4 border-b bg-slate-50 flex items-center justify-between">
-                        <h3 class="font-bold text-slate-700 flex items-center">
-                            <span class="material-icons mr-2 text-indigo-500">directions_boat</span> 
+                    <div class="p-4 border-b flex items-center justify-between">
+                        <h3 class="font-bold flex items-center">
+                            <span class="material-icons mr-2">directions_boat</span> 
                             Cruise Gider / Gelir Matrisi
                         </h3>
-                        <span class="text-[9px] font-bold text-indigo-600 bg-indigo-100 px-2 py-1 rounded uppercase">Sadece Folyo & Tip</span>
+                        <span class="text-[9px] font-bold bg-indigo-100 text-indigo-700 px-2 py-1 rounded uppercase">Sadece Folyo & Tip</span>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="excel-table w-full">
-                            <thead class="bg-indigo-900 text-white">
+                            <thead>
                                 <tr>
                                     <th>GEMİ / CRUISE</th>
                                     <th>TİP GETİRİSİ (+)</th>
@@ -147,12 +160,55 @@
                 </div>
             </section>
 
+            <!-- 4. PİYASA & GRAFİKLER (GÜNLÜK BAZDA) -->
+            <section id="view-market" class="view-section">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="card border-t-4 border-amber-500">
+                        <h3 class="font-bold flex items-center mb-4"><span class="material-icons mr-2 text-amber-500">poll</span> Altın (Gram) - Günlük Analiz</h3>
+                        <div class="text-3xl font-black text-amber-600 mb-4" id="ui-gold-price">₺0.00</div>
+                        <canvas id="chartGold" height="200"></canvas>
+                    </div>
+                    <div class="card border-t-4 border-slate-400">
+                        <h3 class="font-bold flex items-center mb-4"><span class="material-icons mr-2 text-slate-400">poll</span> Gümüş (Gram) - Günlük Analiz</h3>
+                        <div class="text-3xl font-black text-slate-600 mb-4" id="ui-silver-price">₺0.00</div>
+                        <canvas id="chartSilver" height="200"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. AYARLAR -->
+            <section id="view-settings" class="view-section">
+                <div class="card max-w-lg mx-auto">
+                    <h3 class="text-lg font-bold mb-4 flex items-center"><span class="material-icons mr-2">palette</span> Tema ve Sistem Ayarları</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs font-bold opacity-70">Arayüz Teması</label>
+                            <select id="themeSelect" onchange="changeTheme()" class="w-full p-2 border rounded mt-1">
+                                <option value="theme-default">Varsayılan (Aydınlık)</option>
+                                <option value="theme-retro">Retro Terminal (Koyu/Yeşil)</option>
+                                <option value="theme-cyber">Cyberpunk (Koyu/Neon)</option>
+                            </select>
+                        </div>
+                        <hr class="my-4 border-slate-200">
+                        <button onclick="exportToExcel()" class="btn bg-emerald-600 text-white w-full py-3 flex items-center justify-center">
+                            <span class="material-icons mr-2">download</span> Tüm Veriyi Excel Olarak İndir
+                        </button>
+                    </div>
+                </div>
+            </section>
+
         </div>
     </main>
 
 <script>
-    // --- VERİTABANI ---
+    // --- VERİTABANI & STATE ---
     let records = JSON.parse(localStorage.getItem('finpro_records')) || [];
+    let gsState = JSON.parse(localStorage.getItem('finpro_gs')) || {
+        prices: { gold: {gram: 0}, silver: {gram: 0}, usdTry: 0 },
+        priceHistory: { labels: [], gold: [], silver: [] }
+    };
+    
+    let goldChart, silverChart;
 
     // --- SEKME GEÇİŞİ ---
     function switchTab(tabId) {
@@ -162,12 +218,30 @@
         const titles = {
             'view-dashboard': 'Gösterge Paneli',
             'view-add': 'İşlem Ekle',
-            'view-reports': 'Cruise Raporları'
+            'view-reports': 'Cruise Raporları',
+            'view-market': 'Altın ve Gümüş Piyasa Analizi',
+            'view-settings': 'Ayarlar'
         };
         document.getElementById('page-title').innerText = titles[tabId];
         
         if (tabId === 'view-reports' || tabId === 'view-dashboard') calculateMatrix();
+        if (tabId === 'view-market') renderCharts();
     }
+
+    // --- TEMA SİSTEMİ ---
+    function changeTheme() {
+        const theme = document.getElementById('themeSelect').value;
+        document.body.className = `flex h-screen w-full ${theme}`;
+        localStorage.setItem('finpro_theme', theme);
+        if(document.getElementById('view-market').classList.contains('active')) renderCharts();
+    }
+    
+    // Açılışta temayı yükle
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('finpro_theme') || 'theme-default';
+        document.getElementById('themeSelect').value = savedTheme;
+        changeTheme();
+    });
 
     // --- KAYIT EKLEME ---
     function saveRecord() {
@@ -201,7 +275,7 @@
         calculateMatrix();
     }
 
-    // --- CRUISE FOLYO/TİP MATRİSİ & DASHBOARD HESAPLAMA ---
+    // --- CRUISE MATRİSİ (FOLYO & TİP) ---
     function calculateMatrix() {
         const shipTbody = document.getElementById('rep-ship-tbody');
         let shipData = {};
@@ -217,40 +291,35 @@
             const cName = String(r.categoryName || '').toUpperCase();
             const v = r.value || 0;
             
-            // TİP Şartı: Gelir ve adı Tip/Bahşiş içeriyor
             if(r.type === 'INCOME' && (cName.includes('TIP') || cName.includes('BAHŞİŞ') || cName.includes('CASH'))) {
                 shipData[s].tips += v;
                 totalTipsGlobal += v;
             }
             
-            // FOLYO Şartı: Gider, hesabı FOLIO
             if(r.type === 'OUTGOING' && r.account === 'FOLIO' && !r.isTransfer) {
                 shipData[s].folioSpend += v;
                 totalFolioGlobal += v;
             }
         });
 
-        // Matris Tablosunu Doldur
         if (shipTbody) {
             shipTbody.innerHTML = '';
             Object.keys(shipData).sort().forEach((s, i) => {
                 let d = shipData[s];
                 let net = d.tips - d.folioSpend;
-                let bg = i % 2 === 0 ? "bg-slate-50" : "bg-white";
                 
                 shipTbody.innerHTML += `
-                <tr class="${bg} hover:bg-indigo-50 transition-colors">
-                    <td class="font-black p-3 text-indigo-700">${s}</td>
-                    <td class="text-emerald-600 font-bold p-3 bg-emerald-50">+$${d.tips.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
-                    <td class="text-rose-500 font-bold p-3 bg-rose-50">-$${d.folioSpend.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
-                    <td class="font-black p-3 border-l ${net >= 0 ? 'text-emerald-700 bg-emerald-100 border-emerald-200' : 'text-rose-700 bg-rose-100 border-rose-200'}">
+                <tr class="border-b transition-colors hover:opacity-80">
+                    <td class="font-black p-3">${s}</td>
+                    <td class="text-emerald-500 font-bold p-3">+$${d.tips.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                    <td class="text-rose-500 font-bold p-3">-$${d.folioSpend.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                    <td class="font-black p-3 border-l ${net >= 0 ? 'text-emerald-500' : 'text-rose-500'}">
                         ${net >= 0 ? '+' : ''}$${net.toLocaleString('en-US', {minimumFractionDigits:2})}
                     </td>
                 </tr>`;
             });
         }
 
-        // Dashboard'u Güncelle
         document.getElementById('totalTips').innerText = `$${totalTipsGlobal.toLocaleString('en-US', {minimumFractionDigits:2})}`;
         document.getElementById('totalFolio').innerText = `$${totalFolioGlobal.toLocaleString('en-US', {minimumFractionDigits:2})}`;
     }
@@ -264,7 +333,7 @@
         btn.disabled = true;
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 sn sonra iptal
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
 
         try {
             const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pax-gold,kinesis-silver,tether&vs_currencies=try,usd', { 
@@ -274,26 +343,123 @@
 
             if (!res.ok) throw new Error("API hatası");
             const data = await res.json();
+            const troyGram = 31.1034768;
+            
+            gsState.prices.gold.gram = parseFloat((data['pax-gold'].try / troyGram).toFixed(2));
+            gsState.prices.silver.gram = parseFloat((data['kinesis-silver'].try / troyGram).toFixed(2));
+            gsState.prices.usdTry = parseFloat(data['tether'].try.toFixed(2));
+            
+            // Günlük periyot doğrultusunda tarih bazlı kayıt
+            const nowDate = new Date().toLocaleDateString('tr-TR');
+            
+            if(gsState.priceHistory.labels[gsState.priceHistory.labels.length - 1] !== nowDate){
+                gsState.priceHistory.labels.push(nowDate);
+                gsState.priceHistory.gold.push(gsState.prices.gold.gram);
+                gsState.priceHistory.silver.push(gsState.prices.silver.gram);
+                if(gsState.priceHistory.labels.length > 30) {
+                    gsState.priceHistory.labels.shift();
+                    gsState.priceHistory.gold.shift();
+                    gsState.priceHistory.silver.shift();
+                }
+            } else {
+                gsState.priceHistory.gold[gsState.priceHistory.gold.length - 1] = gsState.prices.gold.gram;
+                gsState.priceHistory.silver[gsState.priceHistory.silver.length - 1] = gsState.prices.silver.gram;
+            }
+            
+            localStorage.setItem('finpro_gs', JSON.stringify(gsState));
             
             statusText.innerText = "Canlı API: " + new Date().toLocaleTimeString('tr-TR');
             btn.innerHTML = `<span class="material-icons text-sm mr-1">sync</span> Güncellendi`;
+            
+            updateMarketUI();
 
         } catch (err) {
             clearTimeout(timeoutId);
             statusText.innerText = "Bağlantı Yok (Lokal Mod)";
             btn.innerHTML = "❌ Kısıtlı Ağ";
-            btn.classList.add("bg-rose-100", "text-rose-600");
+            updateMarketUI(); // İnternet yoksa lokal veriyi çiz
         } finally {
             setTimeout(() => {
                 btn.innerHTML = `<span class="material-icons text-sm mr-1">sync</span> Fiyatları Çek`;
-                btn.classList.remove("bg-rose-100", "text-rose-600");
                 btn.disabled = false;
             }, 3000);
         }
     }
 
-    // İlk açılışta hesaplamaları yap
+    function updateMarketUI() {
+        document.getElementById('ui-gold-price').innerText = `₺${gsState.prices.gold.gram.toLocaleString('tr-TR', {minimumFractionDigits:2})}`;
+        document.getElementById('ui-silver-price').innerText = `₺${gsState.prices.silver.gram.toLocaleString('tr-TR', {minimumFractionDigits:2})}`;
+        if(document.getElementById('view-market').classList.contains('active')) renderCharts();
+    }
+
+    // --- CHART.JS GRAFİKLERİ ---
+    function renderCharts() {
+        if (!window.Chart) return;
+        
+        const isDark = document.body.classList.contains('theme-retro') || document.body.classList.contains('theme-cyber');
+        const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+        const textColor = isDark ? (document.body.classList.contains('theme-retro') ? '#39ff14' : '#00f0ff') : '#64748b';
+
+        Chart.defaults.color = textColor;
+        Chart.defaults.scale.grid.color = gridColor;
+
+        const commonOptions = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
+
+        if (goldChart) goldChart.destroy();
+        const ctxG = document.getElementById('chartGold').getContext('2d');
+        goldChart = new Chart(ctxG, {
+            type: 'line',
+            data: { labels: gsState.priceHistory.labels, datasets: [{ data: gsState.priceHistory.gold, borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', fill: true, tension: 0.3 }] },
+            options: commonOptions
+        });
+
+        if (silverChart) silverChart.destroy();
+        const ctxS = document.getElementById('chartSilver').getContext('2d');
+        silverChart = new Chart(ctxS, {
+            type: 'line',
+            data: { labels: gsState.priceHistory.labels, datasets: [{ data: gsState.priceHistory.silver, borderColor: '#94a3b8', backgroundColor: 'rgba(148, 163, 184, 0.1)', fill: true, tension: 0.3 }] },
+            options: commonOptions
+        });
+    }
+
+    // --- EXCEL ÇIKTISI (Offline Çalışır) ---
+    async function exportToExcel() {
+        if (!window.ExcelJS) { alert("ExcelJS kütüphanesi yüklenemedi."); return; }
+        
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('İşlemler');
+        
+        worksheet.columns = [
+            { header: 'Tarih', key: 'date', width: 20 },
+            { header: 'Tür', key: 'type', width: 15 },
+            { header: 'Kategori', key: 'category', width: 25 },
+            { header: 'Tutar ($)', key: 'amount', width: 15 },
+            { header: 'Hesap', key: 'account', width: 15 },
+            { header: 'Cruise', key: 'cruise', width: 25 }
+        ];
+
+        records.forEach(r => {
+            worksheet.addRow({
+                date: new Date(r.date).toLocaleDateString('tr-TR'),
+                type: r.type === 'INCOME' ? 'Gelir' : 'Gider',
+                category: r.categoryName,
+                amount: r.value,
+                account: r.account,
+                cruise: r.cruise
+            });
+        });
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `FinPro_Yedek_${new Date().toLocaleDateString('tr-TR')}.xlsx`;
+        link.click();
+    }
+
+    // İlk açılış işlemleri
     calculateMatrix();
+    updateMarketUI();
 </script>
 </body>
 </html>
