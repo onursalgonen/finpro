@@ -1,19 +1,6 @@
-const CACHE_NAME = 'finpro-v8.2-full-cache-v4';
-const ASSETS_TO_CACHE = [
-    './',
-    './index.html',
-    './manifest.json',
-    './libs/tailwindcss.js',
-    './libs/chart.min.js',
-    './libs/exceljs.min.js',
-    './libs/peerjs.min.js',
-    './libs/material-icons.css'
-];
+const CACHE_NAME = 'finpro-orijinal-cache-v1';
 
 self.addEventListener('install', event => {
-    event.waitUntil(
-        caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS_TO_CACHE))
-    );
     self.skipWaiting();
 });
 
@@ -26,18 +13,41 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+    const url = new URL(event.request.url);
+
+    // API İstekleri için 3 Saniye Kuralı (Beyaz Ekran Koruması)
+    if (url.hostname === 'api.coingecko.com') {
+        event.respondWith(
+            new Promise((resolve, reject) => {
+                const timeout = setTimeout(() => reject(new Error('Timeout')), 3000);
+                fetch(event.request).then(response => {
+                    clearTimeout(timeout);
+                    resolve(response);
+                }).catch(err => {
+                    clearTimeout(timeout);
+                    reject(err);
+                });
+            }).catch(() => new Response('', { status: 408, statusText: 'Request Timeout' }))
+        );
+        return;
+    }
+
+    // Diğer her şey için (CDN'ler, Fontlar, HTML): Önce Cache, Yoksa İnternet
     event.respondWith(
         caches.match(event.request).then(cachedResponse => {
-            if (cachedResponse) return cachedResponse;
-
-            const fetchRequest = fetch(event.request);
-            const timeout = new Promise((_, reject) => {
-                setTimeout(() => reject(new Error('Ağ zaman aşımı')), 3000);
-            });
-
-            return Promise.race([fetchRequest, timeout]).catch(() => {
-                console.log("Kısıtlı Wi-Fi algılandı, lokal veri devrede: ", event.request.url);
-                return new Response('', { status: 408, statusText: 'Request Timeout' });
+            if (cachedResponse) {
+                return cachedResponse; // Cihaz hafızasından ver
+            }
+            return fetch(event.request).then(networkResponse => {
+                // İnternetten çekileni bir dahaki sefere offline çalışsın diye hafızaya kaydet
+                return caches.open(CACHE_NAME).then(cache => {
+                    if (event.request.method === 'GET') {
+                        cache.put(event.request, networkResponse.clone());
+                    }
+                    return networkResponse;
+                });
+            }).catch(() => {
+                return new Response('Offline', { status: 503, statusText: 'Offline' });
             });
         })
     );
