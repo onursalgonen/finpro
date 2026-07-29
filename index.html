@@ -1,161 +1,299 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.8.2) - Offline Master</title>
+    <title>FinPro (V.8.2) - Cruise Edition</title>
     
-    <!-- PWA & Offline Manifest -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="FinPro">
-    <link rel="apple-touch-icon" href="./icon-192.png">
-
-    <!-- Yerel (Offline) Kütüphaneler -->
+    
+    <!-- Çevrimdışı Kütüphaneler (libs klasöründe olmalı) -->
     <script src="./libs/tailwindcss.js"></script>
     <link href="./libs/material-icons.css" rel="stylesheet">
-    
-    <!-- JS Kütüphaneleri (Offline) -->
     <script src="./libs/chart.min.js"></script>
-    <script src="./libs/exceljs.min.js"></script>
-    <script src="./libs/peerjs.min.js"></script>
-
-    <!-- PWA Service Worker Entegrasyonu -->
+    
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Offline Service Worker Aktif!', reg.scope))
-                    .catch(err => console.error('SW Kayıt Hatası:', err));
+                navigator.serviceWorker.register('./sw.js').catch(err => console.error('SW Hatası:', err));
             });
         }
     </script>
 
     <style>
-        /* (Önceki versiyondaki tüm CSS kodları aynı şekilde kalacak) */
-        body { background-color: #f8fafc; color: #1e293b; overflow-x: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f8fafc; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, sans-serif; overflow-x: hidden; }
         .card { background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); padding: 1.5rem; border: 1px solid #e2e8f0; }
         .btn { transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; }
         .btn:active { transform: scale(0.95); }
-        .sidebar-collapsed { width: 4.5rem !important; }
-        .sidebar-collapsed .nav-text, .sidebar-collapsed .logo-text, .sidebar-collapsed .tools-header { display: none; }
-        .sidebar-collapsed .nav-icon { margin-right: 0 !important; font-size: 1.5rem; }
-        .sidebar-collapsed .p-4.border-b { padding: 1rem 0.5rem; text-align: center; justify-content: center; }
-        .sidebar-collapsed .btn-sidebar { padding: 0.75rem; justify-content: center; }
-        #sidebar { transition: width 0.3s ease; }
         .view-section { display: none; }
         .view-section.active { display: block; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        .excel-table { border-collapse: collapse; width: 100%; font-size: 0.75rem; text-align: center; }
-        .excel-table th, .excel-table td { border: 1px solid #cbd5e1; padding: 6px; white-space: nowrap; }
-        .excel-table th { background-color: #f1f5f9; font-weight: bold; color: #475569; text-transform: uppercase; }
-        .excel-table tbody tr:hover { background-color: #f8fafc; }
-        .cell-red { background-color: #fee2e2; color: #dc2626; font-weight: bold; }
-        .cell-green { background-color: #dcfce7; color: #16a34a; font-weight: bold; }
-        .cell-blue { background-color: #e0f2fe; color: #0284c7; font-weight: bold; }
-        .cell-yellow { background-color: #fef9c3; color: #ca8a04; font-weight: bold; }
-        .safak-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)); gap: 4px; }
-        .safak-box { width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 11px; border-radius: 4px; transition: all 0.3s; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 24px; height: 24px; border-radius: 50%; background: #f59e0b; cursor: pointer; }
-        #view-goldsilver input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); scale: 1.3; }
-        .goldsilver-wrap { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
-        
-        /* Tema Ayarları */
-        body.theme-retro { background-color: #050505 !important; }
-        body.theme-retro * { color: #39ff14 !important; border-color: #1a5e0b !important; font-family: 'Courier New', Courier, monospace !important; border-radius: 0 !important; }
-        body.theme-retro .card, body.theme-retro header, body.theme-retro #sidebar, body.theme-retro table th, body.theme-retro input, body.theme-retro select, body.theme-retro div[class*="bg-"] { background-color: #050505 !important; border: 1px solid #1a5e0b !important; background-image: none !important; box-shadow: none !important; }
-        body.theme-retro button, body.theme-retro .btn, body.theme-retro .btn-sidebar { background-color: #0a2405 !important; border: 1px solid #39ff14 !important; }
-        body.theme-retro button:hover, body.theme-retro .btn:hover { background-color: #39ff14 !important; color: #000 !important; }
-        body.theme-retro button:hover *, body.theme-retro .btn:hover * { color: #000 !important; }
-        
-        body.theme-cyber { background-color: #0a0414 !important; }
-        body.theme-cyber * { font-family: sans-serif !important; border-color: #00f0ff !important; }
-        body.theme-cyber .card, body.theme-cyber header, body.theme-cyber #sidebar, body.theme-cyber .bg-white, body.theme-cyber .bg-slate-50, body.theme-cyber .bg-slate-900, body.theme-cyber .bg-slate-950, body.theme-cyber input, body.theme-cyber select { background-color: #120424 !important; border: 1px solid #00f0ff !important; color: #d8cbf0 !important; box-shadow: 0 0 10px rgba(0,240,255,0.1) !important; background-image: none !important; }
-        body.theme-cyber h1, body.theme-cyber h2, body.theme-cyber h3, body.theme-cyber .nav-text { color: #00f0ff !important; text-shadow: 0 0 5px rgba(0,240,255,0.5) !important; }
-        body.theme-cyber .material-icons { color: #ff007f !important; text-shadow: 0 0 5px rgba(255,0,127,0.5) !important; }
-        body.theme-cyber button, body.theme-cyber .btn, body.theme-cyber .btn-sidebar { background-color: rgba(255,0,127,0.1) !important; border: 1px solid #ff007f !important; color: #ff007f !important; box-shadow: 0 0 8px rgba(255,0,127,0.4) !important; }
-        body.theme-cyber button:hover, body.theme-cyber .btn:hover { background-color: #ff007f !important; color: #fff !important; }
-        body.theme-cyber button:hover *, body.theme-cyber .btn:hover * { color: #fff !important; text-shadow: none !important; }
-        body.theme-cyber table th { background-color: #1f0742 !important; color: #00f0ff !important; }
+        .excel-table { border-collapse: collapse; width: 100%; font-size: 0.85rem; text-align: center; }
+        .excel-table th, .excel-table td { border: 1px solid #cbd5e1; padding: 8px; white-space: nowrap; }
+        .excel-table th { background-color: #f1f5f9; font-weight: bold; color: #475569; }
     </style>
 </head>
-<body class="flex h-screen w-full overflow-hidden theme-default">
+<body class="flex h-screen w-full">
 
-    <!-- ARAYÜZ HTML KODLARI (V8.2 ile tamamen aynı kalacak, buraya görseldeki HTML menü ve tablo yapıları gelecek) -->
-    <!-- Önceki iletimdeki <aside> ve <main> bölümlerini aynen buraya yerleştirin -->
+    <!-- Sidebar -->
+    <aside class="w-20 bg-slate-900 text-white flex flex-col items-center py-6 shadow-xl z-20">
+        <div class="mb-8 text-center text-indigo-400">
+            <span class="material-icons text-3xl">sailing</span>
+        </div>
+        <nav class="flex flex-col gap-4 w-full px-2">
+            <button onclick="switchTab('view-dashboard')" class="btn bg-slate-800 text-slate-300 hover:text-white w-full"><span class="material-icons">dashboard</span></button>
+            <button onclick="switchTab('view-add')" class="btn bg-slate-800 text-slate-300 hover:text-white w-full"><span class="material-icons">add_circle</span></button>
+            <button onclick="switchTab('view-reports')" class="btn bg-slate-800 text-slate-300 hover:text-white w-full"><span class="material-icons">analytics</span></button>
+        </nav>
+    </aside>
+
+    <!-- Ana İçerik -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        
+        <!-- Header API Kontrol -->
+        <header class="bg-white border-b border-slate-200 p-4 flex justify-between items-center shadow-sm z-10">
+            <h2 class="text-xl font-bold text-slate-800" id="page-title">Gösterge Paneli</h2>
+            <div class="flex items-center gap-2">
+                <span id="lastUpdated" class="text-xs text-slate-500 font-mono">Veri Bekleniyor</span>
+                <button id="btnFetchPrices" onclick="fetchGsLivePrices()" class="btn bg-indigo-50 text-indigo-600 text-sm border border-indigo-200">
+                    <span class="material-icons text-sm mr-1">sync</span> Fiyatları Çek
+                </button>
+            </div>
+        </header>
+
+        <!-- İçerik Alanı -->
+        <div class="flex-1 overflow-y-auto p-6 bg-slate-50">
+            
+            <!-- Dashboard -->
+            <section id="view-dashboard" class="view-section active">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="card border-t-4 border-emerald-500 text-center">
+                        <h3 class="text-slate-500 text-sm font-bold">Toplam Tip Geliri</h3>
+                        <p id="totalTips" class="text-2xl font-black text-emerald-600 mt-2">$0.00</p>
+                    </div>
+                    <div class="card border-t-4 border-rose-500 text-center">
+                        <h3 class="text-slate-500 text-sm font-bold">Toplam Folyo Gideri</h3>
+                        <p id="totalFolio" class="text-2xl font-black text-rose-600 mt-2">$0.00</p>
+                    </div>
+                    <div class="card border-t-4 border-indigo-500 text-center">
+                        <h3 class="text-slate-500 text-sm font-bold">Son Maaş Yatırımı</h3>
+                        <p class="text-2xl font-black text-indigo-600 mt-2">$3,600.00</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Yeni Kayıt (Cruise Odaklı) -->
+            <section id="view-add" class="view-section">
+                <div class="card max-w-lg mx-auto">
+                    <h3 class="text-lg font-bold mb-4 flex items-center"><span class="material-icons mr-2">edit_document</span> Yeni İşlem Ekle</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500">İşlem Tipi</label>
+                            <select id="entryType" class="w-full p-2 border rounded mt-1 bg-slate-50">
+                                <option value="INCOME">Gelir (Örn: Bahşiş / Tip)</option>
+                                <option value="OUTGOING">Gider (Örn: Folyo Harcaması)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500">Kategori Adı</label>
+                            <input type="text" id="entryCategory" placeholder="Örn: Nakit Tip, Folio Bar" class="w-full p-2 border rounded mt-1">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500">Tutar ($)</label>
+                            <input type="number" id="entryAmount" placeholder="0.00" class="w-full p-2 border rounded mt-1 font-mono">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500">Hesap</label>
+                            <select id="entryAccount" class="w-full p-2 border rounded mt-1 bg-slate-50">
+                                <option value="CASH">Nakit</option>
+                                <option value="FOLIO">Gemi Folyo</option>
+                                <option value="BANK">Banka / Maaş</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500">Gemi / Cruise Kontratı</label>
+                            <input type="text" id="entryCruise" placeholder="Örn: Carnival Contract" value="Carnival Contract" class="w-full p-2 border rounded mt-1 font-bold text-indigo-700">
+                        </div>
+                        <button onclick="saveRecord()" class="btn bg-indigo-600 text-white w-full mt-4 py-3">Kaydet</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Raporlar ve Matris -->
+            <section id="view-reports" class="view-section">
+                <div class="card p-0 border-t-4 border-indigo-500 overflow-hidden">
+                    <div class="p-4 border-b bg-slate-50 flex items-center justify-between">
+                        <h3 class="font-bold text-slate-700 flex items-center">
+                            <span class="material-icons mr-2 text-indigo-500">directions_boat</span> 
+                            Cruise Gider / Gelir Matrisi
+                        </h3>
+                        <span class="text-[9px] font-bold text-indigo-600 bg-indigo-100 px-2 py-1 rounded uppercase">Sadece Folyo & Tip</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="excel-table w-full">
+                            <thead class="bg-indigo-900 text-white">
+                                <tr>
+                                    <th>GEMİ / CRUISE</th>
+                                    <th>TİP GETİRİSİ (+)</th>
+                                    <th>FOLYO HARCAMASI (-)</th>
+                                    <th>NET DURUM</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rep-ship-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
 
 <script>
-// --- OFFLINE API DESTEĞİ İÇİN GÜNCELLENEN GOLDSILVER FONKSİYONU ---
-async function fetchGsLivePrices() {
-    const btn = document.getElementById('btnFetchPrices');
-    
-    // OFFLINE KONTROLÜ
-    if (!navigator.onLine) {
-        btn.innerHTML = "❌ İnternet Yok";
-        btn.classList.add("bg-rose-500", "text-white");
-        setTimeout(() => {
-            btn.innerHTML = "🔄 Verileri Güncelle";
-            btn.classList.remove("bg-rose-500", "text-white");
-        }, 2000);
-        return; // Hata vermeden sistemin IndexedDB verisini kullanmasına izin ver.
+    // --- VERİTABANI ---
+    let records = JSON.parse(localStorage.getItem('finpro_records')) || [];
+
+    // --- SEKME GEÇİŞİ ---
+    function switchTab(tabId) {
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        
+        const titles = {
+            'view-dashboard': 'Gösterge Paneli',
+            'view-add': 'İşlem Ekle',
+            'view-reports': 'Cruise Raporları'
+        };
+        document.getElementById('page-title').innerText = titles[tabId];
+        
+        if (tabId === 'view-reports' || tabId === 'view-dashboard') calculateMatrix();
     }
 
-    btn.innerText = "⏳ Kontrol...";
-    btn.disabled = true;
+    // --- KAYIT EKLEME ---
+    function saveRecord() {
+        const type = document.getElementById('entryType').value;
+        const category = document.getElementById('entryCategory').value.trim();
+        const amount = parseFloat(document.getElementById('entryAmount').value);
+        const account = document.getElementById('entryAccount').value;
+        const cruise = document.getElementById('entryCruise').value.trim();
 
-    try {
-        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pax-gold,kinesis-silver,tether&vs_currencies=try,usd');
-        if (!res.ok) throw new Error("API hatası");
-        
-        const data = await res.json();
-        const troyGram = 31.1034768;
-        
-        const goldGram = data['pax-gold'].try / troyGram;
-        const silverGram = data['kinesis-silver'].try / troyGram;
-        const usdTry = data['tether'].try;
-        
-        gsState.prices.gold.gram = parseFloat(goldGram.toFixed(2));
-        gsState.prices.gold.ons = parseFloat(data['pax-gold'].usd.toFixed(2));
-        gsState.prices.silver.gram = parseFloat(silverGram.toFixed(2));
-        gsState.prices.silver.ons = parseFloat(data['kinesis-silver'].usd.toFixed(2));
-        gsState.prices.usdTry = parseFloat(usdTry.toFixed(2));
-        
-        const nowTime = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-        if (!gsState.priceHistory) gsState.priceHistory = { labels: [], gold: [], silver: [] };
-        
-        if(gsState.priceHistory.labels[gsState.priceHistory.labels.length - 1] !== nowTime){
-            gsState.priceHistory.labels.push(nowTime);
-            gsState.priceHistory.gold.push(gsState.prices.gold.gram);
-            gsState.priceHistory.silver.push(gsState.prices.silver.gram);
-            if(gsState.priceHistory.labels.length > 15) {
-                gsState.priceHistory.labels.shift();
-                gsState.priceHistory.gold.shift();
-                gsState.priceHistory.silver.shift();
-            }
+        if (!category || isNaN(amount) || !cruise) {
+            alert('Lütfen Kategori, Tutar ve Gemi adını eksiksiz girin!');
+            return;
         }
+
+        records.push({
+            id: Date.now(),
+            type: type,
+            categoryName: category,
+            value: amount,
+            account: account,
+            cruise: cruise,
+            isTransfer: false,
+            date: new Date().toISOString()
+        });
+
+        localStorage.setItem('finpro_records', JSON.stringify(records));
+        alert('İşlem başarıyla kaydedildi!');
         
-        document.getElementById('inputPurchaseUsdRate').value = gsState.prices.usdTry;
-        saveGsDataToStorage();
-        updateGsUIForAsset();
-        document.getElementById('lastUpdated').innerText = "Canlı API: " + new Date().toLocaleTimeString('tr-TR');
-        
-    } catch (err) {
-        console.error("API Bağlantı Hatası:", err);
-    } finally {
-        btn.innerText = "🔄 Verileri Güncelle";
-        btn.disabled = false;
+        document.getElementById('entryCategory').value = '';
+        document.getElementById('entryAmount').value = '';
+        calculateMatrix();
     }
-}
 
-// (Önceki iletimdeki tüm diğer JS fonksiyonları aynen buraya yerleştirilecek)
+    // --- CRUISE FOLYO/TİP MATRİSİ & DASHBOARD HESAPLAMA ---
+    function calculateMatrix() {
+        const shipTbody = document.getElementById('rep-ship-tbody');
+        let shipData = {};
+        let totalTipsGlobal = 0;
+        let totalFolioGlobal = 0;
+        
+        records.forEach(r => {
+            let s = r.cruise;
+            if(!s || s === 'INVALID' || s.trim() === '') return;
+            
+            if(!shipData[s]) shipData[s] = { tips: 0, folioSpend: 0 };
+            
+            const cName = String(r.categoryName || '').toUpperCase();
+            const v = r.value || 0;
+            
+            // TİP Şartı: Gelir ve adı Tip/Bahşiş içeriyor
+            if(r.type === 'INCOME' && (cName.includes('TIP') || cName.includes('BAHŞİŞ') || cName.includes('CASH'))) {
+                shipData[s].tips += v;
+                totalTipsGlobal += v;
+            }
+            
+            // FOLYO Şartı: Gider, hesabı FOLIO
+            if(r.type === 'OUTGOING' && r.account === 'FOLIO' && !r.isTransfer) {
+                shipData[s].folioSpend += v;
+                totalFolioGlobal += v;
+            }
+        });
 
+        // Matris Tablosunu Doldur
+        if (shipTbody) {
+            shipTbody.innerHTML = '';
+            Object.keys(shipData).sort().forEach((s, i) => {
+                let d = shipData[s];
+                let net = d.tips - d.folioSpend;
+                let bg = i % 2 === 0 ? "bg-slate-50" : "bg-white";
+                
+                shipTbody.innerHTML += `
+                <tr class="${bg} hover:bg-indigo-50 transition-colors">
+                    <td class="font-black p-3 text-indigo-700">${s}</td>
+                    <td class="text-emerald-600 font-bold p-3 bg-emerald-50">+$${d.tips.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                    <td class="text-rose-500 font-bold p-3 bg-rose-50">-$${d.folioSpend.toLocaleString('en-US', {minimumFractionDigits:2})}</td>
+                    <td class="font-black p-3 border-l ${net >= 0 ? 'text-emerald-700 bg-emerald-100 border-emerald-200' : 'text-rose-700 bg-rose-100 border-rose-200'}">
+                        ${net >= 0 ? '+' : ''}$${net.toLocaleString('en-US', {minimumFractionDigits:2})}
+                    </td>
+                </tr>`;
+            });
+        }
+
+        // Dashboard'u Güncelle
+        document.getElementById('totalTips').innerText = `$${totalTipsGlobal.toLocaleString('en-US', {minimumFractionDigits:2})}`;
+        document.getElementById('totalFolio').innerText = `$${totalFolioGlobal.toLocaleString('en-US', {minimumFractionDigits:2})}`;
+    }
+
+    // --- BEYAZ EKRAN KORUMALI API ÇAĞRISI (3 Saniye Kuralı) ---
+    async function fetchGsLivePrices() {
+        const btn = document.getElementById('btnFetchPrices');
+        const statusText = document.getElementById('lastUpdated');
+        
+        btn.innerText = "⏳ Bekleniyor...";
+        btn.disabled = true;
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 sn sonra iptal
+
+        try {
+            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pax-gold,kinesis-silver,tether&vs_currencies=try,usd', { 
+                signal: controller.signal 
+            });
+            clearTimeout(timeoutId); 
+
+            if (!res.ok) throw new Error("API hatası");
+            const data = await res.json();
+            
+            statusText.innerText = "Canlı API: " + new Date().toLocaleTimeString('tr-TR');
+            btn.innerHTML = `<span class="material-icons text-sm mr-1">sync</span> Güncellendi`;
+
+        } catch (err) {
+            clearTimeout(timeoutId);
+            statusText.innerText = "Bağlantı Yok (Lokal Mod)";
+            btn.innerHTML = "❌ Kısıtlı Ağ";
+            btn.classList.add("bg-rose-100", "text-rose-600");
+        } finally {
+            setTimeout(() => {
+                btn.innerHTML = `<span class="material-icons text-sm mr-1">sync</span> Fiyatları Çek`;
+                btn.classList.remove("bg-rose-100", "text-rose-600");
+                btn.disabled = false;
+            }, 3000);
+        }
+    }
+
+    // İlk açılışta hesaplamaları yap
+    calculateMatrix();
 </script>
 </body>
 </html>
