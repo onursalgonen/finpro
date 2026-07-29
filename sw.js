@@ -1,4 +1,4 @@
-const CACHE_NAME = 'finpro-v8.2-offline-cache-v1';
+const CACHE_NAME = 'finpro-v8.2-offline-cache-v3';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -10,38 +10,34 @@ const ASSETS_TO_CACHE = [
     './libs/material-icons.css'
 ];
 
-// Kurulum Aşamasında Dosyaları İndir ve Cihaza Göm
 self.addEventListener('install', event => {
     event.waitUntil(
-        caches.open(CACHE_NAME)
-        .then(cache => {
-            console.log('Offline dosyalar önbelleğe alınıyor...');
-            return cache.addAll(ASSETS_TO_CACHE);
-        })
+        caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS_TO_CACHE))
     );
     self.skipWaiting();
 });
 
-// Eski Cache'leri Temizle
 self.addEventListener('activate', event => {
     event.waitUntil(
-        caches.keys().then(keys => {
-            return Promise.all(
-                keys.filter(key => key !== CACHE_NAME)
-                .map(key => caches.delete(key))
-            );
-        })
+        caches.keys().then(keys => Promise.all(
+            keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+        ))
     );
 });
 
-// İnternet yokken (Fetch) Cihaz Hafızasından (Cache) Ver
 self.addEventListener('fetch', event => {
     event.respondWith(
-        caches.match(event.request)
-        .then(response => {
-            // Cache'de varsa onu ver, yoksa internetten çek
-            return response || fetch(event.request).catch(() => {
-                console.log("İnternet bağlantısı koptu. Uygulama lokal bellekten çalışıyor.");
+        caches.match(event.request).then(cachedResponse => {
+            if (cachedResponse) return cachedResponse;
+
+            const fetchRequest = fetch(event.request);
+            const timeout = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('Ağ zaman aşımı')), 3000);
+            });
+
+            return Promise.race([fetchRequest, timeout]).catch(() => {
+                console.log("Kısıtlı Wi-Fi algılandı, lokal veri devrede: ", event.request.url);
+                return new Response('', { status: 408, statusText: 'Request Timeout' });
             });
         })
     );
