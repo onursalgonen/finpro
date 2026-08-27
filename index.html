@@ -229,6 +229,7 @@
                     </div>
                     <div class="border-t bg-slate-50 p-4"><h4 class="text-xs font-black uppercase text-slate-400 mb-3">Kayıtlı Özel Raporların</h4><div class="overflow-x-auto"><table class="excel-table text-left w-full"><thead class="bg-rose-100 text-rose-800"><tr><th>Rapor Adı</th><th>Hesap</th><th>İşlem Türü</th><th>Kategori</th><th>Anlık Toplam (Seçili Filtrede)</th><th>Ayarlar</th></tr></thead><tbody id="cr-tbody"></tbody></table></div></div>
                 </div>
+                <div class="card p-0 border-t-4 border-amber-500 overflow-hidden"><div class="p-4 border-b bg-slate-50 flex items-center justify-between"><h3 class="font-bold text-slate-700 flex items-center"><span class="material-icons mr-2 text-amber-500">insights</span> Harcama İndikatör Sistemi</h3><span class="text-[9px] text-slate-400 font-bold uppercase">Bu Ay vs Geçmiş Ay Ortalaması</span></div><div id="indicator-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4"></div></div>
                 <div class="card p-0 border-t-4 border-teal-500 overflow-hidden"><div class="p-4 border-b bg-slate-50 flex items-center justify-between"><h3 class="font-bold text-slate-700 flex items-center"><span class="material-icons mr-2 text-teal-500">grid_on</span> Yıllık Rapor Matrisi (All Time) <span id="legacy-badge" class="text-[9px] text-teal-600 bg-teal-100 px-2 py-0.5 rounded ml-2 uppercase">Eski Kayıtlar Dahil</span></h3><button onclick="clearAllTimeData()" class="text-xs bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1.5 rounded font-bold transition flex items-center shadow-sm"><span class="material-icons text-[14px] mr-1">delete_sweep</span> Sıfırla</button></div><div class="overflow-x-auto"><table class="excel-table text-center w-full"><thead class="bg-slate-800 text-white"><tr><th>YIL / YEAR</th><th>INCOME (Gelir)</th><th>TIPS (Bahşiş)</th><th>TRANSFER (Çıkış)</th><th>TOTAL SPEND (Gider)</th><th>NET FARK</th></tr></thead><tbody id="rep-alltime-tbody"></tbody></table></div></div>
                 <div class="card p-0 border-t-4 border-indigo-500 overflow-hidden"><div class="p-4 border-b bg-slate-50 flex items-center justify-between"><h3 class="font-bold text-slate-700 flex items-center"><span class="material-icons mr-2 text-indigo-500">directions_boat</span> Gemi / Kontrat Bazlı Rapor Matrisi</h3></div><div class="overflow-x-auto"><table class="excel-table text-center w-full"><thead class="bg-indigo-900 text-white"><tr><th>GEMİ (CRUISE)</th><th>INCOME (Gelir)</th><th>TIPS (Bahşiş)</th><th>TRANSFER (Çıkış)</th><th>TOTAL SPEND (Gider)</th><th>NET FARK</th></tr></thead><tbody id="rep-ship-tbody"></tbody></table></div></div>
                 <div class="card p-0 overflow-hidden border-t-4 border-purple-500"><div class="p-4 border-b bg-slate-50 flex items-center"><span class="material-icons mr-2 text-purple-500">account_balance</span><h3 class="font-bold text-slate-700">Aylık Banka Akışı (Bank Account)</h3></div><div class="overflow-x-auto"><table class="excel-table" id="bank-matrix-table"><thead><tr><th>Ay / Month</th><th>Payroll</th><th>Transfer</th><th>DINA</th><th>Purchase</th><th>Fee</th><th>Total</th></tr></thead><tbody></tbody></table></div></div>
@@ -487,7 +488,7 @@
 
         function checkActiveContractForms() { const eCruise = document.getElementById('entry-cruise'); const sShip = document.getElementById('sh-ship'); const extShip = document.getElementById('ext-ship'); if(safakData.isActive) { if(eCruise) { eCruise.value = safakData.name; eCruise.readOnly = true; eCruise.classList.add('bg-indigo-50', 'text-indigo-800'); } if(sShip) { sShip.value = safakData.name; sShip.readOnly = true; sShip.classList.add('bg-indigo-50', 'text-indigo-800'); } if(extShip) { extShip.value = safakData.name; extShip.readOnly = true; extShip.classList.add('bg-indigo-50', 'text-indigo-800'); } } else { if(eCruise) { eCruise.readOnly = false; eCruise.classList.remove('bg-indigo-50', 'text-indigo-800'); if(!editRecordId) eCruise.value = ''; } if(sShip) { sShip.readOnly = false; sShip.classList.remove('bg-indigo-50', 'text-indigo-800'); if(!editShopId) sShip.value = ''; } if(extShip) { extShip.readOnly = false; extShip.classList.remove('bg-indigo-50', 'text-indigo-800'); if(!editExtId) extShip.value = ''; } } }
         
-        function refreshAllViews() { try { checkActiveContractForms(); } catch(e){} try { updateCategorySelect(); } catch(e){} try { renderCategoriesTable(); } catch(e){} try { renderEntriesTable(); } catch(e){} try { renderDashboard(); } catch(e){} try { renderShopping(); } catch(e){} try { renderExtTransfers(); } catch(e){} try { initWalletDenominations(); } catch(e){} try { updateDatalists(); } catch(e){} try { calcSimulation(); } catch(e){} try { renderReportsTab(); } catch(e){} try { renderQtyReport(); } catch(e){} try { renderCustomReports(); } catch(e){} try { calcSafak(); } catch(e){} try { renderPastContracts(); } catch(e){} try { renderSubMatrix(); } catch(e){} }
+        function refreshAllViews() { try { checkActiveContractForms(); } catch(e){} try { updateCategorySelect(); } catch(e){} try { renderCategoriesTable(); } catch(e){} try { renderEntriesTable(); } catch(e){} try { renderDashboard(); } catch(e){} try { renderShopping(); } catch(e){} try { renderExtTransfers(); } catch(e){} try { initWalletDenominations(); } catch(e){} try { updateDatalists(); } catch(e){} try { calcSimulation(); } catch(e){} try { renderReportsTab(); } catch(e){} try { renderQtyReport(); } catch(e){} try { renderIndicators(); } catch(e){} try { renderCustomReports(); } catch(e){} try { calcSafak(); } catch(e){} try { renderPastContracts(); } catch(e){} try { renderSubMatrix(); } catch(e){} }
 
         function updateDatalists() { const uniqueCruises = [...new Set(records.map(r => r.cruise).filter(c => c && c !== 'INVALID'))]; ['ship-datalist', 'ship-datalist-form', 'ship-datalist-shop', 'ship-datalist-ext'].forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = uniqueCruises.map(c => `<option value="${c}">`).join(''); }); const uniqueSubCats = [...new Set(records.map(r => r.subCategory).filter(c => c && c.trim() !== ''))]; const subList = document.getElementById('subcat-list'); if(subList) subList.innerHTML = uniqueSubCats.map(c => `<option value="${c}">`).join(''); }
         function getFilteredRecords(recs) { const y = document.getElementById('global-year').value; const s = document.getElementById('global-ship').value.trim().toUpperCase(); let f = recs; if(y && y !== 'ALL') f = f.filter(r => r.date && String(r.date).startsWith(y)); if(s && s !== '' && s !== 'TÜM GEMILER' && s !== 'TÜM GEMİLER' && s !== 'ALL') f = f.filter(r => r.cruise && String(r.cruise).toUpperCase() === s); return f; }
@@ -541,6 +542,92 @@ function renderQtyReport() {
                 tbody.innerHTML += `<tr class="border-b hover:bg-slate-50"><td class="font-bold text-slate-800 p-2.5">${row.main}</td><td class="text-slate-500 p-2.5">${row.sub}</td><td class="text-center font-black text-cyan-700 p-2.5">${row.qty}</td><td class="text-right font-bold text-slate-700 p-2.5">$${row.total.toFixed(2)}</td></tr>`;
             });
             tfoot.innerHTML = `<tr><td colspan="2" class="p-3 text-right">GENEL TOPLAM:</td><td class="p-3 text-center text-cyan-800">${grandQty}</td><td class="p-3 text-right">$${grandTotal.toFixed(2)}</td></tr>`;
+        }
+
+        function renderIndicators() {
+            const grid = document.getElementById('indicator-grid'); if(!grid) return;
+            grid.innerHTML = '';
+            const allMonths = [...new Set(records.filter(r => r.date).map(r => String(r.date).substring(0,7)))].sort();
+            if(allMonths.length === 0) { grid.innerHTML = '<p class="text-xs text-slate-400 italic p-2 md:col-span-3">Henüz yeterli veri yok.</p>'; return; }
+
+            // Aynı Aylık Gider Matrisi'nde kullanılan kategori eşleme mantığına sadık kalınır.
+            const categoryDefs = [
+                { key: 'internet', label: 'İnternet', icon: 'wifi', match: c => c.includes('internet') },
+                { key: 'bar', label: 'Bar', icon: 'local_bar', match: c => c.includes('bar') },
+                { key: 'water', label: 'Su', icon: 'water_drop', match: c => c.includes('water') || c.includes('su') },
+                { key: 'market', label: 'Market', icon: 'storefront', match: c => c.includes('market') },
+                { key: 'amazon', label: 'Amazon / Alışveriş', icon: 'shopping_cart', match: c => c.includes('amazon') || c.includes('shopping') || c.includes('purchase') },
+                { key: 'total', label: 'Toplam Gider', icon: 'payments', match: null }
+            ];
+
+            const monthlyTotals = {}; categoryDefs.forEach(cd => { monthlyTotals[cd.key] = {}; allMonths.forEach(m => monthlyTotals[cd.key][m] = 0); });
+
+            records.filter(r => r.type === 'OUTGOING' && !r.isTransfer && r.date).forEach(r => {
+                const m = String(r.date).substring(0,7); const v = r.value || 0; const c = String(r.categoryName || '').toLowerCase();
+                if(monthlyTotals.total[m] !== undefined) monthlyTotals.total[m] += v;
+                categoryDefs.forEach(cd => { if(cd.match && cd.match(c) && monthlyTotals[cd.key][m] !== undefined) monthlyTotals[cd.key][m] += v; });
+            });
+
+            const curMonth = allMonths[allMonths.length - 1];
+            const prevMonth = allMonths.length > 1 ? allMonths[allMonths.length - 2] : null;
+            const histMonths = allMonths.slice(0, -1);
+
+            let cardsHTML = '';
+            categoryDefs.forEach(cd => {
+                const monthsData = monthlyTotals[cd.key];
+                const curVal = monthsData[curMonth] || 0;
+                const prevVal = prevMonth !== null ? (monthsData[prevMonth] || 0) : null;
+                const histVals = histMonths.map(m => monthsData[m] || 0);
+                const avg = histVals.length > 0 ? (histVals.reduce((a,b) => a+b, 0) / histVals.length) : null;
+
+                if(curVal === 0 && (!avg || avg === 0) && (!prevVal || prevVal === 0)) return; // hiç veri yoksa kartı gösterme
+
+                let changeVsPrevPct = null;
+                if(prevVal !== null && prevVal > 0) changeVsPrevPct = ((curVal - prevVal) / prevVal) * 100;
+                else if(prevVal === 0 && curVal > 0) changeVsPrevPct = 100;
+
+                let changeVsAvgPct = null;
+                if(avg !== null && avg > 0) changeVsAvgPct = ((curVal - avg) / avg) * 100;
+
+                let level = 'normal';
+                if(changeVsAvgPct !== null) {
+                    if(changeVsAvgPct >= 25) level = 'danger';
+                    else if(changeVsAvgPct >= 10) level = 'warn';
+                    else if(changeVsAvgPct <= -10) level = 'good';
+                }
+
+                const styles = {
+                    danger: { bg:'bg-red-50', border:'border-red-300', text:'text-red-700', badge:'bg-red-600', msg:'Ortalamanın çok üzerinde' },
+                    warn:   { bg:'bg-amber-50', border:'border-amber-300', text:'text-amber-700', badge:'bg-amber-500', msg:'Ortalamanın üzerinde' },
+                    good:   { bg:'bg-emerald-50', border:'border-emerald-300', text:'text-emerald-700', badge:'bg-emerald-600', msg:'Ortalamanın altında' },
+                    normal: { bg:'bg-slate-50', border:'border-slate-200', text:'text-slate-600', badge:'bg-slate-500', msg:'Normal seyir' }
+                };
+                const st = styles[level];
+
+                let prevArrowHTML = '<span class="text-slate-400 font-bold text-[10px]">Önceki ay verisi yok</span>';
+                if(changeVsPrevPct !== null) {
+                    if(changeVsPrevPct > 0.05) prevArrowHTML = `<span class="text-red-500 font-bold flex items-center text-[11px]"><span class="material-icons text-[13px] mr-0.5">arrow_upward</span>%${Math.abs(changeVsPrevPct).toFixed(1)} (geçen aya göre)</span>`;
+                    else if(changeVsPrevPct < -0.05) prevArrowHTML = `<span class="text-emerald-600 font-bold flex items-center text-[11px]"><span class="material-icons text-[13px] mr-0.5">arrow_downward</span>%${Math.abs(changeVsPrevPct).toFixed(1)} (geçen aya göre)</span>`;
+                    else prevArrowHTML = '<span class="text-slate-400 font-bold text-[11px]">Geçen ayla aynı</span>';
+                }
+
+                cardsHTML += `<div class="p-4 rounded-xl border ${st.border} ${st.bg} shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="flex items-center font-bold text-sm ${st.text}"><span class="material-icons text-[18px] mr-1.5">${cd.icon}</span>${cd.label}</span>
+                        <span class="text-[9px] font-black uppercase text-white px-2 py-0.5 rounded-full whitespace-nowrap ${st.badge}">${st.msg}</span>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div><p class="text-[9px] text-slate-400 uppercase font-bold">${formatMonth(curMonth)}</p><p class="text-xl font-black ${st.text}">$${curVal.toFixed(2)}</p></div>
+                        <div class="text-right">${prevMonth !== null ? `<p class="text-[9px] text-slate-400 uppercase font-bold">Önceki Ay</p><p class="text-xs font-bold text-slate-500">$${prevVal.toFixed(2)}</p>` : ''}</div>
+                    </div>
+                    <div class="flex items-center justify-between mt-2.5 pt-2 border-t ${st.border}">
+                        ${prevArrowHTML}
+                        <span class="text-[10px] text-slate-500 font-semibold">${avg !== null ? `Ortalama: $${avg.toFixed(2)}` : 'Ortalama: -'}</span>
+                    </div>
+                </div>`;
+            });
+
+            grid.innerHTML = cardsHTML || '<p class="text-xs text-slate-400 italic p-2 md:col-span-3">Henüz karşılaştırma yapılacak yeterli veri yok.</p>';
         }
 
                 function calcSafak() { const start = new Date(safakData.start); const end = new Date(safakData.end); const today = new Date(); if(isNaN(start) || isNaN(end)) { document.getElementById('sf-tot').innerText = "0 GÜN"; document.getElementById('sf-done').innerText = "0 GÜN"; document.getElementById('sf-rem').innerText = "0 GÜN"; document.getElementById('sf-rem-month').innerText = "0 Ay 0 Gün"; document.getElementById('sf-pct').innerText = "%0"; document.getElementById('safak-grid-container').innerHTML = ''; document.getElementById('dash-safak-rem').innerText = "KONTRAT YOK"; return; } const totalDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24)); let doneDays = Math.ceil((today - start) / (1000 * 60 * 60 * 24)); if(doneDays < 0) doneDays = 0; if(doneDays > totalDays) doneDays = totalDays; const remDays = totalDays - doneDays; const pct = totalDays > 0 ? Math.round((doneDays / totalDays) * 100) : 0; const remMonths = Math.floor(remDays / 30); const remDaysMod = remDays % 30; document.getElementById('sf-tot').innerText = totalDays + " GÜN"; document.getElementById('sf-done').innerText = doneDays + " GÜN"; document.getElementById('sf-rem').innerText = remDays + " GÜN"; document.getElementById('sf-rem-month').innerText = `${remMonths} Ay ${remDaysMod} Gün`; document.getElementById('sf-pct').innerText = "%" + pct; document.getElementById('dash-safak-title').innerText = (safakData.name || 'KONTRAT') + ' ŞAFAK'; document.getElementById('dash-safak-rem').innerText = remDays + " GÜN KALDI"; document.getElementById('dash-safak-tot').innerText = `${doneDays}/${totalDays} Gün`; document.getElementById('dash-safak-pct').innerText = `%${pct}`; const grid = document.getElementById('safak-grid-container'); grid.innerHTML = ''; for(let i = 1; i <= totalDays; i++) { let isPassed = i > remDays; let content = isPassed ? `<span class="material-icons text-slate-500 text-[14px]">close</span>` : i; let colorClass = isPassed ? 'bg-slate-800/60 shadow-inner' : 'bg-red-600 text-white font-black shadow-md'; grid.innerHTML += `<div class="safak-box ${colorClass}">${content}</div>`; } }
