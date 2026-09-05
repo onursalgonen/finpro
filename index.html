@@ -706,6 +706,7 @@ function renderQtyReport() {
                     recs.forEach(r => {
                         const c = String(r.categoryName || '').toLowerCase();
                         if(c.includes('payroll')) return; // Payroll hariç
+                        if(c.includes('transfer')) return; // Transfer çıkış/girişleri hariç
                         const v = r.value || 0; const s = r.cruise;
                         if(r.type === 'INCOME') cruiseIncome[s] = (cruiseIncome[s] || 0) + v;
                         else if(r.type === 'OUTGOING') cruiseExpense[s] = (cruiseExpense[s] || 0) + v;
