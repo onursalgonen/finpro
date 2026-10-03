@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.1) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.2) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -56,7 +56,7 @@
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.1 <span class="text-slate-400 font-normal ml-1">Master</span> <span class="text-emerald-400 font-normal ml-1.5" id="app-version-counter">Rev #0</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.2 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -453,7 +453,7 @@
             else { btnT.className = "flex-1 py-3 font-bold text-sm text-indigo-600 bg-white transition"; btnN.className = "flex-1 py-3 font-bold text-sm text-slate-500 hover:bg-slate-100 border-r transition"; }
         }
 
-        const DB_REC = 'finAppV79_Records'; const DB_CAT = 'finAppV79_Categories'; const DB_SHOP = 'finAppV79_Shopping'; const DB_WAL = 'finAppV79_WalletNotes'; const DB_SIM = 'finAppV79_Sim'; const DB_SFK = 'finAppV79_Safak'; const DB_PAST = 'finAppV79_PastContracts'; const DB_EXT = 'finAppV79_ExtTransfers'; const DB_CR = 'finAppV81_CustomReports'; const DB_CRU = 'finAppV82_KnownCruises'; const DB_REV = 'finAppV82_Revision'; const DB_ROUTE = 'finAppV83_KnownRoutes'; const DB_LAST_ROUTE = 'finAppV83_LastEntryRoute';
+        const DB_REC = 'finAppV79_Records'; const DB_CAT = 'finAppV79_Categories'; const DB_SHOP = 'finAppV79_Shopping'; const DB_WAL = 'finAppV79_WalletNotes'; const DB_SIM = 'finAppV79_Sim'; const DB_SFK = 'finAppV79_Safak'; const DB_PAST = 'finAppV79_PastContracts'; const DB_EXT = 'finAppV79_ExtTransfers'; const DB_CR = 'finAppV81_CustomReports'; const DB_CRU = 'finAppV82_KnownCruises'; const DB_ROUTE = 'finAppV83_KnownRoutes'; const DB_LAST_ROUTE = 'finAppV83_LastEntryRoute';
         let records = JSON.parse(localStorage.getItem(DB_REC)) || [];
         let shoppingRecords = JSON.parse(localStorage.getItem(DB_SHOP)) || [];
         let extTransfers = JSON.parse(localStorage.getItem(DB_EXT)) || [];
@@ -463,7 +463,6 @@
         let safakData = JSON.parse(localStorage.getItem(DB_SFK)) || {isActive: false, name: '', start: '', end: ''};
         let pastContracts = JSON.parse(localStorage.getItem(DB_PAST)) || [];
         let knownCruises = JSON.parse(localStorage.getItem(DB_CRU)) || [];
-        let revisionCounter = parseInt(localStorage.getItem(DB_REV)) || 0;
         let knownRoutes = JSON.parse(localStorage.getItem(DB_ROUTE)) || [];
         let lastEntryRoute = localStorage.getItem(DB_LAST_ROUTE) || '';
         let categories = JSON.parse(localStorage.getItem(DB_CAT)) || [
@@ -482,8 +481,7 @@
             refreshAllViews(); updateSyncUI();
         }
         
-        function saveLocalOnly() { try { revisionCounter++; localStorage.setItem(DB_REC, JSON.stringify(records)); localStorage.setItem(DB_CAT, JSON.stringify(categories)); localStorage.setItem(DB_SHOP, JSON.stringify(shoppingRecords)); localStorage.setItem(DB_WAL, JSON.stringify(walletNotes)); localStorage.setItem(DB_SIM, JSON.stringify(simulation)); localStorage.setItem(DB_SFK, JSON.stringify(safakData)); localStorage.setItem(DB_PAST, JSON.stringify(pastContracts)); localStorage.setItem(DB_EXT, JSON.stringify(extTransfers)); localStorage.setItem(DB_CR, JSON.stringify(customReports)); localStorage.setItem(DB_CRU, JSON.stringify(knownCruises)); localStorage.setItem(DB_ROUTE, JSON.stringify(knownRoutes)); localStorage.setItem(DB_REV, String(revisionCounter)); renderVersionCounter(); } catch (e) {} }
-        function renderVersionCounter() { const el = document.getElementById('app-version-counter'); if(el) el.innerText = 'Rev #' + revisionCounter; }
+        function saveLocalOnly() { try { localStorage.setItem(DB_REC, JSON.stringify(records)); localStorage.setItem(DB_CAT, JSON.stringify(categories)); localStorage.setItem(DB_SHOP, JSON.stringify(shoppingRecords)); localStorage.setItem(DB_WAL, JSON.stringify(walletNotes)); localStorage.setItem(DB_SIM, JSON.stringify(simulation)); localStorage.setItem(DB_SFK, JSON.stringify(safakData)); localStorage.setItem(DB_PAST, JSON.stringify(pastContracts)); localStorage.setItem(DB_EXT, JSON.stringify(extTransfers)); localStorage.setItem(DB_CR, JSON.stringify(customReports)); localStorage.setItem(DB_CRU, JSON.stringify(knownCruises)); localStorage.setItem(DB_ROUTE, JSON.stringify(knownRoutes)); } catch (e) {} }
         function saveData() { saveLocalOnly(); triggerAutoSync(); }
         
         async function exportData() {
@@ -530,7 +528,7 @@
 
         function checkActiveContractForms() { const eCruise = document.getElementById('entry-cruise'); const sShip = document.getElementById('sh-ship'); const extShip = document.getElementById('ext-ship'); const trCruise = document.getElementById('tr-cruise'); if(safakData.isActive) { if(eCruise) { eCruise.value = safakData.name; eCruise.readOnly = true; eCruise.classList.add('bg-indigo-50', 'text-indigo-800'); } if(sShip) { sShip.value = safakData.name; sShip.readOnly = true; sShip.classList.add('bg-indigo-50', 'text-indigo-800'); } if(extShip) { extShip.value = safakData.name; extShip.readOnly = true; extShip.classList.add('bg-indigo-50', 'text-indigo-800'); } if(trCruise) { trCruise.value = safakData.name; trCruise.readOnly = true; trCruise.classList.add('bg-indigo-50', 'text-indigo-800'); } } else { if(eCruise) { eCruise.readOnly = false; eCruise.classList.remove('bg-indigo-50', 'text-indigo-800'); } if(sShip) { sShip.readOnly = false; sShip.classList.remove('bg-indigo-50', 'text-indigo-800'); if(!editShopId) sShip.value = ''; } if(extShip) { extShip.readOnly = false; extShip.classList.remove('bg-indigo-50', 'text-indigo-800'); if(!editExtId) extShip.value = ''; } if(trCruise) { trCruise.readOnly = false; trCruise.classList.remove('bg-indigo-50', 'text-indigo-800'); } } }
         
-        function refreshAllViews() { try { updateDatalists(); } catch(e){} try { checkActiveContractForms(); } catch(e){} try { updateCategorySelect(); } catch(e){} try { renderCategoriesTable(); } catch(e){} try { renderEntriesTable(); } catch(e){} try { renderDashboard(); } catch(e){} try { renderShopping(); } catch(e){} try { renderExtTransfers(); } catch(e){} try { initWalletDenominations(); } catch(e){} try { calcSimulation(); } catch(e){} try { renderReportsTab(); } catch(e){} try { renderQtyReport(); } catch(e){} try { renderIndicators('indicator-grid'); renderIndicators('indicator-grid-dash'); } catch(e){} try { renderIncomeIndicators('indicator-grid-income'); renderIncomeIndicators('indicator-grid-income-dash'); } catch(e){} try { renderCruiseComparison(); } catch(e){} try { renderCruiseDetailReport(); } catch(e){} try { renderCruiseIndicator(); } catch(e){} try { renderKnownCruises(); } catch(e){} try { renderKnownRoutes(); } catch(e){} try { renderVersionCounter(); } catch(e){} try { renderCustomReports(); } catch(e){} try { calcSafak(); } catch(e){} try { renderPastContracts(); } catch(e){} try { renderSubMatrix(); } catch(e){} }
+        function refreshAllViews() { try { updateDatalists(); } catch(e){} try { checkActiveContractForms(); } catch(e){} try { updateCategorySelect(); } catch(e){} try { renderCategoriesTable(); } catch(e){} try { renderEntriesTable(); } catch(e){} try { renderDashboard(); } catch(e){} try { renderShopping(); } catch(e){} try { renderExtTransfers(); } catch(e){} try { initWalletDenominations(); } catch(e){} try { calcSimulation(); } catch(e){} try { renderReportsTab(); } catch(e){} try { renderQtyReport(); } catch(e){} try { renderIndicators('indicator-grid'); renderIndicators('indicator-grid-dash'); } catch(e){} try { renderIncomeIndicators('indicator-grid-income'); renderIncomeIndicators('indicator-grid-income-dash'); } catch(e){} try { renderCruiseComparison(); } catch(e){} try { renderCruiseDetailReport(); } catch(e){} try { renderCruiseIndicator(); } catch(e){} try { renderKnownCruises(); } catch(e){} try { renderKnownRoutes(); } catch(e){} try { renderCustomReports(); } catch(e){} try { calcSafak(); } catch(e){} try { renderPastContracts(); } catch(e){} try { renderSubMatrix(); } catch(e){} }
 
         function updateDatalists() {
             const activeName = (safakData.isActive && safakData.name) ? safakData.name.toUpperCase() : null;
@@ -1183,14 +1181,14 @@ function renderQtyReport() {
             else { badge.classList.add('hidden'); }
         }
 
-        function getFullDataSync() { return { records, categories, shoppingRecords, walletNotes, simulation, safakData, pastContracts, extTransfers, customReports, gsState, knownCruises, knownRoutes, revisionCounter }; }
+        function getFullDataSync() { return { records, categories, shoppingRecords, walletNotes, simulation, safakData, pastContracts, extTransfers, customReports, gsState, knownCruises, knownRoutes }; }
         function triggerAutoSync() { if (connections.length > 0) { const syncPayload = { type: 'AUTO_UPDATE', data: getFullDataSync(), sender: myDeviceName }; connections.forEach(c => c.send(syncPayload)); } }
 
         function handleSyncData(payload, sourceConn) {
             if(!payload || !payload.data) return;
             try {
                 const d = payload.data;
-                if(d.records) records = d.records; if(d.categories) categories = d.categories; if(d.shoppingRecords) shoppingRecords = d.shoppingRecords; if(d.walletNotes) walletNotes = d.walletNotes; if(d.simulation) simulation = d.simulation; if(d.safakData) safakData = d.safakData; if(d.pastContracts) pastContracts = d.pastContracts; if(d.extTransfers) extTransfers = d.extTransfers; if(d.customReports) customReports = d.customReports; if(d.gsState) gsState = d.gsState; if(d.knownCruises) knownCruises = d.knownCruises; if(d.knownRoutes) knownRoutes = d.knownRoutes; if(typeof d.revisionCounter === 'number' && d.revisionCounter > revisionCounter) revisionCounter = d.revisionCounter;
+                if(d.records) records = d.records; if(d.categories) categories = d.categories; if(d.shoppingRecords) shoppingRecords = d.shoppingRecords; if(d.walletNotes) walletNotes = d.walletNotes; if(d.simulation) simulation = d.simulation; if(d.safakData) safakData = d.safakData; if(d.pastContracts) pastContracts = d.pastContracts; if(d.extTransfers) extTransfers = d.extTransfers; if(d.customReports) customReports = d.customReports; if(d.gsState) gsState = d.gsState; if(d.knownCruises) knownCruises = d.knownCruises; if(d.knownRoutes) knownRoutes = d.knownRoutes;
                 saveLocalOnly(); saveGsDataToStorage();
                 if(isHost && sourceConn) { connections.forEach(c => { if(c.peer !== sourceConn.peer) { c.send({ type: 'AUTO_UPDATE', data: d, sender: payload.sender }); } }); }
                 refreshAllViews(); if(document.getElementById('view-goldsilver').classList.contains('active')) { updateGsUIForAsset(); }
