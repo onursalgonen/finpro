@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.4) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.5) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -56,7 +56,7 @@
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.4 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.5 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -219,33 +219,37 @@
                     <div onclick="document.getElementById('nav-wallet').click()" class="card bg-gradient-to-r from-emerald-50 to-white border-emerald-200 cursor-pointer hover:shadow-md transition flex items-center justify-between p-4"><div class="flex items-center"><span class="material-icons text-emerald-500 mr-3 text-3xl">account_balance_wallet</span><div><p class="text-[10px] font-bold uppercase text-slate-500">Sistem vs Fiziki Sayım</p><h4 class="font-black text-slate-800">Cüzdan Farkı</h4></div></div><p class="text-2xl font-black text-slate-800" id="dash-link-wallet-diff">$0.00</p></div>
                     <div onclick="document.getElementById('nav-shopping').click()" class="card bg-gradient-to-r from-blue-50 to-white border-blue-200 cursor-pointer hover:shadow-md transition flex items-center justify-between p-4"><div class="flex items-center"><span class="material-icons text-blue-500 mr-3 text-3xl">shopping_cart</span><div><p class="text-[10px] font-bold uppercase text-slate-500">Kayıt vs Siparişler</p><h4 class="font-black text-slate-800">Alışveriş Farkı</h4></div></div><p class="text-2xl font-black text-slate-800" id="dash-link-shop-diff">$0.00</p></div>
                 </div>
-                <div class="flex justify-end mb-6">
-                <div class="card p-0 overflow-hidden border-t-4 border-red-500 w-full max-w-[260px]">
-                    <div class="p-2.5 border-b bg-slate-50 flex items-center justify-between">
-                        <h3 class="font-bold text-slate-700 flex items-center text-xs"><span class="material-icons mr-1 text-red-500 text-base">calendar_month</span> Şafak Takvimi</h3>
-                        <div class="flex items-center gap-0.5">
-                            <button onclick="shiftDashCalendar(-1)" class="p-0.5 rounded hover:bg-slate-200 text-slate-500 transition"><span class="material-icons text-sm">chevron_left</span></button>
-                            <span id="dash-cal-title" class="text-[10px] font-bold text-slate-700 w-16 text-center">-</span>
-                            <button onclick="shiftDashCalendar(1)" class="p-0.5 rounded hover:bg-slate-200 text-slate-500 transition"><span class="material-icons text-sm">chevron_right</span></button>
+                <div class="flex flex-col lg:flex-row gap-6 mb-8 items-start">
+                    <div class="flex-1 w-full min-w-0">
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Hesap Özetleri <span class="text-indigo-500 ml-2" id="dash-filter-info"></span></h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="card border-t-4 border-blue-500"><div class="flex justify-between mb-4"><h3 class="font-bold text-lg">Folio Hesabı</h3><span class="bg-blue-50 text-blue-600 text-[10px] px-2 py-1 rounded font-bold uppercase">Gemi İçi</span></div><div class="space-y-2 text-sm"><div class="flex justify-between"><span>Gelir:</span><span class="font-bold text-emerald-600" id="dash-f-in">$0.00</span></div><div class="flex justify-between"><span>Gider:</span><span class="font-bold text-red-500" id="dash-f-out">-$0.00</span></div><div class="flex justify-between border-t pt-2 mt-2 font-bold"><span>Net Durum:</span><span class="font-black text-lg" id="dash-f-net">$0.00</span></div></div></div>
+                            <div class="card border-t-4 border-purple-500"><div class="flex justify-between mb-4"><h3 class="font-bold text-lg">Banka (Kart)</h3><span class="bg-purple-50 text-purple-600 text-[10px] px-2 py-1 rounded font-bold uppercase">Şirket ATM</span></div><div class="space-y-2 text-sm"><div class="flex justify-between"><span>Gelir:</span><span class="font-bold text-emerald-600" id="dash-b-in">$0.00</span></div><div class="flex justify-between"><span>Gider:</span><span class="font-bold text-red-500" id="dash-b-out">-$0.00</span></div><div class="flex justify-between border-t pt-2 mt-2 font-bold"><span>Net Durum:</span><span class="font-black text-lg" id="dash-b-net">$0.00</span></div></div></div>
+                            <div class="card border-t-4 border-emerald-500"><div class="flex justify-between mb-4"><h3 class="font-bold text-lg">Cüzdan</h3><span class="bg-emerald-50 text-emerald-600 text-[10px] px-2 py-1 rounded font-bold uppercase">Nakit</span></div><div class="space-y-2 text-sm"><div class="flex justify-between"><span>Gelir:</span><span class="font-bold text-emerald-600" id="dash-w-in">$0.00</span></div><div class="flex justify-between"><span>Gider:</span><span class="font-bold text-red-500" id="dash-w-out">-$0.00</span></div><div class="flex justify-between border-t pt-2 mt-2 font-bold"><span>Net Durum:</span><span class="font-black text-lg" id="dash-w-net">$0.00</span></div></div></div>
                         </div>
                     </div>
-                    <div class="p-2">
-                        <div class="grid grid-cols-7 gap-0.5 mb-1 text-center">
-                            <span class="text-[7px] font-bold text-slate-400 uppercase">P</span><span class="text-[7px] font-bold text-slate-400 uppercase">S</span><span class="text-[7px] font-bold text-slate-400 uppercase">Ç</span><span class="text-[7px] font-bold text-slate-400 uppercase">P</span><span class="text-[7px] font-bold text-slate-400 uppercase">C</span><span class="text-[7px] font-bold text-slate-400 uppercase">C</span><span class="text-[7px] font-bold text-slate-400 uppercase">P</span>
+                    <div class="w-full lg:w-[260px] flex-shrink-0">
+                    <div class="card p-0 overflow-hidden border-t-4 border-red-500">
+                        <div class="p-2.5 border-b bg-slate-50 flex items-center justify-between">
+                            <h3 class="font-bold text-slate-700 flex items-center text-xs"><span class="material-icons mr-1 text-red-500 text-base">calendar_month</span> Şafak Takvimi</h3>
+                            <div class="flex items-center gap-0.5">
+                                <button onclick="shiftDashCalendar(-1)" class="p-0.5 rounded hover:bg-slate-200 text-slate-500 transition"><span class="material-icons text-sm">chevron_left</span></button>
+                                <span id="dash-cal-title" class="text-[10px] font-bold text-slate-700 w-16 text-center">-</span>
+                                <button onclick="shiftDashCalendar(1)" class="p-0.5 rounded hover:bg-slate-200 text-slate-500 transition"><span class="material-icons text-sm">chevron_right</span></button>
+                            </div>
                         </div>
-                        <div id="dash-calendar-grid" class="grid grid-cols-7 gap-0.5"></div>
-                        <div class="flex items-center justify-center gap-2 mt-2 pt-2 border-t text-[7px] font-bold text-slate-400 uppercase">
-                            <span class="flex items-center"><span class="w-2 h-2 rounded bg-red-600 inline-block mr-1"></span> Bugün</span>
-                            <span class="flex items-center"><span class="w-2 h-2 rounded bg-red-50 border border-red-200 inline-block mr-1"></span> Kontrat</span>
+                        <div class="p-2">
+                            <div class="grid grid-cols-7 gap-0.5 mb-1 text-center">
+                                <span class="text-[7px] font-bold text-slate-400 uppercase">P</span><span class="text-[7px] font-bold text-slate-400 uppercase">S</span><span class="text-[7px] font-bold text-slate-400 uppercase">Ç</span><span class="text-[7px] font-bold text-slate-400 uppercase">P</span><span class="text-[7px] font-bold text-slate-400 uppercase">C</span><span class="text-[7px] font-bold text-slate-400 uppercase">C</span><span class="text-[7px] font-bold text-slate-400 uppercase">P</span>
+                            </div>
+                            <div id="dash-calendar-grid" class="grid grid-cols-7 gap-0.5"></div>
+                            <div class="flex items-center justify-center gap-2 mt-2 pt-2 border-t text-[7px] font-bold text-slate-400 uppercase">
+                                <span class="flex items-center"><span class="w-2 h-2 rounded bg-red-600 inline-block mr-1"></span> Bugün</span>
+                                <span class="flex items-center"><span class="w-2 h-2 rounded bg-red-50 border border-red-200 inline-block mr-1"></span> Kontrat</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                </div>
-                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Hesap Özetleri <span class="text-indigo-500 ml-2" id="dash-filter-info"></span></h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="card border-t-4 border-blue-500"><div class="flex justify-between mb-4"><h3 class="font-bold text-lg">Folio Hesabı</h3><span class="bg-blue-50 text-blue-600 text-[10px] px-2 py-1 rounded font-bold uppercase">Gemi İçi</span></div><div class="space-y-2 text-sm"><div class="flex justify-between"><span>Gelir:</span><span class="font-bold text-emerald-600" id="dash-f-in">$0.00</span></div><div class="flex justify-between"><span>Gider:</span><span class="font-bold text-red-500" id="dash-f-out">-$0.00</span></div><div class="flex justify-between border-t pt-2 mt-2 font-bold"><span>Net Durum:</span><span class="font-black text-lg" id="dash-f-net">$0.00</span></div></div></div>
-                    <div class="card border-t-4 border-purple-500"><div class="flex justify-between mb-4"><h3 class="font-bold text-lg">Banka (Kart)</h3><span class="bg-purple-50 text-purple-600 text-[10px] px-2 py-1 rounded font-bold uppercase">Şirket ATM</span></div><div class="space-y-2 text-sm"><div class="flex justify-between"><span>Gelir:</span><span class="font-bold text-emerald-600" id="dash-b-in">$0.00</span></div><div class="flex justify-between"><span>Gider:</span><span class="font-bold text-red-500" id="dash-b-out">-$0.00</span></div><div class="flex justify-between border-t pt-2 mt-2 font-bold"><span>Net Durum:</span><span class="font-black text-lg" id="dash-b-net">$0.00</span></div></div></div>
-                    <div class="card border-t-4 border-emerald-500"><div class="flex justify-between mb-4"><h3 class="font-bold text-lg">Cüzdan</h3><span class="bg-emerald-50 text-emerald-600 text-[10px] px-2 py-1 rounded font-bold uppercase">Nakit</span></div><div class="space-y-2 text-sm"><div class="flex justify-between"><span>Gelir:</span><span class="font-bold text-emerald-600" id="dash-w-in">$0.00</span></div><div class="flex justify-between"><span>Gider:</span><span class="font-bold text-red-500" id="dash-w-out">-$0.00</span></div><div class="flex justify-between border-t pt-2 mt-2 font-bold"><span>Net Durum:</span><span class="font-black text-lg" id="dash-w-net">$0.00</span></div></div></div>
+                    </div>
                 </div>
                 <div class="card p-0 border-t-4 border-amber-500 overflow-hidden"><div class="p-4 border-b bg-slate-50 flex items-center justify-between"><h3 class="font-bold text-slate-700 flex items-center"><span class="material-icons mr-2 text-amber-500">insights</span> Harcama İndikatörleri</h3><span class="text-[9px] text-slate-400 font-bold uppercase">Bu Ay vs Geçmiş Ay Ortalaması</span></div><div id="indicator-grid-dash" class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4"></div></div>
                 <div class="card p-0 border-t-4 border-emerald-500 overflow-hidden"><div class="p-4 border-b bg-slate-50 flex items-center justify-between"><h3 class="font-bold text-slate-700 flex items-center"><span class="material-icons mr-2 text-emerald-500">trending_up</span> Gelir İndikatörleri</h3><span class="text-[9px] text-slate-400 font-bold uppercase">Bu Ay vs Geçmiş Ay Ortalaması</span></div><div id="indicator-grid-income-dash" class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4"></div></div>
