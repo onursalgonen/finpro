@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.5) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.6) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -56,7 +56,7 @@
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.5 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.6 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -253,6 +253,7 @@
                 </div>
                 <div class="card p-0 border-t-4 border-amber-500 overflow-hidden"><div class="p-4 border-b bg-slate-50 flex items-center justify-between"><h3 class="font-bold text-slate-700 flex items-center"><span class="material-icons mr-2 text-amber-500">insights</span> Harcama İndikatörleri</h3><span class="text-[9px] text-slate-400 font-bold uppercase">Bu Ay vs Geçmiş Ay Ortalaması</span></div><div id="indicator-grid-dash" class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4"></div></div>
                 <div class="card p-0 border-t-4 border-emerald-500 overflow-hidden"><div class="p-4 border-b bg-slate-50 flex items-center justify-between"><h3 class="font-bold text-slate-700 flex items-center"><span class="material-icons mr-2 text-emerald-500">trending_up</span> Gelir İndikatörleri</h3><span class="text-[9px] text-slate-400 font-bold uppercase">Bu Ay vs Geçmiş Ay Ortalaması</span></div><div id="indicator-grid-income-dash" class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4"></div></div>
+                <div class="card p-0 border-t-4 border-fuchsia-500 overflow-hidden"><div class="p-4 border-b bg-slate-50 flex items-center justify-between"><h3 class="font-bold text-slate-700 flex items-center"><span class="material-icons mr-2 text-fuchsia-500">query_stats</span> Cruise İndikatörü</h3><span class="text-[9px] text-slate-400 font-bold uppercase">Bu Cruise vs Önceki Cruise (Payroll ve Transfer Hariç)</span></div><div id="indicator-grid-cruise-dash" class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4"></div></div>
             </section>
 
             <!-- VIEW: RAPORLAR -->
@@ -555,7 +556,7 @@
 
         function checkActiveContractForms() { const eCruise = document.getElementById('entry-cruise'); const sShip = document.getElementById('sh-ship'); const extShip = document.getElementById('ext-ship'); const trCruise = document.getElementById('tr-cruise'); if(safakData.isActive) { if(eCruise) { eCruise.value = safakData.name; eCruise.readOnly = true; eCruise.classList.add('bg-indigo-50', 'text-indigo-800'); } if(sShip) { sShip.value = safakData.name; sShip.readOnly = true; sShip.classList.add('bg-indigo-50', 'text-indigo-800'); } if(extShip) { extShip.value = safakData.name; extShip.readOnly = true; extShip.classList.add('bg-indigo-50', 'text-indigo-800'); } if(trCruise) { trCruise.value = safakData.name; trCruise.readOnly = true; trCruise.classList.add('bg-indigo-50', 'text-indigo-800'); } } else { if(eCruise) { eCruise.readOnly = false; eCruise.classList.remove('bg-indigo-50', 'text-indigo-800'); } if(sShip) { sShip.readOnly = false; sShip.classList.remove('bg-indigo-50', 'text-indigo-800'); if(!editShopId) sShip.value = ''; } if(extShip) { extShip.readOnly = false; extShip.classList.remove('bg-indigo-50', 'text-indigo-800'); if(!editExtId) extShip.value = ''; } if(trCruise) { trCruise.readOnly = false; trCruise.classList.remove('bg-indigo-50', 'text-indigo-800'); } } }
         
-        function refreshAllViews() { try { updateDatalists(); } catch(e){} try { checkActiveContractForms(); } catch(e){} try { updateCategorySelect(); } catch(e){} try { renderCategoriesTable(); } catch(e){} try { renderEntriesTable(); } catch(e){} try { renderDashboard(); } catch(e){} try { renderDashCalendar(); } catch(e){} try { renderShopping(); } catch(e){} try { renderExtTransfers(); } catch(e){} try { initWalletDenominations(); } catch(e){} try { calcSimulation(); } catch(e){} try { renderReportsTab(); } catch(e){} try { renderQtyReport(); } catch(e){} try { renderIndicators('indicator-grid'); renderIndicators('indicator-grid-dash'); } catch(e){} try { renderIncomeIndicators('indicator-grid-income'); renderIncomeIndicators('indicator-grid-income-dash'); } catch(e){} try { renderCruiseComparison(); } catch(e){} try { renderCruiseDetailReport(); } catch(e){} try { renderCruiseIndicator(); } catch(e){} try { renderKnownCruises(); } catch(e){} try { renderKnownRoutes(); } catch(e){} try { renderCustomReports(); } catch(e){} try { calcSafak(); } catch(e){} try { renderPastContracts(); } catch(e){} try { renderSubMatrix(); } catch(e){} }
+        function refreshAllViews() { try { updateDatalists(); } catch(e){} try { checkActiveContractForms(); } catch(e){} try { updateCategorySelect(); } catch(e){} try { renderCategoriesTable(); } catch(e){} try { renderEntriesTable(); } catch(e){} try { renderDashboard(); } catch(e){} try { renderDashCalendar(); } catch(e){} try { renderShopping(); } catch(e){} try { renderExtTransfers(); } catch(e){} try { initWalletDenominations(); } catch(e){} try { calcSimulation(); } catch(e){} try { renderReportsTab(); } catch(e){} try { renderQtyReport(); } catch(e){} try { renderIndicators('indicator-grid'); renderIndicators('indicator-grid-dash'); } catch(e){} try { renderIncomeIndicators('indicator-grid-income'); renderIncomeIndicators('indicator-grid-income-dash'); } catch(e){} try { renderCruiseComparison(); } catch(e){} try { renderCruiseDetailReport(); } catch(e){} try { renderCruiseIndicator('indicator-grid-cruise'); renderCruiseIndicator('indicator-grid-cruise-dash'); } catch(e){} try { renderKnownCruises(); } catch(e){} try { renderKnownRoutes(); } catch(e){} try { renderCustomReports(); } catch(e){} try { calcSafak(); } catch(e){} try { renderPastContracts(); } catch(e){} try { renderSubMatrix(); } catch(e){} }
 
         function updateDatalists() {
             const activeName = (safakData.isActive && safakData.name) ? safakData.name.toUpperCase() : null;
@@ -870,8 +871,8 @@ function renderQtyReport() {
                     tbody.innerHTML = rows;
                 }
 
-                function renderCruiseIndicator() {
-                    const grid = document.getElementById('indicator-grid-cruise'); if(!grid) return;
+                function renderCruiseIndicator(gridId) {
+                    const grid = document.getElementById(gridId || 'indicator-grid-cruise'); if(!grid) return;
                     grid.innerHTML = '';
                     const recs = records.filter(r => !r.isTransfer && r.route && r.route.trim() !== '' && r.date);
                     if(recs.length === 0) { grid.innerHTML = '<p class="text-xs text-slate-400 italic p-2 md:col-span-3">Henüz yeterli cruise (sefer/rota) verisi yok.</p>'; return; }
