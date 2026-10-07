@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.3) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.4) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -56,7 +56,7 @@
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.3 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.4 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -219,25 +219,27 @@
                     <div onclick="document.getElementById('nav-wallet').click()" class="card bg-gradient-to-r from-emerald-50 to-white border-emerald-200 cursor-pointer hover:shadow-md transition flex items-center justify-between p-4"><div class="flex items-center"><span class="material-icons text-emerald-500 mr-3 text-3xl">account_balance_wallet</span><div><p class="text-[10px] font-bold uppercase text-slate-500">Sistem vs Fiziki Sayım</p><h4 class="font-black text-slate-800">Cüzdan Farkı</h4></div></div><p class="text-2xl font-black text-slate-800" id="dash-link-wallet-diff">$0.00</p></div>
                     <div onclick="document.getElementById('nav-shopping').click()" class="card bg-gradient-to-r from-blue-50 to-white border-blue-200 cursor-pointer hover:shadow-md transition flex items-center justify-between p-4"><div class="flex items-center"><span class="material-icons text-blue-500 mr-3 text-3xl">shopping_cart</span><div><p class="text-[10px] font-bold uppercase text-slate-500">Kayıt vs Siparişler</p><h4 class="font-black text-slate-800">Alışveriş Farkı</h4></div></div><p class="text-2xl font-black text-slate-800" id="dash-link-shop-diff">$0.00</p></div>
                 </div>
-                <div class="card p-0 overflow-hidden mb-6 border-t-4 border-red-500">
-                    <div class="p-4 border-b bg-slate-50 flex items-center justify-between">
-                        <h3 class="font-bold text-slate-700 flex items-center"><span class="material-icons mr-2 text-red-500">calendar_month</span> Şafak Takvimi</h3>
-                        <div class="flex items-center gap-1">
-                            <button onclick="shiftDashCalendar(-1)" class="p-1.5 rounded hover:bg-slate-200 text-slate-500 transition"><span class="material-icons text-base">chevron_left</span></button>
-                            <span id="dash-cal-title" class="text-sm font-bold text-slate-700 w-32 text-center">-</span>
-                            <button onclick="shiftDashCalendar(1)" class="p-1.5 rounded hover:bg-slate-200 text-slate-500 transition"><span class="material-icons text-base">chevron_right</span></button>
+                <div class="flex justify-end mb-6">
+                <div class="card p-0 overflow-hidden border-t-4 border-red-500 w-full max-w-[260px]">
+                    <div class="p-2.5 border-b bg-slate-50 flex items-center justify-between">
+                        <h3 class="font-bold text-slate-700 flex items-center text-xs"><span class="material-icons mr-1 text-red-500 text-base">calendar_month</span> Şafak Takvimi</h3>
+                        <div class="flex items-center gap-0.5">
+                            <button onclick="shiftDashCalendar(-1)" class="p-0.5 rounded hover:bg-slate-200 text-slate-500 transition"><span class="material-icons text-sm">chevron_left</span></button>
+                            <span id="dash-cal-title" class="text-[10px] font-bold text-slate-700 w-16 text-center">-</span>
+                            <button onclick="shiftDashCalendar(1)" class="p-0.5 rounded hover:bg-slate-200 text-slate-500 transition"><span class="material-icons text-sm">chevron_right</span></button>
                         </div>
                     </div>
-                    <div class="p-4">
-                        <div class="grid grid-cols-7 gap-1.5 mb-2 text-center">
-                            <span class="text-[9px] font-bold text-slate-400 uppercase">Pzt</span><span class="text-[9px] font-bold text-slate-400 uppercase">Sal</span><span class="text-[9px] font-bold text-slate-400 uppercase">Çar</span><span class="text-[9px] font-bold text-slate-400 uppercase">Per</span><span class="text-[9px] font-bold text-slate-400 uppercase">Cum</span><span class="text-[9px] font-bold text-slate-400 uppercase">Cmt</span><span class="text-[9px] font-bold text-slate-400 uppercase">Paz</span>
+                    <div class="p-2">
+                        <div class="grid grid-cols-7 gap-0.5 mb-1 text-center">
+                            <span class="text-[7px] font-bold text-slate-400 uppercase">P</span><span class="text-[7px] font-bold text-slate-400 uppercase">S</span><span class="text-[7px] font-bold text-slate-400 uppercase">Ç</span><span class="text-[7px] font-bold text-slate-400 uppercase">P</span><span class="text-[7px] font-bold text-slate-400 uppercase">C</span><span class="text-[7px] font-bold text-slate-400 uppercase">C</span><span class="text-[7px] font-bold text-slate-400 uppercase">P</span>
                         </div>
-                        <div id="dash-calendar-grid" class="grid grid-cols-7 gap-1.5"></div>
-                        <div class="flex items-center gap-4 mt-3 pt-3 border-t text-[10px] font-bold text-slate-400 uppercase">
-                            <span class="flex items-center"><span class="w-3 h-3 rounded bg-red-600 inline-block mr-1.5"></span> Bugün</span>
-                            <span class="flex items-center"><span class="w-3 h-3 rounded bg-red-50 border border-red-200 inline-block mr-1.5"></span> Kontrat Günü (kalan gün sayısıyla)</span>
+                        <div id="dash-calendar-grid" class="grid grid-cols-7 gap-0.5"></div>
+                        <div class="flex items-center justify-center gap-2 mt-2 pt-2 border-t text-[7px] font-bold text-slate-400 uppercase">
+                            <span class="flex items-center"><span class="w-2 h-2 rounded bg-red-600 inline-block mr-1"></span> Bugün</span>
+                            <span class="flex items-center"><span class="w-2 h-2 rounded bg-red-50 border border-red-200 inline-block mr-1"></span> Kontrat</span>
                         </div>
                     </div>
+                </div>
                 </div>
                 <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Hesap Özetleri <span class="text-indigo-500 ml-2" id="dash-filter-info"></span></h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -979,15 +981,16 @@ function renderQtyReport() {
                     for(let d = 1; d <= daysInMonth; d++) {
                         const cellDate = new Date(year, month, d); cellDate.setHours(0,0,0,0);
                         const isToday = cellDate.getTime() === today.getTime();
-                        let remBadge = ''; let cellClasses = 'bg-slate-50 text-slate-500';
+                        let remBadge = ''; let cellClasses = 'bg-slate-50 text-slate-500'; let titleAttr = '';
                         if(contractStart && contractEnd && cellDate >= contractStart && cellDate <= contractEnd) {
                             const remDays = Math.round((contractEnd - cellDate) / (1000 * 60 * 60 * 24));
-                            remBadge = `<span class="block text-[9px] font-black leading-none mt-0.5 ${isToday ? 'text-white' : 'text-red-500'}">${remDays} gün</span>`;
+                            remBadge = `<span class="block text-[6px] font-black leading-none ${isToday ? 'text-white' : 'text-red-500'}">${remDays}</span>`;
                             cellClasses = isToday ? 'bg-red-600 text-white shadow-md' : 'bg-red-50 text-red-700 border border-red-200';
+                            titleAttr = ` title="${remDays} gün kaldı"`;
                         } else if(isToday) {
                             cellClasses = 'bg-slate-800 text-white shadow-md';
                         }
-                        html += `<div class="aspect-square rounded-lg flex flex-col items-center justify-center text-xs font-bold ${cellClasses}"><span>${d}</span>${remBadge}</div>`;
+                        html += `<div class="aspect-square rounded flex flex-col items-center justify-center text-[9px] font-bold leading-none ${cellClasses}"${titleAttr}><span>${d}</span>${remBadge}</div>`;
                     }
                     grid.innerHTML = html;
                 }
