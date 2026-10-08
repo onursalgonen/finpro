@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.6) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.8) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -56,7 +56,7 @@
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.6 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.8 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -246,6 +246,10 @@
                             <div class="flex items-center justify-center gap-2 mt-2 pt-2 border-t text-[7px] font-bold text-slate-400 uppercase">
                                 <span class="flex items-center"><span class="w-2 h-2 rounded bg-red-600 inline-block mr-1"></span> Bugün</span>
                                 <span class="flex items-center"><span class="w-2 h-2 rounded bg-red-50 border border-red-200 inline-block mr-1"></span> Kontrat</span>
+                            </div>
+                            <div class="mt-2 pt-2 border-t">
+                                <p class="text-[8px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Yaklaşan Etkinlikler</p>
+                                <div id="dash-upcoming-events" class="space-y-1 max-h-32 overflow-y-auto"></div>
                             </div>
                         </div>
                     </div>
@@ -458,6 +462,48 @@
         </div>
     </div>
 
+    <!-- TAKVİM ETKİNLİĞİ MODAL -->
+    <div id="event-modal" class="hidden fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center backdrop-blur-sm p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
+            <div class="p-4 border-b bg-slate-50 flex justify-between items-center"><h3 class="font-bold text-slate-800 flex items-center"><span class="material-icons mr-2 text-red-500">event</span> <span id="event-modal-date">Gün Etkinlikleri</span></h3><button onclick="document.getElementById('event-modal').classList.add('hidden')" class="text-slate-400 hover:text-red-500"><span class="material-icons">close</span></button></div>
+            <div class="p-5 space-y-4">
+                <div id="event-modal-list" class="space-y-2 max-h-48 overflow-y-auto"></div>
+                <div class="border-t pt-4 space-y-3">
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1">Yeni Etkinlik Adı</label><input type="text" id="new-event-title" placeholder="Örn: Doktor Randevusu" class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1">Renk</label>
+                        <select id="new-event-color" class="w-full border p-2.5 rounded-lg bg-white font-semibold text-sm">
+                            <option value="green">Yeşil</option>
+                            <option value="blue">Mavi</option>
+                            <option value="red">Kırmızı</option>
+                            <option value="amber">Sarı</option>
+                        </select>
+                    </div>
+                    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="new-event-recurring" onchange="toggleEventRecurrenceUI()" class="w-4 h-4"><span class="text-xs font-bold text-slate-600">Bu etkinlik tekrarlansın</span></label>
+                    <div id="event-recurrence-options" class="hidden space-y-3 bg-slate-50 border rounded-lg p-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-slate-500">Her</span>
+                            <input type="number" id="new-event-interval" value="1" min="1" class="w-16 border p-2 rounded-lg bg-white font-bold text-sm text-center">
+                            <select id="new-event-unit" class="flex-1 border p-2 rounded-lg bg-white font-semibold text-sm">
+                                <option value="day">Gün</option>
+                                <option value="week">Hafta</option>
+                            </select>
+                            <span class="text-xs font-bold text-slate-500">bir</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-1">Ne zamana kadar?</label>
+                            <select id="new-event-until-mode" onchange="toggleEventUntilUI()" class="w-full border p-2.5 rounded-lg bg-white font-semibold text-sm">
+                                <option value="forever">Süresiz</option>
+                                <option value="until">Belirli Bir Tarihe Kadar</option>
+                            </select>
+                        </div>
+                        <div id="event-until-date-wrap" class="hidden"><input type="date" id="new-event-until-date" class="w-full border p-2.5 rounded-lg bg-white font-semibold text-sm"></div>
+                    </div>
+                    <button onclick="addCalendarEvent()" class="w-full btn bg-red-600 hover:bg-red-500 text-white py-3 text-sm shadow-lg">Etkinlik Ekle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         let isSidebarCollapsed = false;
         function toggleSidebar() { isSidebarCollapsed = !isSidebarCollapsed; const sb = document.getElementById('sidebar'); isSidebarCollapsed ? sb.classList.add('sidebar-collapsed') : sb.classList.remove('sidebar-collapsed'); }
@@ -480,7 +526,7 @@
             else { btnT.className = "flex-1 py-3 font-bold text-sm text-indigo-600 bg-white transition"; btnN.className = "flex-1 py-3 font-bold text-sm text-slate-500 hover:bg-slate-100 border-r transition"; }
         }
 
-        const DB_REC = 'finAppV79_Records'; const DB_CAT = 'finAppV79_Categories'; const DB_SHOP = 'finAppV79_Shopping'; const DB_WAL = 'finAppV79_WalletNotes'; const DB_SIM = 'finAppV79_Sim'; const DB_SFK = 'finAppV79_Safak'; const DB_PAST = 'finAppV79_PastContracts'; const DB_EXT = 'finAppV79_ExtTransfers'; const DB_CR = 'finAppV81_CustomReports'; const DB_CRU = 'finAppV82_KnownCruises'; const DB_ROUTE = 'finAppV83_KnownRoutes'; const DB_LAST_ROUTE = 'finAppV83_LastEntryRoute';
+        const DB_REC = 'finAppV79_Records'; const DB_CAT = 'finAppV79_Categories'; const DB_SHOP = 'finAppV79_Shopping'; const DB_WAL = 'finAppV79_WalletNotes'; const DB_SIM = 'finAppV79_Sim'; const DB_SFK = 'finAppV79_Safak'; const DB_PAST = 'finAppV79_PastContracts'; const DB_EXT = 'finAppV79_ExtTransfers'; const DB_CR = 'finAppV81_CustomReports'; const DB_CRU = 'finAppV82_KnownCruises'; const DB_ROUTE = 'finAppV83_KnownRoutes'; const DB_LAST_ROUTE = 'finAppV83_LastEntryRoute'; const DB_EVENTS = 'finAppV84_CalendarEvents';
         let records = JSON.parse(localStorage.getItem(DB_REC)) || [];
         let shoppingRecords = JSON.parse(localStorage.getItem(DB_SHOP)) || [];
         let extTransfers = JSON.parse(localStorage.getItem(DB_EXT)) || [];
@@ -491,6 +537,8 @@
         let pastContracts = JSON.parse(localStorage.getItem(DB_PAST)) || [];
         let knownCruises = JSON.parse(localStorage.getItem(DB_CRU)) || [];
         let knownRoutes = JSON.parse(localStorage.getItem(DB_ROUTE)) || [];
+        let calendarEvents = JSON.parse(localStorage.getItem(DB_EVENTS)) || [];
+        let eventModalDate = '';
         let lastEntryRoute = localStorage.getItem(DB_LAST_ROUTE) || '';
         let dashCalendarDate = new Date();
         let categories = JSON.parse(localStorage.getItem(DB_CAT)) || [
@@ -506,10 +554,18 @@
             if(safakData.isActive) { document.getElementById('global-ship').value = safakData.name; if(safakData.start) document.getElementById('global-year').value = safakData.start.substring(0,4); }
             document.getElementById('sf-name').value = safakData.name; if(safakData.start) document.getElementById('sf-start').value = safakData.start; if(safakData.end) document.getElementById('sf-end').value = safakData.end;
             let crCatStr = '<option value="ALL">Tüm Kategoriler</option>'; categories.forEach(c => crCatStr += `<option value="${c.id}">${c.name}</option>`); document.getElementById('cr-cat').innerHTML = crCatStr;
+            // Varsayılan "Payday" kuralı: bu ayın 16'sından başlayarak her 14 günde bir, yeşille işaretli - sadece ilk açılışta bir kez eklenir.
+            if(!calendarEvents.some(e => e.id === 'payday-default')) {
+                const now = new Date();
+                const paydayStart = new Date(now.getFullYear(), now.getMonth(), 16);
+                const ps = `${paydayStart.getFullYear()}-${String(paydayStart.getMonth()+1).padStart(2,'0')}-${String(paydayStart.getDate()).padStart(2,'0')}`;
+                calendarEvents.push({ id: 'payday-default', title: 'Payday', recurring: true, startDate: ps, intervalDays: 14, color: 'green' });
+                saveData();
+            }
             refreshAllViews(); updateSyncUI();
         }
         
-        function saveLocalOnly() { try { localStorage.setItem(DB_REC, JSON.stringify(records)); localStorage.setItem(DB_CAT, JSON.stringify(categories)); localStorage.setItem(DB_SHOP, JSON.stringify(shoppingRecords)); localStorage.setItem(DB_WAL, JSON.stringify(walletNotes)); localStorage.setItem(DB_SIM, JSON.stringify(simulation)); localStorage.setItem(DB_SFK, JSON.stringify(safakData)); localStorage.setItem(DB_PAST, JSON.stringify(pastContracts)); localStorage.setItem(DB_EXT, JSON.stringify(extTransfers)); localStorage.setItem(DB_CR, JSON.stringify(customReports)); localStorage.setItem(DB_CRU, JSON.stringify(knownCruises)); localStorage.setItem(DB_ROUTE, JSON.stringify(knownRoutes)); } catch (e) {} }
+        function saveLocalOnly() { try { localStorage.setItem(DB_REC, JSON.stringify(records)); localStorage.setItem(DB_CAT, JSON.stringify(categories)); localStorage.setItem(DB_SHOP, JSON.stringify(shoppingRecords)); localStorage.setItem(DB_WAL, JSON.stringify(walletNotes)); localStorage.setItem(DB_SIM, JSON.stringify(simulation)); localStorage.setItem(DB_SFK, JSON.stringify(safakData)); localStorage.setItem(DB_PAST, JSON.stringify(pastContracts)); localStorage.setItem(DB_EXT, JSON.stringify(extTransfers)); localStorage.setItem(DB_CR, JSON.stringify(customReports)); localStorage.setItem(DB_CRU, JSON.stringify(knownCruises)); localStorage.setItem(DB_ROUTE, JSON.stringify(knownRoutes)); localStorage.setItem(DB_EVENTS, JSON.stringify(calendarEvents)); } catch (e) {} }
         function saveData() { saveLocalOnly(); triggerAutoSync(); }
         
         async function exportData() {
@@ -963,6 +1019,27 @@ function renderQtyReport() {
                     grid.innerHTML = html;
                 }
                 function shiftDashCalendar(delta) { dashCalendarDate.setMonth(dashCalendarDate.getMonth() + delta); renderDashCalendar(); }
+                function dateToStr(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+                const EVENT_DOT_COLORS = { green: 'bg-emerald-500', blue: 'bg-blue-500', red: 'bg-red-500', amber: 'bg-amber-500' };
+                function getEventIntervalDays(e) {
+                    if(e.intervalDays) return e.intervalDays; // eski kayıtlar (örn. varsayılan Payday)
+                    const unit = e.intervalUnit || 'day'; const val = e.intervalValue || 1;
+                    return unit === 'week' ? val * 7 : val;
+                }
+                function getEventsForDate(dateStr, cellDate) {
+                    const matches = [];
+                    calendarEvents.forEach(e => {
+                        if(!e.recurring) { if(e.date === dateStr) matches.push(e); return; }
+                        const anchorStr = e.startDate || e.date; if(!anchorStr) return;
+                        const start = new Date(anchorStr); start.setHours(0,0,0,0);
+                        if(cellDate < start) return;
+                        if(e.repeatUntil) { const until = new Date(e.repeatUntil); until.setHours(0,0,0,0); if(cellDate > until) return; }
+                        const intervalDays = getEventIntervalDays(e);
+                        const diffDays = Math.round((cellDate - start) / (1000 * 60 * 60 * 24));
+                        if(diffDays % intervalDays === 0) matches.push(e);
+                    });
+                    return matches;
+                }
                 function renderDashCalendar() {
                     const grid = document.getElementById('dash-calendar-grid'); const titleEl = document.getElementById('dash-cal-title'); if(!grid || !titleEl) return;
                     const year = dashCalendarDate.getFullYear(); const month = dashCalendarDate.getMonth();
@@ -985,19 +1062,127 @@ function renderQtyReport() {
                     for(let i = 0; i < startOffset; i++) html += `<div></div>`;
                     for(let d = 1; d <= daysInMonth; d++) {
                         const cellDate = new Date(year, month, d); cellDate.setHours(0,0,0,0);
+                        const dateStr = dateToStr(cellDate);
                         const isToday = cellDate.getTime() === today.getTime();
-                        let remBadge = ''; let cellClasses = 'bg-slate-50 text-slate-500'; let titleAttr = '';
+                        let remBadge = ''; let cellClasses = 'bg-slate-50 text-slate-500'; let titleParts = [];
                         if(contractStart && contractEnd && cellDate >= contractStart && cellDate <= contractEnd) {
                             const remDays = Math.round((contractEnd - cellDate) / (1000 * 60 * 60 * 24));
                             remBadge = `<span class="block text-[6px] font-black leading-none ${isToday ? 'text-white' : 'text-red-500'}">${remDays}</span>`;
                             cellClasses = isToday ? 'bg-red-600 text-white shadow-md' : 'bg-red-50 text-red-700 border border-red-200';
-                            titleAttr = ` title="${remDays} gün kaldı"`;
+                            titleParts.push(`${remDays} gün kaldı`);
                         } else if(isToday) {
                             cellClasses = 'bg-slate-800 text-white shadow-md';
                         }
-                        html += `<div class="aspect-square rounded flex flex-col items-center justify-center text-[9px] font-bold leading-none ${cellClasses}"${titleAttr}><span>${d}</span>${remBadge}</div>`;
+                        const dayEvents = getEventsForDate(dateStr, cellDate);
+                        let dotsHtml = '';
+                        if(dayEvents.length > 0) {
+                            titleParts.push(dayEvents.map(e => e.title).join(', '));
+                            dotsHtml = `<div class="absolute bottom-0.5 left-0 right-0 flex items-center justify-center gap-0.5">${dayEvents.slice(0,3).map(e => `<span class="w-1 h-1 rounded-full ${EVENT_DOT_COLORS[e.color] || 'bg-slate-400'}"></span>`).join('')}</div>`;
+                        }
+                        const titleAttr = titleParts.length ? ` title="${titleParts.join(' • ')}"` : '';
+                        html += `<div class="relative aspect-square rounded flex flex-col items-center justify-center text-[9px] font-bold leading-none cursor-pointer hover:ring-1 hover:ring-slate-400 transition ${cellClasses}"${titleAttr} onclick="openDayEventModal('${dateStr}')"><span>${d}</span>${remBadge}${dotsHtml}</div>`;
                     }
                     grid.innerHTML = html;
+                    renderUpcomingEventsList();
+                }
+                function renderUpcomingEventsList() {
+                    const el = document.getElementById('dash-upcoming-events'); if(!el) return;
+                    const today = new Date(); today.setHours(0,0,0,0);
+                    const horizon = new Date(today); horizon.setDate(horizon.getDate() + 120);
+                    let occurrences = [];
+                    calendarEvents.forEach(e => {
+                        if(!e.recurring) {
+                            if(!e.date) return;
+                            const d = new Date(e.date); d.setHours(0,0,0,0);
+                            if(d >= today && d <= horizon) occurrences.push({ date: d, title: e.title, color: e.color });
+                            return;
+                        }
+                        const anchorStr = e.startDate || e.date; if(!anchorStr) return;
+                        const start = new Date(anchorStr); start.setHours(0,0,0,0);
+                        const until = e.repeatUntil ? new Date(e.repeatUntil) : null; if(until) until.setHours(0,0,0,0);
+                        const intervalDays = getEventIntervalDays(e);
+                        let cursor = new Date(Math.max(start.getTime(), today.getTime()));
+                        const diff = Math.round((cursor - start) / (1000 * 60 * 60 * 24));
+                        const rem = diff % intervalDays;
+                        if(rem !== 0) cursor.setDate(cursor.getDate() + (intervalDays - rem));
+                        let guard = 0;
+                        while(cursor <= horizon && (!until || cursor <= until) && guard < 60) {
+                            occurrences.push({ date: new Date(cursor), title: e.title, color: e.color });
+                            cursor.setDate(cursor.getDate() + intervalDays);
+                            guard++;
+                        }
+                    });
+                    occurrences.sort((a, b) => a.date - b.date);
+                    occurrences = occurrences.slice(0, 8);
+                    if(occurrences.length === 0) { el.innerHTML = '<p class="text-[8px] text-slate-400 italic text-center py-1">Yaklaşan etkinlik yok.</p>'; return; }
+                    el.innerHTML = occurrences.map(o => {
+                        const mm = String(o.date.getMonth() + 1).padStart(2, '0');
+                        const monAbbr = (monthNames[mm] || '').substring(0, 3);
+                        return `<div class="flex items-center justify-between text-[8px] leading-tight"><span class="flex items-center font-bold text-slate-600 truncate"><span class="w-1.5 h-1.5 rounded-full flex-shrink-0 ${EVENT_DOT_COLORS[o.color] || 'bg-slate-400'} mr-1"></span><span class="truncate">${o.title}</span></span><span class="text-slate-400 font-semibold flex-shrink-0 ml-1">${String(o.date.getDate()).padStart(2, '0')} ${monAbbr}</span></div>`;
+                    }).join('');
+                }
+                function openDayEventModal(dateStr) {
+                    eventModalDate = dateStr;
+                    const parts = dateStr.split('-'); const d = new Date(parts[0], parts[1]-1, parts[2]);
+                    document.getElementById('event-modal-date').innerText = d.getDate() + ' ' + (monthNames[parts[1]] || '') + ' ' + parts[0];
+                    document.getElementById('new-event-title').value = '';
+                    document.getElementById('new-event-color').value = 'green';
+                    document.getElementById('new-event-recurring').checked = false;
+                    document.getElementById('new-event-interval').value = '1';
+                    document.getElementById('new-event-unit').value = 'day';
+                    document.getElementById('new-event-until-mode').value = 'forever';
+                    document.getElementById('new-event-until-date').value = '';
+                    toggleEventRecurrenceUI();
+                    renderEventModalList();
+                    document.getElementById('event-modal').classList.remove('hidden');
+                }
+                function toggleEventRecurrenceUI() {
+                    const on = document.getElementById('new-event-recurring').checked;
+                    document.getElementById('event-recurrence-options').classList.toggle('hidden', !on);
+                }
+                function toggleEventUntilUI() {
+                    const mode = document.getElementById('new-event-until-mode').value;
+                    document.getElementById('event-until-date-wrap').classList.toggle('hidden', mode !== 'until');
+                }
+                function renderEventModalList() {
+                    const list = document.getElementById('event-modal-list'); if(!list) return;
+                    const parts = eventModalDate.split('-'); const cellDate = new Date(parts[0], parts[1]-1, parts[2]); cellDate.setHours(0,0,0,0);
+                    const dayEvents = getEventsForDate(eventModalDate, cellDate);
+                    if(dayEvents.length === 0) { list.innerHTML = '<p class="text-xs text-slate-400 italic">Bu günde henüz etkinlik yok.</p>'; return; }
+                    list.innerHTML = dayEvents.map(e => {
+                        const recLabel = e.recurring ? ` <span class="text-[9px] text-slate-400 font-bold uppercase ml-1">(her ${getEventIntervalDays(e)} günde${e.repeatUntil ? ', ' + e.repeatUntil + "'e kadar" : ', süresiz'})</span>` : '';
+                        return `<div class="flex items-center justify-between bg-slate-50 border rounded-lg px-3 py-2"><span class="flex items-center text-sm font-semibold text-slate-700"><span class="w-2.5 h-2.5 rounded-full ${EVENT_DOT_COLORS[e.color] || 'bg-slate-400'} mr-2"></span>${e.title}${recLabel}</span><button onclick="deleteCalendarEvent('${e.id}')" class="text-red-400 hover:text-red-600"><span class="material-icons text-sm">delete</span></button></div>`;
+                    }).join('');
+                }
+                function addCalendarEvent() {
+                    const titleEl = document.getElementById('new-event-title'); const title = titleEl.value.trim();
+                    if(!title) return alert('Lütfen bir etkinlik adı girin.');
+                    const color = document.getElementById('new-event-color').value;
+                    const isRecurring = document.getElementById('new-event-recurring').checked;
+                    const ev = { id: Date.now(), title, date: eventModalDate, color, recurring: isRecurring };
+                    if(isRecurring) {
+                        ev.intervalValue = parseInt(document.getElementById('new-event-interval').value) || 1;
+                        ev.intervalUnit = document.getElementById('new-event-unit').value;
+                        const untilMode = document.getElementById('new-event-until-mode').value;
+                        if(untilMode === 'until') {
+                            const untilDate = document.getElementById('new-event-until-date').value;
+                            if(!untilDate) return alert('Lütfen "ne zamana kadar" tekrarlanacağını seçin.');
+                            ev.repeatUntil = untilDate;
+                        } else {
+                            ev.repeatUntil = null;
+                        }
+                    }
+                    calendarEvents.push(ev);
+                    titleEl.value = '';
+                    document.getElementById('new-event-recurring').checked = false; toggleEventRecurrenceUI();
+                    saveData(); renderEventModalList(); renderDashCalendar();
+                }
+                function deleteCalendarEvent(id) {
+                    const ev = calendarEvents.find(e => String(e.id) === String(id)); if(!ev) return;
+                    const msg = ev.recurring ? `"${ev.title}" tekrarlanan bir etkinlik. Silersen TÜM tekrarları silinir, emin misin?` : `"${ev.title}" etkinliği silinsin mi?`;
+                    if(!confirm(msg)) return;
+                    calendarEvents = calendarEvents.filter(e => String(e.id) !== String(id));
+                    saveData(); renderEventModalList(); renderDashCalendar();
                 }
                 function calcSafak() { const start = new Date(safakData.start); const end = new Date(safakData.end); const today = new Date(); if(isNaN(start) || isNaN(end)) { document.getElementById('sf-tot').innerText = "0 GÜN"; document.getElementById('sf-done').innerText = "0 GÜN"; document.getElementById('sf-rem').innerText = "0 GÜN"; document.getElementById('sf-rem-month').innerText = "0 Ay 0 Gün"; document.getElementById('sf-pct').innerText = "%0"; document.getElementById('safak-grid-container').innerHTML = ''; document.getElementById('dash-safak-rem').innerText = "KONTRAT YOK"; return; } const totalDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24)); let doneDays = Math.ceil((today - start) / (1000 * 60 * 60 * 24)); if(doneDays < 0) doneDays = 0; if(doneDays > totalDays) doneDays = totalDays; const remDays = totalDays - doneDays; const pct = totalDays > 0 ? Math.round((doneDays / totalDays) * 100) : 0; const remMonths = Math.floor(remDays / 30); const remDaysMod = remDays % 30; document.getElementById('sf-tot').innerText = totalDays + " GÜN"; document.getElementById('sf-done').innerText = doneDays + " GÜN"; document.getElementById('sf-rem').innerText = remDays + " GÜN"; document.getElementById('sf-rem-month').innerText = `${remMonths} Ay ${remDaysMod} Gün`; document.getElementById('sf-pct').innerText = "%" + pct; document.getElementById('dash-safak-title').innerText = (safakData.name || 'KONTRAT') + ' ŞAFAK'; document.getElementById('dash-safak-rem').innerText = remDays + " GÜN KALDI"; document.getElementById('dash-safak-tot').innerText = `${doneDays}/${totalDays} Gün`; document.getElementById('dash-safak-pct').innerText = `%${pct}`; const grid = document.getElementById('safak-grid-container'); grid.innerHTML = ''; for(let i = 1; i <= totalDays; i++) { let isPassed = i > remDays; let content = isPassed ? `<span class="material-icons text-slate-500 text-[14px]">close</span>` : i; let colorClass = isPassed ? 'bg-slate-800/60 shadow-inner' : 'bg-red-600 text-white font-black shadow-md'; grid.innerHTML += `<div class="safak-box ${colorClass}">${content}</div>`; } }
 
@@ -1246,14 +1431,14 @@ function renderQtyReport() {
             else { badge.classList.add('hidden'); }
         }
 
-        function getFullDataSync() { return { records, categories, shoppingRecords, walletNotes, simulation, safakData, pastContracts, extTransfers, customReports, gsState, knownCruises, knownRoutes }; }
+        function getFullDataSync() { return { records, categories, shoppingRecords, walletNotes, simulation, safakData, pastContracts, extTransfers, customReports, gsState, knownCruises, knownRoutes, calendarEvents }; }
         function triggerAutoSync() { if (connections.length > 0) { const syncPayload = { type: 'AUTO_UPDATE', data: getFullDataSync(), sender: myDeviceName }; connections.forEach(c => c.send(syncPayload)); } }
 
         function handleSyncData(payload, sourceConn) {
             if(!payload || !payload.data) return;
             try {
                 const d = payload.data;
-                if(d.records) records = d.records; if(d.categories) categories = d.categories; if(d.shoppingRecords) shoppingRecords = d.shoppingRecords; if(d.walletNotes) walletNotes = d.walletNotes; if(d.simulation) simulation = d.simulation; if(d.safakData) safakData = d.safakData; if(d.pastContracts) pastContracts = d.pastContracts; if(d.extTransfers) extTransfers = d.extTransfers; if(d.customReports) customReports = d.customReports; if(d.gsState) gsState = d.gsState; if(d.knownCruises) knownCruises = d.knownCruises; if(d.knownRoutes) knownRoutes = d.knownRoutes;
+                if(d.records) records = d.records; if(d.categories) categories = d.categories; if(d.shoppingRecords) shoppingRecords = d.shoppingRecords; if(d.walletNotes) walletNotes = d.walletNotes; if(d.simulation) simulation = d.simulation; if(d.safakData) safakData = d.safakData; if(d.pastContracts) pastContracts = d.pastContracts; if(d.extTransfers) extTransfers = d.extTransfers; if(d.customReports) customReports = d.customReports; if(d.gsState) gsState = d.gsState; if(d.knownCruises) knownCruises = d.knownCruises; if(d.knownRoutes) knownRoutes = d.knownRoutes; if(d.calendarEvents) calendarEvents = d.calendarEvents;
                 saveLocalOnly(); saveGsDataToStorage();
                 if(isHost && sourceConn) { connections.forEach(c => { if(c.peer !== sourceConn.peer) { c.send({ type: 'AUTO_UPDATE', data: d, sender: payload.sender }); } }); }
                 refreshAllViews(); if(document.getElementById('view-goldsilver').classList.contains('active')) { updateGsUIForAsset(); }
