@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.9) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.10) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -56,7 +56,7 @@
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.9 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.10 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -439,13 +439,20 @@
                 </div>
 
                 <div class="card p-0 overflow-hidden border-t-4 border-lime-500">
-                    <div class="p-4 border-b bg-slate-50"><h3 class="font-bold text-slate-700 flex items-center"><span class="material-icons mr-2 text-lime-500">insights</span> Kontrat Projeksiyonu</h3><p class="text-[10px] text-slate-400 font-bold uppercase mt-1">Ortalama Gelir/Gidere Göre Sıradaki Kontratta Ne Kazanırım?</p></div>
-                    <div class="p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="text-center p-3 bg-slate-50 rounded-lg border"><p class="text-[10px] font-bold text-slate-400 uppercase">Ort. Kontrat Geliri</p><p class="text-xl font-black text-emerald-600" id="proj-avg-income">$0.00</p></div>
-                        <div class="text-center p-3 bg-slate-50 rounded-lg border"><p class="text-[10px] font-bold text-slate-400 uppercase">Ort. Kontrat Gideri</p><p class="text-xl font-black text-red-500" id="proj-avg-expense">$0.00</p></div>
-                        <div class="text-center p-3 bg-lime-50 rounded-lg border border-lime-200"><p class="text-[10px] font-bold text-lime-700 uppercase">Tahmini Net Kazanç</p><p class="text-xl font-black text-lime-700" id="proj-avg-net">$0.00</p></div>
+                    <div class="p-4 border-b bg-slate-50"><h3 class="font-bold text-slate-700 flex items-center"><span class="material-icons mr-2 text-lime-500">insights</span> Kontrat Projeksiyonu</h3><p class="text-[10px] text-slate-400 font-bold uppercase mt-1">Günlük Ortalamaya Göre Toplam Kontratta Ne Kazanırım?</p></div>
+                    <div class="p-5">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                            <div class="text-center p-2.5 bg-slate-50 rounded-lg border"><p class="text-[9px] font-bold text-slate-400 uppercase">Günlük Ort. Gelir</p><p class="text-sm font-black text-emerald-600" id="proj-daily-income">$0.00</p><p class="text-[8px] text-slate-400 font-semibold">(Payday + Tips)</p></div>
+                            <div class="text-center p-2.5 bg-slate-50 rounded-lg border"><p class="text-[9px] font-bold text-slate-400 uppercase">Günlük Ort. Gider</p><p class="text-sm font-black text-red-500" id="proj-daily-expense">$0.00</p><p class="text-[8px] text-slate-400 font-semibold">(Transfer Hariç)</p></div>
+                            <div class="text-center p-2.5 bg-slate-50 rounded-lg border"><p class="text-[9px] font-bold text-slate-400 uppercase">Ort. Kontrat Süresi</p><p class="text-sm font-black text-slate-700" id="proj-avg-contract-days">0 gün</p></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="text-center p-3 bg-slate-50 rounded-lg border"><p class="text-[10px] font-bold text-slate-400 uppercase">Proj. Kontrat Geliri</p><p class="text-xl font-black text-emerald-600" id="proj-avg-income">$0.00</p></div>
+                            <div class="text-center p-3 bg-slate-50 rounded-lg border"><p class="text-[10px] font-bold text-slate-400 uppercase">Proj. Kontrat Gideri</p><p class="text-xl font-black text-red-500" id="proj-avg-expense">$0.00</p></div>
+                            <div class="text-center p-3 bg-lime-50 rounded-lg border border-lime-200"><p class="text-[10px] font-bold text-lime-700 uppercase">Tahmini Net Kazanç</p><p class="text-xl font-black text-lime-700" id="proj-avg-net">$0.00</p></div>
+                        </div>
                     </div>
-                    <div class="px-5 pb-5 text-xs text-slate-500">Bu hesaplama, geçmişte kayıt girilen <strong id="proj-contract-count">0</strong> farklı gemi/kontratın ortalamasına dayanır.</div>
+                    <div class="px-5 pb-5 text-xs text-slate-500">Günlük gelir ortalaması <strong id="proj-income-days">0</strong> günlük veriye, gider ortalaması <strong id="proj-expense-days">0</strong> günlük veriye dayanır. Kontrat süresi, <strong id="proj-contract-count">0</strong> kontratın ortalamasıdır.</div>
                 </div>
 
                 <div class="card p-0 overflow-hidden border-t-4 border-amber-500">
@@ -1206,9 +1213,11 @@ function renderQtyReport() {
                     calendarEvents = calendarEvents.filter(e => String(e.id) !== String(id));
                     saveData(); renderEventModalList(); renderDashCalendar();
                 }
+                function isTransferCategory(r) { return String(r.categoryName || '').toLowerCase().includes('transfer'); }
                 function renderProjection() {
                     const totalIncomeEl = document.getElementById('proj-total-income'); if(!totalIncomeEl) return;
-                    const recs = records.filter(r => !r.isTransfer);
+                    // Transferler (içi transfer + "transfer" kategorili dış transfer) hiçbir yerde gider/gelir olarak sayılmaz.
+                    const recs = records.filter(r => !r.isTransfer && !isTransferCategory(r));
                     let totalIncome = 0, totalExpense = 0;
                     const expenseByCategory = {};
                     recs.forEach(r => {
@@ -1221,25 +1230,46 @@ function renderQtyReport() {
                     document.getElementById('proj-total-expense').innerText = '$' + totalExpense.toFixed(2);
                     document.getElementById('proj-total-net').innerText = '$' + net.toFixed(2);
 
-                    // Kontrat (gemi/cruise) bazlı ortalamalar - sıradaki kontrat projeksiyonu için
-                    let contractIncome = {}, contractExpense = {};
-                    recs.forEach(r => {
-                        const s = r.cruise; if(!s || s === 'INVALID' || String(s).trim() === '') return;
-                        const v = r.value || 0;
-                        if(r.type === 'INCOME') contractIncome[s] = (contractIncome[s] || 0) + v;
-                        else if(r.type === 'OUTGOING') contractExpense[s] = (contractExpense[s] || 0) + v;
-                    });
-                    const allContracts = [...new Set([...Object.keys(contractIncome), ...Object.keys(contractExpense)])];
-                    const n = allContracts.length;
-                    const avgIncome = n > 0 ? allContracts.reduce((a, c) => a + (contractIncome[c] || 0), 0) / n : 0;
-                    const avgExpense = n > 0 ? allContracts.reduce((a, c) => a + (contractExpense[c] || 0), 0) / n : 0;
-                    const avgNet = avgIncome - avgExpense;
-                    document.getElementById('proj-avg-income').innerText = '$' + avgIncome.toFixed(2);
-                    document.getElementById('proj-avg-expense').innerText = '$' + avgExpense.toFixed(2);
-                    document.getElementById('proj-avg-net').innerText = '$' + avgNet.toFixed(2);
-                    document.getElementById('proj-contract-count').innerText = n;
+                    // --- Günlük ortalamaya dayalı kontrat projeksiyonu ---
+                    // Gelir: sadece Payday (payroll/maaş) + Tips (bahşiş) toplamı üzerinden günlük ortalama.
+                    const incomeRecs = recs.filter(r => r.type === 'INCOME' && r.date);
+                    const paydayTipsRecs = incomeRecs.filter(r => { const c = String(r.categoryName || '').toLowerCase(); return c.includes('payroll') || c.includes('tip'); });
+                    const paydayTipsTotal = paydayTipsRecs.reduce((a, r) => a + (r.value || 0), 0);
+                    const daySpan = (recsForDateSpan) => {
+                        const dates = recsForDateSpan.map(r => r.date).filter(Boolean).sort();
+                        if(dates.length === 0) return 0;
+                        const first = new Date(dates[0]); const last = new Date(dates[dates.length - 1]);
+                        return Math.max(1, Math.round((last - first) / (1000 * 60 * 60 * 24)) + 1);
+                    };
+                    const incomeDaySpan = daySpan(paydayTipsRecs);
+                    const dailyIncomeAvg = incomeDaySpan > 0 ? paydayTipsTotal / incomeDaySpan : 0;
 
-                    // Gider dağılımı
+                    // Gider: transfer hariç tüm giderler üzerinden günlük ortalama (aynı yöntem gidere de uygulanıyor).
+                    const expenseRecs = recs.filter(r => r.type === 'OUTGOING' && r.date);
+                    const expenseDaySpan = daySpan(expenseRecs);
+                    const dailyExpenseAvg = expenseDaySpan > 0 ? totalExpense / expenseDaySpan : 0;
+
+                    // Ortalama kontrat süresi (gün): geçmiş kontratlar + varsa aktif kontrat.
+                    let contractLengths = [];
+                    pastContracts.forEach(c => { if(c.start && c.end) { const s = new Date(c.start), e = new Date(c.end); const d = Math.round((e - s) / (1000*60*60*24)) + 1; if(d > 0) contractLengths.push(d); } });
+                    if(safakData.isActive && safakData.start && safakData.end) { const s = new Date(safakData.start), e = new Date(safakData.end); const d = Math.round((e - s) / (1000*60*60*24)) + 1; if(d > 0) contractLengths.push(d); }
+                    const avgContractDays = contractLengths.length > 0 ? Math.round(contractLengths.reduce((a,b) => a+b, 0) / contractLengths.length) : 0;
+
+                    const projIncome = dailyIncomeAvg * avgContractDays;
+                    const projExpense = dailyExpenseAvg * avgContractDays;
+                    const projNet = projIncome - projExpense;
+
+                    document.getElementById('proj-daily-income').innerText = '$' + dailyIncomeAvg.toFixed(2);
+                    document.getElementById('proj-daily-expense').innerText = '$' + dailyExpenseAvg.toFixed(2);
+                    document.getElementById('proj-avg-contract-days').innerText = avgContractDays + ' gün';
+                    document.getElementById('proj-avg-income').innerText = '$' + projIncome.toFixed(2);
+                    document.getElementById('proj-avg-expense').innerText = '$' + projExpense.toFixed(2);
+                    document.getElementById('proj-avg-net').innerText = '$' + projNet.toFixed(2);
+                    document.getElementById('proj-contract-count').innerText = contractLengths.length;
+                    document.getElementById('proj-income-days').innerText = incomeDaySpan;
+                    document.getElementById('proj-expense-days').innerText = expenseDaySpan;
+
+                    // Gider dağılımı (transfer hariç)
                     const distEl = document.getElementById('proj-expense-dist');
                     const sortedCats = Object.keys(expenseByCategory).sort((a, b) => expenseByCategory[b] - expenseByCategory[a]);
                     if(sortedCats.length === 0) { distEl.innerHTML = '<p class="text-xs text-slate-400 italic">Henüz gider verisi yok.</p>'; }
@@ -1250,7 +1280,7 @@ function renderQtyReport() {
                         }).join('');
                     }
 
-                    // Gelire göre gider oranı
+                    // Gelire göre gider oranı (transfer hariç)
                     const ratio = totalIncome > 0 ? (totalExpense / totalIncome * 100) : 0;
                     document.getElementById('proj-expense-ratio').innerText = '%' + ratio.toFixed(1);
                     document.getElementById('proj-ratio-fill').style.width = Math.min(ratio, 100).toFixed(1) + '%';
