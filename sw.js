@@ -1,4 +1,4 @@
-const CACHE_NAME = 'finpro-sync-cache-v6'; // v4 -> v5: Türkçe karakter (İ/I) eşleşme hatası düzeltildi, önbellek zorla yenilendi
+const CACHE_NAME = 'finpro-sync-cache-v7'; // v4 -> v5: Türkçe karakter (İ/I) eşleşme hatası düzeltildi, önbellek zorla yenilendi
 
 // Uygulamanın kendi dosyaları
 const CORE_ASSETS = [
