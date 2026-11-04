@@ -1,4 +1,4 @@
-const CACHE_NAME = 'finpro-sync-cache-v12'; // v9 -> v10: boş kalan sw.js/manifest.json geri yüklendi
+const CACHE_NAME = 'finpro-sync-cache-v13'; // v9 -> v10: boş kalan sw.js/manifest.json geri yüklendi
 
 // Uygulamanın kendi dosyaları
 const CORE_ASSETS = [
