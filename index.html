@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.34) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.35) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -63,7 +63,7 @@
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.34 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.35 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -555,7 +555,7 @@
     <!-- YENİ CRUISE (SEFER/ROTA) MODAL -->
     <div id="route-modal" class="hidden fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center backdrop-blur-sm p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all max-h-[92vh] overflow-y-auto">
-            <div class="p-4 border-b bg-slate-50 flex justify-between items-center"><h3 class="font-bold text-slate-800 flex items-center"><span class="material-icons mr-2 text-fuchsia-500">map</span> Yeni Cruise Oluştur</h3><button onclick="document.getElementById('route-modal').classList.add('hidden')" class="text-slate-400 hover:text-red-500"><span class="material-icons">close</span></button></div>
+            <div class="p-4 border-b bg-slate-50 flex justify-between items-center"><h3 class="font-bold text-slate-800 flex items-center"><span class="material-icons mr-2 text-fuchsia-500">map</span> <span id="rt-title">Yeni Cruise Oluştur</span></h3><button onclick="document.getElementById('route-modal').classList.add('hidden')" class="text-slate-400 hover:text-red-500"><span class="material-icons">close</span></button></div>
             <div class="p-5 space-y-4">
                 <div class="grid grid-cols-3 gap-3">
                     <div class="col-span-2"><label class="block text-xs font-bold text-slate-500 mb-1">Gemi</label><input list="ship-datalist-route" id="rt-ship" oninput="onRouteShipChange()" placeholder="Örn: BREEZE" class="w-full border-2 border-fuchsia-100 p-2.5 rounded-lg bg-slate-50 font-black uppercase text-sm"><datalist id="ship-datalist-route"></datalist></div>
@@ -571,7 +571,7 @@
                         <button type="button" onclick="setRouteDays(7)" class="text-xs font-bold px-2.5 py-1.5 rounded bg-slate-100 hover:bg-slate-200">7</button><button type="button" onclick="setRouteDays(10)" class="text-xs font-bold px-2.5 py-1.5 rounded bg-slate-100 hover:bg-slate-200">10</button><button type="button" onclick="setRouteDays(14)" class="text-xs font-bold px-2.5 py-1.5 rounded bg-slate-100 hover:bg-slate-200">14</button></div></div>
                 <div class="flex items-center gap-3"><label class="text-xs font-bold text-slate-500">Takvim Rengi</label><input type="color" id="rt-color" class="w-10 h-8 p-0 border rounded cursor-pointer"><span class="text-[10px] text-slate-400">Otomatik seçilir, istersen değiştir.</span></div>
                 <div class="bg-fuchsia-50 border border-fuchsia-200 rounded-lg p-3"><p class="text-[10px] font-bold text-fuchsia-700 uppercase">Oluşacak Cruise Kodu</p><p id="rt-preview" class="font-mono text-lg font-black text-fuchsia-800 select-all">—</p><p class="text-[10px] text-fuchsia-600 mt-0.5">Gemi kodu + gün (2 hane) + ay + gün + yıl</p></div>
-                <button onclick="createCruise()" class="w-full btn bg-fuchsia-600 hover:bg-fuchsia-500 text-white shadow-xl py-3.5 text-sm tracking-wide">Cruise Oluştur</button>
+                <button id="rt-save-btn" onclick="createCruise()" class="w-full btn bg-fuchsia-600 hover:bg-fuchsia-500 text-white shadow-xl py-3.5 text-sm tracking-wide">Cruise Oluştur</button>
             </div>
         </div>
     </div>
@@ -670,6 +670,7 @@
         let calendarEvents = JSON.parse(localStorage.getItem(DB_EVENTS)) || [];
         let routeMeta = JSON.parse(localStorage.getItem(DB_ROUTE_META)) || {};
         let shipCodes = JSON.parse(localStorage.getItem(DB_SHIP_CODES)) || {};
+        let editingRoute = null;
         let eventModalDate = '';
         let lastEntryRoute = localStorage.getItem(DB_LAST_ROUTE) || '';
         let dashCalendarDate = new Date();
@@ -808,6 +809,7 @@
         function buildRouteCode(code, days, start) { const p = String(start).split('-'); return `${code}${String(days).padStart(2, '0')}${p[1]}${p[2]}${p[0]}`; }
         function openRouteModal() {
             const shipEl = document.getElementById('rt-ship'); if(!shipEl) return;
+            editingRoute = null; document.getElementById('rt-title').innerText = 'Yeni Cruise Oluştur'; document.getElementById('rt-save-btn').innerText = 'Cruise Oluştur';
             shipEl.value = safakData.isActive && safakData.name ? String(safakData.name).toUpperCase() : (knownCruises[0] || '');
             document.getElementById('rt-code').value = defaultShipCode(shipEl.value);
             document.getElementById('rt-start').value = dateToStr(new Date());
@@ -828,6 +830,20 @@
             const code = document.getElementById('rt-code').value.trim().toUpperCase(), start = document.getElementById('rt-start').value, days = parseInt(document.getElementById('rt-days').value);
             document.getElementById('rt-preview').innerText = (code && start && days > 0) ? buildRouteCode(code, days, start) : '—';
         }
+        function openRouteEdit(name) {
+            const m = routeMeta[name]; if(!document.getElementById('rt-ship')) return;
+            const shipEl = document.getElementById('rt-ship');
+            shipEl.value = m ? m.ship : String(safakData.isActive && safakData.name ? safakData.name : (knownCruises[0] || '')).toUpperCase();
+            document.getElementById('rt-code').value = m ? m.shipCode : defaultShipCode(shipEl.value);
+            document.getElementById('rt-start').value = m ? m.start : dateToStr(new Date());
+            document.getElementById('rt-days').value = m ? m.days : 7; routeDateSync('days');
+            if(m) { document.getElementById('rt-end').value = m.end; }
+            document.getElementById('rt-color').value = m ? m.color : nextRouteColor();
+            editingRoute = name;
+            document.getElementById('rt-title').innerText = 'Cruise Düzenle'; document.getElementById('rt-save-btn').innerText = 'Değişiklikleri Kaydet';
+            updateRoutePreview();
+            document.getElementById('route-modal').classList.remove('hidden');
+        }
         function createCruise() {
             const ship = document.getElementById('rt-ship').value.trim().toUpperCase(), code = document.getElementById('rt-code').value.trim().toUpperCase();
             const start = document.getElementById('rt-start').value, end = document.getElementById('rt-end').value, days = parseInt(document.getElementById('rt-days').value);
@@ -837,17 +853,33 @@
             if(!start || !end || !(days > 0)) return alert('Lütfen başlangıç/bitiş tarihini ve gün sayısını girin.');
             if(parseYMD(end) < parseYMD(start)) return alert('Bitiş tarihi başlangıçtan önce olamaz.');
             const name = buildRouteCode(code, days, start);
-            if(knownRoutes.includes(name) || routeMeta[name]) return alert('Bu cruise zaten var: ' + name);
+            const old = editingRoute;
+            if((!old || name !== old) && (knownRoutes.includes(name) || routeMeta[name])) return alert('Bu kodla bir cruise zaten var: ' + name);
             shipCodes[ship] = code;
             if(!knownCruises.includes(ship) && !records.some(r => r.cruise === ship)) knownCruises.push(ship);
-            knownRoutes.push(name); routeMeta[name] = { ship, shipCode: code, start, end, days, color };
-            // Günlük giriş formlarında yeni cruise otomatik seçili gelir (sonradan değiştirilebilir)
-            lastEntryRoute = name; try { localStorage.setItem(DB_LAST_ROUTE, name); } catch(e) {}
+            const wasSelected = {}; ['entry-route', 'tr-route'].forEach(id => { const el = document.getElementById(id); wasSelected[id] = el ? el.value : ''; });
+            if(old) {
+                // DÜZELTME: kod değiştiyse eski adı kullanan tüm kayıtları yeni ada taşı
+                if(name !== old) {
+                    knownRoutes = knownRoutes.filter(r => r !== old); if(!knownRoutes.includes(name)) knownRoutes.push(name);
+                    delete routeMeta[old];
+                    records.forEach(r => { if(r.route === old) r.route = name; });
+                    if(lastEntryRoute === old) { lastEntryRoute = name; try { localStorage.setItem(DB_LAST_ROUTE, name); } catch(e) {} }
+                    Object.keys(wasSelected).forEach(id => { if(wasSelected[id] === old) wasSelected[id] = name; });
+                } else if(!knownRoutes.includes(name)) { knownRoutes.push(name); }
+                routeMeta[name] = { ship, shipCode: code, start, end, days, color };
+                editingRoute = null;
+            } else {
+                knownRoutes.push(name); routeMeta[name] = { ship, shipCode: code, start, end, days, color };
+                // Günlük giriş formlarında yeni cruise otomatik seçili gelir (sonradan değiştirilebilir)
+                lastEntryRoute = name; try { localStorage.setItem(DB_LAST_ROUTE, name); } catch(e) {}
+                wasSelected['entry-route'] = name; wasSelected['tr-route'] = name;
+            }
             saveData();
             document.getElementById('route-modal').classList.add('hidden');
             updateDatalists();
-            ['entry-route', 'tr-route'].forEach(id => { const el = document.getElementById(id); if(el) el.value = name; });
-            renderKnownCruises(); renderKnownRoutes(); renderDashCalendar();
+            ['entry-route', 'tr-route'].forEach(id => { const el = document.getElementById(id); if(el && wasSelected[id]) el.value = wasSelected[id]; });
+            renderKnownCruises(); renderKnownRoutes(); renderEntriesTable(); renderDashCalendar();
         }
         function addKnownRoute(inputId, modalId) {
             const input = document.getElementById(inputId || 'new-route-name'); const name = input.value.trim().toUpperCase();
@@ -873,7 +905,7 @@
                 const m = routeMeta[name]; const recCount = records.filter(r => r.route === name).length;
                 const canDelete = knownRoutes.includes(name);
                 const dot = m && m.color ? `<span class="inline-block w-2.5 h-2.5 rounded-full mr-1.5 align-middle" style="background:${m.color}"></span>` : '';
-                tbody.innerHTML += `<tr class="border-b hover:bg-slate-50"><td class="p-3 font-bold text-slate-700 font-mono text-xs">${dot}${name} ${recCount > 0 ? `<span class="text-[9px] text-slate-400 font-semibold ml-1">(${recCount} kayıt)</span>` : ''}</td><td class="p-3 text-xs text-slate-600">${m ? (m.ship || '-') : '-'}</td><td class="p-3 text-xs text-slate-600 whitespace-nowrap">${m ? `${m.start} → ${m.end}` : '-'}</td><td class="p-3 text-center text-xs font-bold text-slate-600">${m ? m.days : '-'}</td><td class="p-3 text-center">${canDelete ? `<button onclick="deleteKnownRoute('${name}')" class="text-red-500 text-[10px] font-bold border border-red-200 px-2 py-1 rounded hover:bg-red-50">Sil</button>` : `<span class="text-[9px] text-slate-400 italic">Kayıtlardan otomatik</span>`}</td></tr>`;
+                tbody.innerHTML += `<tr class="border-b hover:bg-slate-50"><td class="p-3 font-bold text-slate-700 font-mono text-xs">${dot}${name} ${recCount > 0 ? `<span class="text-[9px] text-slate-400 font-semibold ml-1">(${recCount} kayıt)</span>` : ''}</td><td class="p-3 text-xs text-slate-600">${m ? (m.ship || '-') : '-'}</td><td class="p-3 text-xs text-slate-600 whitespace-nowrap">${m ? `${m.start} → ${m.end}` : '-'}</td><td class="p-3 text-center text-xs font-bold text-slate-600">${m ? m.days : '-'}</td><td class="p-3 text-center whitespace-nowrap"><button onclick="openRouteEdit('${name}')" class="text-indigo-600 text-[10px] font-bold border border-indigo-200 px-2 py-1 rounded hover:bg-indigo-50 mr-1">Düzenle</button>${canDelete ? `<button onclick="deleteKnownRoute('${name}')" class="text-red-500 text-[10px] font-bold border border-red-200 px-2 py-1 rounded hover:bg-red-50">Sil</button>` : `<span class="text-[9px] text-slate-400 italic">Kayıtlardan otomatik</span>`}</td></tr>`;
             });
         }
         function getFilteredRecords(recs) { const y = document.getElementById('global-year').value; const moEl = document.getElementById('global-month'); const mo = moEl ? moEl.value : 'ALL'; const s = document.getElementById('global-ship').value.trim().toUpperCase(); let f = recs; if(y && y !== 'ALL') f = f.filter(r => r.date && String(r.date).startsWith(y)); if(mo && mo !== 'ALL') f = f.filter(r => r.date && String(r.date).substring(5,7) === mo); if(s && s !== '' && s !== 'TÜM GEMILER' && s !== 'TÜM GEMİLER' && s !== 'ALL') f = f.filter(r => r.cruise && String(r.cruise).toUpperCase() === s); return f; } function getFilteredRecordsNoMonth(recs) { const y = document.getElementById('global-year').value; const s = document.getElementById('global-ship').value.trim().toUpperCase(); let f = recs; if(y && y !== 'ALL') f = f.filter(r => r.date && String(r.date).startsWith(y)); if(s && s !== '' && s !== 'TÜM GEMILER' && s !== 'TÜM GEMİLER' && s !== 'ALL') f = f.filter(r => r.cruise && String(r.cruise).toUpperCase() === s); return f; }
@@ -1390,7 +1422,7 @@ function renderQtyReport() {
                     if(active.length > 0) {
                         const n = active[0], m = routeMeta[n];
                         const dayNo = Math.round((today - parseYMD(m.start)) / 86400000) + 1; const left = Math.round((parseYMD(m.end) - today) / 86400000); const pct = Math.min(100, Math.max(0, dayNo / m.days * 100));
-                        titleEl.innerHTML = `<span class="inline-block w-3 h-3 rounded-full mr-2 align-middle" style="background:${m.color}"></span><span class="font-mono">${n}</span>`;
+                        titleEl.innerHTML = `<span class="inline-block w-3 h-3 rounded-full mr-2 align-middle" style="background:${m.color}"></span><span class="font-mono">${n}</span><button onclick="openRouteEdit('${n}')" class="ml-2 text-slate-400 hover:text-fuchsia-600 align-middle" title="Cruise'ı düzenle"><span class="material-icons text-base">edit</span></button>`;
                         subEl.innerHTML = `<div>${m.ship ? 'Gemi: <b>' + m.ship + '</b> • ' : ''}${fmt(m.start)} → ${fmt(m.end)}</div><div><b style="color:${m.color}">${dayNo}/${m.days}. gün</b> • ${left > 0 ? left + ' gün kaldı' : 'son gün'}</div><div class="w-full max-w-xs bg-slate-100 rounded-full h-1.5 mt-1.5 overflow-hidden"><div class="h-1.5 rounded-full" style="width:${pct.toFixed(0)}%;background:${m.color}"></div></div>${active.length > 1 ? '<div class="text-[10px] text-slate-400 mt-1">Aynı gün biten/başlayan: ' + active.slice(1).join(', ') + '</div>' : ''}`;
                         setColor(m.color);
                         return;
@@ -1399,7 +1431,7 @@ function renderQtyReport() {
                     if(upcoming) {
                         const m = routeMeta[upcoming]; const inDays = Math.round((parseYMD(m.start) - today) / 86400000);
                         titleEl.innerHTML = '<span class="text-slate-500">Şu an bir cruise\'da değilsin</span>';
-                        subEl.innerHTML = `<div>Sıradaki: <b class="font-mono">${upcoming}</b> (${m.ship || '-'}) • ${fmt(m.start)} → ${fmt(m.end)}</div><div><b style="color:${m.color}">${inDays} gün sonra</b> başlıyor</div>`;
+                        subEl.innerHTML = `<div>Sıradaki: <b class="font-mono">${upcoming}</b> (${m.ship || '-'}) • ${fmt(m.start)} → ${fmt(m.end)} <button onclick="openRouteEdit('${upcoming}')" class="ml-1 text-slate-400 hover:text-fuchsia-600 align-middle" title="Cruise'ı düzenle"><span class="material-icons text-sm">edit</span></button></div><div><b style="color:${m.color}">${inDays} gün sonra</b> başlıyor</div>`;
                         setColor(m.color);
                         return;
                     }
