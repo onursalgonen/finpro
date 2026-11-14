@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.33) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.34) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -63,7 +63,7 @@
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.33 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.34 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -226,7 +226,7 @@
             <!-- VIEW: DASHBOARD -->
             <section id="view-dashboard" class="view-section active">
                 <div id="active-contract-banner" class="mb-6 card p-5 flex flex-col md:flex-row justify-between items-center bg-slate-900 shadow-xl border-none"></div>
-                <div class="mb-6 card p-5 flex flex-col md:flex-row justify-between items-center gap-3 border-t-4 border-fuchsia-500"><div class="flex items-center"><span class="material-icons text-3xl mr-4 text-fuchsia-500">map</span><div><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sefer / Rota Yönetimi</p><h3 class="text-lg font-bold text-slate-700">Yeni bir cruise (sefer/rota) eklemek ister misin?</h3></div></div><button onclick="openRouteModal()" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white text-sm px-6 py-3 rounded-lg font-bold shadow-lg transition flex items-center whitespace-nowrap"><span class="material-icons text-sm mr-2">add_location_alt</span> Yeni Cruise Ekle</button></div>
+                <div id="dash-cruise-card" class="mb-6 card p-5 flex flex-col md:flex-row justify-between items-center gap-3 border-t-4 border-fuchsia-500"><div class="flex items-center w-full md:w-auto min-w-0"><span id="dash-cruise-icon" class="material-icons text-3xl mr-4 text-fuchsia-500">map</span><div class="min-w-0"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Şu An Bulunduğum Cruise</p><h3 id="dash-current-cruise" class="text-lg font-bold text-slate-700">-</h3><div id="dash-current-cruise-sub" class="text-xs text-slate-500 font-semibold mt-0.5"></div></div></div><button onclick="openRouteModal()" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white text-sm px-6 py-3 rounded-lg font-bold shadow-lg transition flex items-center whitespace-nowrap"><span class="material-icons text-sm mr-2">add_location_alt</span> Yeni Cruise Ekle</button></div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div onclick="document.getElementById('nav-safak').click()" class="card bg-gradient-to-r from-red-500 to-red-600 text-white cursor-pointer hover:shadow-lg transition flex items-center justify-between p-4"><div class="flex items-center"><span class="material-icons mr-3 text-3xl">date_range</span><div><p class="text-[10px] font-bold uppercase text-red-200" id="dash-safak-title">KONTRAT ŞAFAK</p><h4 class="font-black text-xl" id="dash-safak-rem">0 GÜN KALDI</h4></div></div><div class="text-right"><p class="text-xs font-bold text-red-200" id="dash-safak-tot">0/0 Gün</p><p class="text-lg font-black text-yellow-300" id="dash-safak-pct">%0</p></div></div>
                     <div onclick="document.getElementById('nav-wallet').click()" class="card bg-gradient-to-r from-emerald-50 to-white border-emerald-200 cursor-pointer hover:shadow-md transition flex items-center justify-between p-4"><div class="flex items-center"><span class="material-icons text-emerald-500 mr-3 text-3xl">account_balance_wallet</span><div><p class="text-[10px] font-bold uppercase text-slate-500">Sistem vs Fiziki Sayım</p><h4 class="font-black text-slate-800">Cüzdan Farkı</h4></div></div><p class="text-2xl font-black text-slate-800" id="dash-link-wallet-diff">$0.00</p></div>
@@ -1377,6 +1377,35 @@ function renderQtyReport() {
                         legendEl.innerHTML = inMonth.map(n => `<span class="flex items-center text-[7px] font-bold text-slate-500" title="${routeMeta[n].start} → ${routeMeta[n].end}"><span class="w-2 h-2 rounded-sm inline-block mr-1" style="background:${routeMeta[n].color}"></span>${n}</span>`).join('');
                     }
                     renderUpcomingEventsList();
+                    renderCurrentCruiseCard();
+                }
+                function renderCurrentCruiseCard() {
+                    const titleEl = document.getElementById('dash-current-cruise'), subEl = document.getElementById('dash-current-cruise-sub'), card = document.getElementById('dash-cruise-card'), icon = document.getElementById('dash-cruise-icon');
+                    if(!titleEl || !subEl) return;
+                    const today = new Date(); today.setHours(0,0,0,0); const todayStr = dateToStr(today);
+                    const fmt = s => { const p = String(s).split('-'); return `${parseInt(p[2])} ${(monthNames[p[1]] || '').substring(0, 3)} ${p[0]}`; };
+                    const names = Object.keys(routeMeta).filter(n => routeMeta[n].start && routeMeta[n].end).sort((a, b) => routeMeta[a].start.localeCompare(routeMeta[b].start));
+                    const active = names.filter(n => routeMeta[n].start <= todayStr && routeMeta[n].end >= todayStr);
+                    const setColor = col => { if(card) card.style.borderTopColor = col || ''; if(icon) icon.style.color = col || ''; };
+                    if(active.length > 0) {
+                        const n = active[0], m = routeMeta[n];
+                        const dayNo = Math.round((today - parseYMD(m.start)) / 86400000) + 1; const left = Math.round((parseYMD(m.end) - today) / 86400000); const pct = Math.min(100, Math.max(0, dayNo / m.days * 100));
+                        titleEl.innerHTML = `<span class="inline-block w-3 h-3 rounded-full mr-2 align-middle" style="background:${m.color}"></span><span class="font-mono">${n}</span>`;
+                        subEl.innerHTML = `<div>${m.ship ? 'Gemi: <b>' + m.ship + '</b> • ' : ''}${fmt(m.start)} → ${fmt(m.end)}</div><div><b style="color:${m.color}">${dayNo}/${m.days}. gün</b> • ${left > 0 ? left + ' gün kaldı' : 'son gün'}</div><div class="w-full max-w-xs bg-slate-100 rounded-full h-1.5 mt-1.5 overflow-hidden"><div class="h-1.5 rounded-full" style="width:${pct.toFixed(0)}%;background:${m.color}"></div></div>${active.length > 1 ? '<div class="text-[10px] text-slate-400 mt-1">Aynı gün biten/başlayan: ' + active.slice(1).join(', ') + '</div>' : ''}`;
+                        setColor(m.color);
+                        return;
+                    }
+                    const upcoming = names.find(n => routeMeta[n].start > todayStr);
+                    if(upcoming) {
+                        const m = routeMeta[upcoming]; const inDays = Math.round((parseYMD(m.start) - today) / 86400000);
+                        titleEl.innerHTML = '<span class="text-slate-500">Şu an bir cruise\'da değilsin</span>';
+                        subEl.innerHTML = `<div>Sıradaki: <b class="font-mono">${upcoming}</b> (${m.ship || '-'}) • ${fmt(m.start)} → ${fmt(m.end)}</div><div><b style="color:${m.color}">${inDays} gün sonra</b> başlıyor</div>`;
+                        setColor(m.color);
+                        return;
+                    }
+                    titleEl.innerHTML = names.length ? '<span class="text-slate-500">Şu an bir cruise\'da değilsin</span>' : '<span class="text-slate-500">Henüz cruise eklenmedi</span>';
+                    subEl.innerHTML = names.length ? '<div>Tüm cruise\'lar sona erdi.</div>' : '<div>Sağdaki butondan ilk cruise\'ını oluştur.</div>';
+                    setColor('');
                 }
                 function renderUpcomingEventsList() {
                     const el = document.getElementById('dash-upcoming-events'); const dateEl = document.getElementById('dash-today-date'); if(!el) return;
