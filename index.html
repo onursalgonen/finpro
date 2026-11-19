@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.36) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.37) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -63,7 +63,7 @@
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.36 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.37 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -236,9 +236,9 @@
                     <div class="flex-1 w-full min-w-0">
                         <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Hesap Özetleri <span class="text-indigo-500 ml-2" id="dash-filter-info"></span></h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="card border-t-4 border-blue-500"><div class="flex justify-between mb-4"><h3 class="font-bold text-lg">Folio Hesabı</h3><span class="bg-blue-50 text-blue-600 text-[10px] px-2 py-1 rounded font-bold uppercase">Gemi İçi</span></div><div class="space-y-2 text-sm"><div class="flex justify-between"><span>Gelir:</span><span class="font-bold text-emerald-600" id="dash-f-in">$0.00</span></div><div class="flex justify-between"><span>Gider:</span><span class="font-bold text-red-500" id="dash-f-out">-$0.00</span></div><div class="flex justify-between border-t pt-2 mt-2 font-bold"><span>Net Durum:</span><span class="font-black text-lg" id="dash-f-net">$0.00</span></div></div></div>
-                            <div class="card border-t-4 border-purple-500"><div class="flex justify-between mb-4"><h3 class="font-bold text-lg">Banka (Kart)</h3><span class="bg-purple-50 text-purple-600 text-[10px] px-2 py-1 rounded font-bold uppercase">Şirket ATM</span></div><div class="space-y-2 text-sm"><div class="flex justify-between"><span>Gelir:</span><span class="font-bold text-emerald-600" id="dash-b-in">$0.00</span></div><div class="flex justify-between"><span>Gider:</span><span class="font-bold text-red-500" id="dash-b-out">-$0.00</span></div><div class="flex justify-between border-t pt-2 mt-2 font-bold"><span>Net Durum:</span><span class="font-black text-lg" id="dash-b-net">$0.00</span></div></div></div>
-                            <div class="card border-t-4 border-emerald-500"><div class="flex justify-between mb-4"><h3 class="font-bold text-lg">Cüzdan</h3><span class="bg-emerald-50 text-emerald-600 text-[10px] px-2 py-1 rounded font-bold uppercase">Nakit</span></div><div class="space-y-2 text-sm"><div class="flex justify-between"><span>Gelir:</span><span class="font-bold text-emerald-600" id="dash-w-in">$0.00</span></div><div class="flex justify-between"><span>Gider:</span><span class="font-bold text-red-500" id="dash-w-out">-$0.00</span></div><div class="flex justify-between border-t pt-2 mt-2 font-bold"><span>Net Durum:</span><span class="font-black text-lg" id="dash-w-net">$0.00</span></div></div></div>
+                            <div class="card border-t-4 border-blue-500 cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition" onclick="showAccountPopup('FOLIO')" title="Hareketleri göster"><div class="flex justify-between mb-4"><h3 class="font-bold text-lg flex items-center">Folio Hesabı<span class="material-icons text-sm ml-1.5 text-slate-300">open_in_new</span></h3><span class="bg-blue-50 text-blue-600 text-[10px] px-2 py-1 rounded font-bold uppercase">Gemi İçi</span></div><div class="space-y-2 text-sm"><div class="flex justify-between"><span>Gelir:</span><span class="font-bold text-emerald-600" id="dash-f-in">$0.00</span></div><div class="flex justify-between"><span>Gider:</span><span class="font-bold text-red-500" id="dash-f-out">-$0.00</span></div><div class="flex justify-between border-t pt-2 mt-2 font-bold"><span>Net Durum:</span><span class="font-black text-lg" id="dash-f-net">$0.00</span></div></div></div>
+                            <div class="card border-t-4 border-purple-500 cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition" onclick="showAccountPopup('BANK')" title="Hareketleri göster"><div class="flex justify-between mb-4"><h3 class="font-bold text-lg flex items-center">Banka (Kart)<span class="material-icons text-sm ml-1.5 text-slate-300">open_in_new</span></h3><span class="bg-purple-50 text-purple-600 text-[10px] px-2 py-1 rounded font-bold uppercase">Şirket ATM</span></div><div class="space-y-2 text-sm"><div class="flex justify-between"><span>Gelir:</span><span class="font-bold text-emerald-600" id="dash-b-in">$0.00</span></div><div class="flex justify-between"><span>Gider:</span><span class="font-bold text-red-500" id="dash-b-out">-$0.00</span></div><div class="flex justify-between border-t pt-2 mt-2 font-bold"><span>Net Durum:</span><span class="font-black text-lg" id="dash-b-net">$0.00</span></div></div></div>
+                            <div class="card border-t-4 border-emerald-500 cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition" onclick="showAccountPopup('WALLET')" title="Hareketleri göster"><div class="flex justify-between mb-4"><h3 class="font-bold text-lg flex items-center">Cüzdan<span class="material-icons text-sm ml-1.5 text-slate-300">open_in_new</span></h3><span class="bg-emerald-50 text-emerald-600 text-[10px] px-2 py-1 rounded font-bold uppercase">Nakit</span></div><div class="space-y-2 text-sm"><div class="flex justify-between"><span>Gelir:</span><span class="font-bold text-emerald-600" id="dash-w-in">$0.00</span></div><div class="flex justify-between"><span>Gider:</span><span class="font-bold text-red-500" id="dash-w-out">-$0.00</span></div><div class="flex justify-between border-t pt-2 mt-2 font-bold"><span>Net Durum:</span><span class="font-black text-lg" id="dash-w-net">$0.00</span></div></div></div>
                         </div>
                     </div>
                     <div class="w-full lg:w-[260px] flex-shrink-0">
@@ -577,6 +577,15 @@
     </div>
 
     <!-- TAKVİM ETKİNLİĞİ MODAL -->
+    <!-- HESAP HAREKETLERİ POPUP -->
+    <div id="account-modal" class="hidden fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center backdrop-blur-sm p-3" onclick="if(event.target===this) this.classList.add('hidden')">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="p-4 border-b bg-slate-50 flex justify-between items-center flex-shrink-0"><div><h3 class="font-bold text-slate-800 flex items-center"><span id="account-modal-icon" class="material-icons mr-2 text-indigo-500">account_balance_wallet</span> <span id="account-modal-title">Hesap Hareketleri</span></h3><p id="account-modal-sub" class="text-[10px] text-slate-400 font-bold uppercase mt-0.5"></p></div><button onclick="document.getElementById('account-modal').classList.add('hidden')" class="text-slate-400 hover:text-red-500"><span class="material-icons">close</span></button></div>
+            <div id="account-modal-summary" class="grid grid-cols-3 gap-2 p-3 border-b flex-shrink-0"></div>
+            <div class="overflow-auto flex-1"><table class="entries-grid w-full text-left text-xs whitespace-nowrap"><thead class="sticky top-0 z-10"><tr class="text-slate-500 uppercase text-[10px] tracking-wider"><th class="p-2">Tarih</th><th class="p-2">Kategori</th><th class="p-2">Alt Grup</th><th class="p-2">Cruise</th><th class="p-2 text-right">Tutar</th></tr></thead><tbody id="account-modal-tbody"></tbody></table></div>
+        </div>
+    </div>
+
     <!-- TRANSFER DETAY POPUP -->
     <div id="ext-detail-modal" class="hidden fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center backdrop-blur-sm p-4" onclick="if(event.target===this) this.classList.add('hidden')">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
@@ -1026,6 +1035,32 @@
                 else if(r.autoSub) { r.subCategory = ''; delete r.autoSub; changed = true; }
             });
             return changed;
+        }
+        // --- Dashboard: Folio / Banka / Cüzdan kartına basınca o hesabın hareketlerini göster ---
+        function showAccountPopup(acc) {
+            const labels = { FOLIO: 'Folio Hesabı', BANK: 'Banka (Kart)', WALLET: 'Cüzdan' }, icons = { FOLIO: 'directions_boat', BANK: 'credit_card', WALLET: 'account_balance_wallet' };
+            const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            // Kartlardaki toplamlarla birebir aynı küme: Cüzdan ay filtresinden bağımsız, diğerleri tüm filtrelere göre
+            const src = acc === 'WALLET' ? getFilteredRecordsNoMonth(records) : getFilteredRecords(records);
+            const list = src.filter(r => r.account === acc && (r.type === 'INCOME' || r.type === 'OUTGOING')).sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || (b.id - a.id));
+            let tin = 0, tout = 0; list.forEach(r => { if(r.type === 'INCOME') tin += (r.value || 0); else tout += (r.value || 0); });
+            const net = tin - tout;
+            document.getElementById('account-modal-title').innerText = (labels[acc] || acc) + ' Hareketleri';
+            document.getElementById('account-modal-icon').innerText = icons[acc] || 'account_balance_wallet';
+            const filt = (document.getElementById('dash-filter-info') || {}).innerText || '';
+            document.getElementById('account-modal-sub').innerText = `${list.length} hareket${acc === 'WALLET' ? ' • Ay filtresinden bağımsız' : ''}${filt ? ' • ' + filt.trim() : ''}`;
+            document.getElementById('account-modal-summary').innerHTML = `<div class="text-center p-2 bg-emerald-50 rounded-lg border border-emerald-100"><p class="text-[9px] font-bold text-slate-400 uppercase">Gelir</p><p class="font-black text-emerald-600">$${tin.toFixed(2)}</p></div><div class="text-center p-2 bg-red-50 rounded-lg border border-red-100"><p class="text-[9px] font-bold text-slate-400 uppercase">Gider</p><p class="font-black text-red-500">-$${tout.toFixed(2)}</p></div><div class="text-center p-2 bg-slate-50 rounded-lg border"><p class="text-[9px] font-bold text-slate-400 uppercase">Net Durum</p><p class="font-black ${net >= 0 ? 'text-slate-800' : 'text-red-600'}">$${net.toFixed(2)}</p></div>`;
+            const tbody = document.getElementById('account-modal-tbody');
+            if(list.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="p-6 text-center italic text-slate-400">Bu hesapta hareket yok.</td></tr>'; }
+            else {
+                tbody.innerHTML = list.map(r => {
+                    const isInc = r.type === 'INCOME';
+                    const cruise = r.cruise && r.cruise !== 'INVALID' ? r.cruise : '-';
+                    const tag = r.isTransfer ? ' <span class="text-[8px] font-black text-indigo-600 bg-indigo-50 px-1 py-0.5 rounded uppercase">İç Transfer</span>' : '';
+                    return `<tr><td class="p-2 text-slate-600">${esc(r.date || '-')}</td><td class="p-2 font-bold text-slate-800">${esc(r.categoryName || '-')}${tag}</td><td class="p-2 text-slate-600">${esc(r.subCategory || '-')}</td><td class="p-2"><span class="text-[10px] font-bold text-blue-800 bg-blue-50 px-1 rounded">${esc(cruise)}</span>${r.route ? ` <span class="text-[10px] font-bold text-fuchsia-700 bg-fuchsia-50 px-1 rounded">${esc(r.route)}</span>` : ''}</td><td class="p-2 text-right font-black ${isInc ? 'text-emerald-600' : 'text-red-500'}">${isInc ? '+' : '-'}$${(r.value || 0).toFixed(2)}</td></tr>`;
+                }).join('');
+            }
+            document.getElementById('account-modal').classList.remove('hidden');
         }
         function showShopDetailPopup(txnId) {
             const body = document.getElementById('shop-detail-body'); if(!body) return;
