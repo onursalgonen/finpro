@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.37) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.38) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -64,7 +64,7 @@
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.37 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.38 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -1901,7 +1901,7 @@ function renderQtyReport() {
         // ==========================================
         // ALTIN & GÜMÜŞ PLATFORMU JS KODLARI
         // ==========================================
-        let gsState = { activeAsset: 'gold', prices: { gold: { gram: 3000, ons: 2350 }, silver: { gram: 35, ons: 29.50 }, usdTry: 33.20 }, portfolio: { gold: [], silver: [] }, rsi: { gold: { current: 55, target: 70 }, silver: { current: 50, target: 65 } }, contacts: [], priceHistory: { labels: [], gold: [], silver: [] } };
+        let gsState = { activeAsset: 'gold', prices: { gold: { gram: 3000, ons: 2350 }, silver: { gram: 35, ons: 29.50 }, usdTry: 33.20 }, portfolio: { gold: [], silver: [] }, rsi: { gold: { current: 55, target: 70 }, silver: { current: 50, target: 65 } }, contacts: [], priceHistory: { labels: [], gold: [], silver: [] }, lastUpdated: null, lastUpdatedAt: 0, updatedAt: 0 };
         const GS_DB_NAME = "GoldSilverPlatformDB"; const GS_DB_VERSION = 1; const GS_STORE_NAME = "app_state"; let gsDb; let gsChartInstance = null; let gsTrendChartInstance = null; let gsPendingMailData = null;
         let rsiBalanceChartInstance = null; let rsiMainChartInstance = null;
         const gsConfirmModal = document.getElementById('gsCustomConfirmModal'); const gsConfirmModalTitle = document.getElementById('gsConfirmModalTitle'); const gsConfirmModalMessage = document.getElementById('gsConfirmModalMessage'); const gsConfirmModalIcon = document.getElementById('gsConfirmModalIcon'); const btnGsConfirmAction = document.getElementById('btnGsConfirmAction'); let gsCurrentModalResolve = null;
@@ -1916,7 +1916,7 @@ function renderQtyReport() {
 
         async function initGS() {
             const today = new Date().toISOString().split('T')[0]; document.getElementById('inputDate').value = today; document.getElementById('inputSellDate').value = today;
-            try { await initGS_DB(); await loadGsFromDatabase(); } catch (err) { loadGsFromStorageFallback(); }
+            try { await initGS_DB(); await loadGsFromDatabase(); } catch (err) { loadGsFromStorageFallback(); } if(gsState.lastUpdated) { const lbl = document.getElementById('lastUpdated'); if(lbl) lbl.innerText = (navigator.onLine ? 'Son API: ' : 'Son API (Çevrimdışı Hafıza): ') + gsState.lastUpdated; }
             document.getElementById('inputPurchaseUsdRate').value = gsState.prices.usdTry || 33.20;
             updateGsOnlineStatus(); window.addEventListener('online', updateGsOnlineStatus); window.addEventListener('offline', updateGsOnlineStatus);
             document.getElementById('sliderCurrentRsi').addEventListener('input', (e) => { const asset = gsState.activeAsset; if(asset === 'portfolio') return; gsState.rsi[asset].current = parseInt(e.target.value); document.getElementById('currentRsiVal').innerText = gsState.rsi[asset].current; calculateGsRsiSimulation(); });
@@ -1939,7 +1939,7 @@ function renderQtyReport() {
                     gsState.priceHistory.labels.push(nowTime); gsState.priceHistory.gold.push(gsState.prices.gold.gram); gsState.priceHistory.silver.push(gsState.prices.silver.gram);
                     if(gsState.priceHistory.labels.length > 15) { gsState.priceHistory.labels.shift(); gsState.priceHistory.gold.shift(); gsState.priceHistory.silver.shift(); }
                 }
-                document.getElementById('inputPurchaseUsdRate').value = gsState.prices.usdTry; saveGsDataToStorage(); updateGsUIForAsset(); document.getElementById('lastUpdated').innerText = "Canlı API: " + new Date().toLocaleTimeString('tr-TR');
+                gsState.lastUpdated = new Date().toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); gsState.lastUpdatedAt = Date.now(); document.getElementById('inputPurchaseUsdRate').value = gsState.prices.usdTry; saveGsDataToStorage(); updateGsUIForAsset(); document.getElementById('lastUpdated').innerText = 'Son API: ' + gsState.lastUpdated;
                 alert(`Fiyatlar Güncellendi!\nDolar: ₺${usdTry.toFixed(2)}\nAltın: ₺${goldGram.toFixed(2)}\nGümüş: ₺${silverGram.toFixed(2)}`);
             } catch (err) { alert(`Hata: ${err.message}`); } finally { btn.innerText = "🔄 Verileri Güncelle"; btn.disabled = false; }
         }
@@ -1986,7 +1986,7 @@ function renderQtyReport() {
             renderGsSingleAssetPortfolio(); calculateGsRsiSimulation();
         }
 
-        function updateGsOnlineStatus() { const badge = document.getElementById('gsConnectionBadge'); if(!badge) return; if (navigator.onLine) { badge.innerText = "● Çevrimiçi (Canlı)"; badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"; } else { badge.innerText = "▲ Çevrimdışı (Hafıza)"; badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/30"; } }
+        function updateGsOnlineStatus() { const badge = document.getElementById('gsConnectionBadge'); if(!badge) return; if (navigator.onLine) { badge.innerText = "● Çevrimiçi (Canlı)"; badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"; } else { badge.innerText = "▲ Çevrimdışı (Hafıza)"; badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/30"; } if(gsState && gsState.lastUpdated) { const lbl = document.getElementById('lastUpdated'); if(lbl) lbl.innerText = (navigator.onLine ? 'Son API: ' : 'Son API (Çevrimdışı Hafıza): ') + gsState.lastUpdated; } }
 
         function renderGsSingleAssetPortfolio() {
             const asset = gsState.activeAsset; const stats = calculateGsPortfolioStats(asset);
@@ -2061,9 +2061,17 @@ function renderQtyReport() {
             document.getElementById('simulatedPrice').className = `text-3xl font-black tracking-tight ${rsiDiff >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
         }
 
-        function saveGsDataToStorage() { localStorage.setItem('finAppV79_GS_State', JSON.stringify(gsState)); }
-        function loadGsFromStorageFallback() { const saved = localStorage.getItem('finAppV79_GS_State'); if (saved) { gsState = { ...gsState, ...JSON.parse(saved) }; } }
-        async function loadGsFromDatabase() { const saved = await getFromGS_DB('main_state'); if (saved) { gsState = { ...gsState, ...saved }; } }
+        function saveGsDataToStorage() { gsState.updatedAt = Date.now(); try { localStorage.setItem('finAppV79_GS_State', JSON.stringify(gsState)); } catch(e) {} saveToGS_DB('main_state', gsState); }
+        function loadGsFromStorageFallback() { try { const saved = localStorage.getItem('finAppV79_GS_State'); if (saved) { gsState = { ...gsState, ...JSON.parse(saved) }; } } catch(e) {} }
+        async function loadGsFromDatabase() {
+            const dbSaved = await getFromGS_DB('main_state');
+            let lsSaved = null;
+            try { const raw = localStorage.getItem('finAppV79_GS_State'); if (raw) lsSaved = JSON.parse(raw); } catch(e) {}
+            const dbTime = (dbSaved && (dbSaved.updatedAt || dbSaved.lastUpdatedAt)) || 0;
+            const lsTime = (lsSaved && (lsSaved.updatedAt || lsSaved.lastUpdatedAt)) || 0;
+            if (lsSaved && lsTime >= dbTime) { gsState = { ...gsState, ...lsSaved }; }
+            else if (dbSaved) { gsState = { ...gsState, ...dbSaved }; }
+        }
         
         async function addGsTransaction(type) {
             const asset = gsState.activeAsset; if (asset === 'portfolio') return;
