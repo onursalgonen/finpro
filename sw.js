@@ -1,4 +1,4 @@
-const CACHE_NAME = 'finpro-sync-cache-v19'; // v19: toplam nakit dijital gösterge + performans güncellemesi // v9 -> v10: boş kalan sw.js/manifest.json geri yüklendi
+const CACHE_NAME = 'finpro-sync-cache-v20'; // v19: toplam nakit dijital gösterge + performans güncellemesi // v9 -> v10: boş kalan sw.js/manifest.json geri yüklendi
 
 // Uygulamanın kendi dosyaları
 const CORE_ASSETS = [

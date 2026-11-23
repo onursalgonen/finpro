@@ -728,13 +728,13 @@
         function debouncedSaveData(delay = 250) { clearTimeout(_saveTimer); _saveTimer = setTimeout(() => { saveData(); }, delay); }
         
         async function exportData() {
-            const data = { records, categories, shoppingRecords, walletNotes, simulation, safakData, pastContracts, extTransfers, customReports }; 
+            const data = { records, categories, shoppingRecords, walletNotes, simulation, safakData, pastContracts, extTransfers, customReports, knownCruises, knownRoutes, routeMeta, shipCodes, calendarEvents }; 
             const jsonString = JSON.stringify(data); const fileName = "finans_yedek_v8_2.json";
             if (navigator.canShare) { const file = new File([jsonString], fileName, { type: "application/json" }); if (navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: 'FinPro Veritabanı Yedeği', text: 'FinPro JSON yedeği.' }); return; } catch (err) { console.log("Paylaşım iptal", err); } } }
             const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(jsonString); a.download = fileName; a.click(); 
         }
 
-        function importData(e) { if(!e.target.files[0]) return; const r = new FileReader(); r.onload = (evt) => { try { const d = JSON.parse(evt.target.result); if(d.records) records = d.records; if(d.shoppingRecords) shoppingRecords = d.shoppingRecords; if(d.categories) categories = d.categories; if(d.walletNotes) walletNotes = d.walletNotes; if(d.simulation) simulation = d.simulation; if(d.safakData) safakData = d.safakData; if(d.pastContracts) pastContracts = d.pastContracts; if(d.extTransfers) extTransfers = d.extTransfers; if(d.customReports) customReports = d.customReports; saveData(); alert("Yedek yüklendi!"); refreshAllViews(); } catch(error) { alert("Format hatası!"); } }; r.readAsText(e.target.files[0]); e.target.value = ''; }
+        function importData(e) { if(!e.target.files[0]) return; const r = new FileReader(); r.onload = (evt) => { try { const d = JSON.parse(evt.target.result); if(d.records) records = d.records; if(d.shoppingRecords) shoppingRecords = d.shoppingRecords; if(d.categories) categories = d.categories; if(d.walletNotes) walletNotes = d.walletNotes; if(d.simulation) simulation = d.simulation; if(d.safakData) safakData = d.safakData; if(d.pastContracts) pastContracts = d.pastContracts; if(d.extTransfers) extTransfers = d.extTransfers; if(d.customReports) customReports = d.customReports; if(d.knownCruises) knownCruises = d.knownCruises; if(d.knownRoutes) knownRoutes = d.knownRoutes; if(d.routeMeta) routeMeta = d.routeMeta; if(d.shipCodes) shipCodes = d.shipCodes; if(d.calendarEvents) calendarEvents = d.calendarEvents; saveData(); alert("Yedek yüklendi!"); refreshAllViews(); } catch(error) { alert("Format hatası!"); } }; r.readAsText(e.target.files[0]); e.target.value = ''; }
 
         async function exportAdvancedExcel(event) {
             if (typeof ExcelJS === 'undefined') { alert("ExcelJS yüklenemedi. İnternet bağlantınızı kontrol edin."); return; }
