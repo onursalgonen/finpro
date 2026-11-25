@@ -1,6 +1,5 @@
-const CACHE_NAME = 'finpro-sync-cache-v21'; // v19: toplam nakit dijital gösterge + performans güncellemesi // v9 -> v10: boş kalan sw.js/manifest.json geri yüklendi
+const CACHE_NAME = 'finpro-sync-cache-v37';
 
-// Uygulamanın kendi dosyaları
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -9,18 +8,20 @@ const CORE_ASSETS = [
   './icon-512.png'
 ];
 
-// CDN kütüphaneleri - ilk kurulumda indirilip önbelleğe alınır
 const CDN_ASSETS = [
   'https://cdn.tailwindcss.com',
   'https://fonts.googleapis.com/icon?family=Material+Icons',
   'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
   'https://cdn.jsdelivr.net/npm/chart.js',
   'https://cdn.jsdelivr.net/npm/exceljs/dist/exceljs.min.js',
-  'https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js'
+  'https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js',
+  'https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js'
 ];
 
-// Kurulum: tüm dosyaları indirmeye çalış, biri başarısız olsa bile diğerleri
-// önbelleğe alınsın diye Promise.allSettled kullanıyoruz.
+function isLiveApiRequest(url) {
+  return /frankfurter|exchangerate|metals|gold|silver|coingecko|binance|api\./i.test(url);
+}
+
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
@@ -32,9 +33,6 @@ self.addEventListener('install', (event) => {
       );
       await Promise.allSettled(
         CDN_ASSETS.map((url) =>
-          // no-cors: bazı CDN'ler CORS header'ı göndermese bile dosya
-          // (opak response olarak) önbelleğe alınabilsin ve script/link
-          // etiketleri offline'da da çalışabilsin.
           fetch(url, { mode: 'no-cors', cache: 'reload' })
             .then((res) => { if (res) return cache.put(url, res); })
             .catch((err) => console.log('CDN cache hatası:', url, err))
@@ -52,20 +50,34 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Kullanıcı isterse (örn. ayarlar ekranından) mesaj göndererek
-// güncellemeyi hemen etkinleştirebilir.
 self.addEventListener('message', (event) => {
   if (event.data === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
-
   const request = event.request;
+  if (!request.url.startsWith('http')) return;
 
+  // Canlı kur / altın / gümüş API istekleri için Network-First (offline'da önbellek fallback)
+  if (isLiveApiRequest(request.url)) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone)).catch(() => {});
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // Statik varlıklar ve CDN dosyaları için Cache-First + arka planda güncelleme
   event.respondWith(
     caches.match(request, { ignoreVary: true }).then((cached) => {
-      // Arka planda ağdan tazele (varsa), ama asıl cevabı önbellekten hemen ver.
       const networkFetch = fetch(request)
         .then((response) => {
           if (response && (response.status === 200 || response.type === 'opaque')) {
@@ -77,14 +89,10 @@ self.addEventListener('fetch', (event) => {
         .catch(() => null);
 
       if (cached) {
-        // Cache-first: internet olmasa da anında önbellekten döner.
         networkFetch.catch(() => {});
         return cached;
       }
 
-      // Önbellekte yoksa ağı dene; o da başarısız olursa (offline ise)
-      // sayfa isteği için ana sayfayı, diğerleri için boş/başarısız cevap yerine
-      // anlamlı bir fallback döndür.
       return networkFetch.then((response) => {
         if (response) return response;
         if (request.mode === 'navigate') {
