@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.59) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.61) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -890,7 +890,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.59 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.61 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -3068,23 +3068,39 @@ let qtyReportFilter = 'ALL';
                 function renderCruiseIndicator(gridId) {
                     const grid = document.getElementById(gridId || 'indicator-grid-cruise'); if(!grid) return;
                     grid.innerHTML = '';
-                    const recs = records.filter(r => !r.isTransfer && r.route && r.route.trim() !== '' && r.date);
+                    const recs = [];
+                    records.forEach(r => {
+                        if(r.isTransfer || !r.date) return;
+                        const c = String(r.categoryName || '').toLowerCase();
+                        if(c.includes('payroll') || c.includes('transfer')) return; // Payroll ve Transfer hariç
+                        const effRoute = (r.route && r.route.trim() !== '') ? r.route.trim() : (getCruiseForDate(r.date) || '');
+                        if(!effRoute) return;
+                        recs.push({ ...r, _effRoute: effRoute });
+                    });
                     if(recs.length === 0) { grid.innerHTML = '<p class="text-xs text-slate-400 italic p-2 md:col-span-3">Henüz yeterli cruise (sefer/rota) verisi yok.</p>'; return; }
 
-                    // Cruise (sefer/rota) sırasını, o cruise'a ait ilk kayıt tarihine göre belirle (kronolojik sıra).
+                    // Cruise (sefer/rota) sırasını, routeMeta başlangıç tarihi veya ilk kayıt tarihine göre belirle (kronolojik sıra).
                     const routeFirstDate = {};
-                    recs.forEach(r => { const s = r.route; if(!routeFirstDate[s] || r.date < routeFirstDate[s]) routeFirstDate[s] = r.date; });
-                    const routeOrder = Object.keys(routeFirstDate).sort((a,b) => routeFirstDate[a] < routeFirstDate[b] ? -1 : (routeFirstDate[a] > routeFirstDate[b] ? 1 : 0));
+                    recs.forEach(r => { const s = r._effRoute; if(!routeFirstDate[s] || r.date < routeFirstDate[s]) routeFirstDate[s] = r.date; });
+                    const routeOrder = Object.keys(routeFirstDate).sort((a,b) => {
+                        const da = (routeMeta[a] && routeMeta[a].start) ? routeMeta[a].start : routeFirstDate[a];
+                        const db = (routeMeta[b] && routeMeta[b].start) ? routeMeta[b].start : routeFirstDate[b];
+                        return da < db ? -1 : (da > db ? 1 : 0);
+                    });
 
-                    const curRoute = routeOrder[routeOrder.length - 1];
-                    const prevRoute = routeOrder.length > 1 ? routeOrder[routeOrder.length - 2] : null;
-                    const histRoutes = routeOrder.slice(0, -1);
+                    const todayStr = dateToStr(new Date());
+                    const activeTodayRoute = getCruiseForDate(todayStr);
+                    let curIdx = routeOrder.length - 1;
+                    if(activeTodayRoute && routeOrder.includes(activeTodayRoute)) {
+                        curIdx = routeOrder.indexOf(activeTodayRoute);
+                    }
+                    const curRoute = routeOrder[curIdx];
+                    const prevRoute = curIdx > 0 ? routeOrder[curIdx - 1] : null;
+                    const histRoutes = routeOrder.slice(0, curIdx);
 
                     function calcTotals(routeName) {
                         let inc = 0, exp = 0;
-                        recs.filter(r => r.route === routeName).forEach(r => {
-                            const c = String(r.categoryName || '').toLowerCase();
-                            if(c.includes('payroll') || c.includes('transfer')) return; // Payroll ve Transfer hariç
+                        recs.filter(r => r._effRoute === routeName).forEach(r => {
                             const v = Number(r.value) || 0;
                             if(r.type === 'INCOME') inc += v; else if(r.type === 'OUTGOING') exp += v;
                         });
@@ -3359,7 +3375,7 @@ let qtyReportFilter = 'ALL';
                             const cols = cruisesToday.map(n => routeMeta[n].color || '#64748b');
                             const bg = cols.length > 1 ? `linear-gradient(135deg, ${cols[0]}33 50%, ${cols[1]}33 50%)` : `${cols[0]}22`;
                             styleAttr = ` style="background:${bg};border-color:${cols[0]};color:#0f172a"`;
-                            if(isToday) cellCls += ' ring-2 ring-slate-800';
+                            if(isToday) cellCls += ' ring-2 ring-slate-800 cal-today-highlight';
                         }
 
                         const ms = milestones[dateStr];
@@ -3373,6 +3389,7 @@ let qtyReportFilter = 'ALL';
                         const topLeftBadges = `
                             <div class="flex items-center gap-1">
                                 <span class="text-xs font-black ${isToday && !cruisesToday.length ? 'text-white' : 'text-slate-800'}">${d}</span>
+                                ${isToday ? '<span class="text-[8px] font-black uppercase px-1 py-0.5 rounded bg-yellow-300 text-slate-900 leading-none shadow-sm">BUGÜN</span>' : ''}
                                 ${isNoSpend ? `<span class="text-[10px] leading-none ${isToday && !cruisesToday.length ? 'text-emerald-200' : 'text-emerald-500'}" title="Harcamasız Gün">★</span>` : ''}
                                 ${ms ? `<span class="text-[10px] leading-none ${isToday && !cruisesToday.length ? 'text-yellow-300' : ms.color}" title="${ms.label}">${ms.icon}</span>` : ''}
                             </div>`;
@@ -3393,6 +3410,7 @@ let qtyReportFilter = 'ALL';
                             </div>`;
                         }
 
+                        if(isToday && !cellCls.includes('cal-today-highlight')) cellCls += ' cal-today-highlight';
                         cells.push(`<div class="min-h-[82px] md:min-h-[104px] p-1.5 rounded-lg border flex flex-col justify-between cursor-pointer hover:ring-2 hover:ring-indigo-400 transition ${cellCls}"${styleAttr} onclick="openDayEventModal('${dateStr}')">
                             <div class="flex items-center justify-between gap-1">${topLeftBadges}${topRight}</div>
                             <div class="space-y-0.5 my-1 overflow-hidden">${cruiseBadges}${evBadges}</div>
