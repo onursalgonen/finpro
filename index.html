@@ -3,12 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.56) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.57) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="FinPro">
     <link rel="apple-touch-icon" href="./icon-192.png">
+    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/exceljs/dist/exceljs.min.js"></script>
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+    <style>
+        body { background-color: #f8fafc; color: #1e293b; overflow-x: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); padding: 1.5rem; border: 1px solid #e2e8f0; }
+        .btn { transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; }
+        .btn:active { transform: scale(0.95); }
+        .sidebar-collapsed { width: 4.5rem !important; }
+        .sidebar-collapsed .nav-text, .sidebar-collapsed .logo-text, .sidebar-collapsed .tools-header { display: none; }
+        .sidebar-collapsed .nav-icon { margin-right: 0 !important; font-size: 1.5rem; }
+        .sidebar-collapsed .p-4.border-b { padding: 1rem 0.5rem; text-align: center; justify-content: center; }
+        .sidebar-collapsed .btn-sidebar { padding: 0.75rem; justify-content: center; }
+        #sidebar { transition: width 0.3s ease; }
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .excel-table { border-collapse: collapse; width: 100%; font-size: 0.75rem; text-align: center; }
+        .excel-table th, .excel-table td { border: 1px solid #cbd5e1; padding: 6px; white-space: nowrap; }
+        .excel-table th { background-color: #f1f5f9; font-weight: bold; color: #475569; text-transform: uppercase; }
+        .excel-table tbody tr:hover { background-color: #f8fafc; }
+        /* Kayıtlar tablosu: Excel hücresi görünümü (dikey + yatay ızgara çizgileri) */
+        .entries-grid { border-collapse: separate; border-spacing: 0; border-top: 1px solid #cbd5e1; border-left: 1px solid #cbd5e1; }
+        .entries-grid th, .entries-grid td { border-right: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1; vertical-align: middle; }
+        .entries-grid thead th { background-color: #f1f5f9; color: #475569; font-weight: 800; }
+        .entries-grid tbody td { background-color: #ffffff; }
+        .entries-grid tbody tr:nth-child(even) td { background-color: #f8fafc; }
+        .entries-grid tbody tr:hover td { background-color: #eef2ff; }
+        .cell-red { background-color: #fee2e2; color: #dc2626; font-weight: bold; }
+        .cell-green { background-color: #dcfce7; color: #16a34a; font-weight: bold; }
+        .cell-blue { background-color: #e0f2fe; color: #0284c7; font-weight: bold; }
+        .cell-yellow { background-color: #fef9c3; color: #ca8a04; font-weight: bold; }
+        .safak-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)); gap: 4px; }
+        .safak-box { width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 11px; border-radius: 4px; transition: all 0.3s; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 24px; height: 24px; border-radius: 50%; background: #f59e0b; cursor: pointer; }
+        #view-goldsilver input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); scale: 1.3; }
+        .goldsilver-wrap { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
+        .digital-readout { font-family: ui-monospace, 'SFMono-Regular', Menlo, Monaco, Consolas, monospace; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+        .modal-backdrop { background-color: rgba(15, 23, 42, 0.55); backdrop-filter: blur(2px); }
+        .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+        .scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    </style>
     <style id="finpro-tailwind-static">
 
 *, ::before, ::after { box-sizing: border-box; border-width: 0; border-style: solid; border-color: #e5e7eb; }
@@ -823,56 +874,6 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
 .pointer-events-auto { pointer-events: auto; }
 .resize-y { resize: vertical; }
     </style>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/exceljs/dist/exceljs.min.js"></script>
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
-    <style>
-        body { background-color: #f8fafc; color: #1e293b; overflow-x: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        .card { background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); padding: 1.5rem; border: 1px solid #e2e8f0; }
-        .btn { transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; }
-        .btn:active { transform: scale(0.95); }
-        .sidebar-collapsed { width: 4.5rem !important; }
-        .sidebar-collapsed .nav-text, .sidebar-collapsed .logo-text, .sidebar-collapsed .tools-header { display: none; }
-        .sidebar-collapsed .nav-icon { margin-right: 0 !important; font-size: 1.5rem; }
-        .sidebar-collapsed .p-4.border-b { padding: 1rem 0.5rem; text-align: center; justify-content: center; }
-        .sidebar-collapsed .btn-sidebar { padding: 0.75rem; justify-content: center; }
-        #sidebar { transition: width 0.3s ease; }
-        .view-section { display: none; }
-        .view-section.active { display: block; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        .excel-table { border-collapse: collapse; width: 100%; font-size: 0.75rem; text-align: center; }
-        .excel-table th, .excel-table td { border: 1px solid #cbd5e1; padding: 6px; white-space: nowrap; }
-        .excel-table th { background-color: #f1f5f9; font-weight: bold; color: #475569; text-transform: uppercase; }
-        .excel-table tbody tr:hover { background-color: #f8fafc; }
-        /* Kayıtlar tablosu: Excel hücresi görünümü (dikey + yatay ızgara çizgileri) */
-        .entries-grid { border-collapse: separate; border-spacing: 0; border-top: 1px solid #cbd5e1; border-left: 1px solid #cbd5e1; }
-        .entries-grid th, .entries-grid td { border-right: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1; vertical-align: middle; }
-        .entries-grid thead th { background-color: #f1f5f9; color: #475569; font-weight: 800; }
-        .entries-grid tbody td { background-color: #ffffff; }
-        .entries-grid tbody tr:nth-child(even) td { background-color: #f8fafc; }
-        .entries-grid tbody tr:hover td { background-color: #eef2ff; }
-        .cell-red { background-color: #fee2e2; color: #dc2626; font-weight: bold; }
-        .cell-green { background-color: #dcfce7; color: #16a34a; font-weight: bold; }
-        .cell-blue { background-color: #e0f2fe; color: #0284c7; font-weight: bold; }
-        .cell-yellow { background-color: #fef9c3; color: #ca8a04; font-weight: bold; }
-        .safak-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(28px, 1fr)); gap: 4px; }
-        .safak-box { width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 11px; border-radius: 4px; transition: all 0.3s; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 24px; height: 24px; border-radius: 50%; background: #f59e0b; cursor: pointer; }
-        #view-goldsilver input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); scale: 1.3; }
-        .goldsilver-wrap { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
-        .digital-readout { font-family: ui-monospace, 'SFMono-Regular', Menlo, Monaco, Consolas, monospace; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
-        .modal-backdrop { background-color: rgba(15, 23, 42, 0.55); backdrop-filter: blur(2px); }
-        .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
-        .scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
-    </style>
 </head>
 <body class="flex h-screen w-full overflow-hidden">
     <aside id="sidebar" class="w-64 bg-slate-900 text-slate-300 flex flex-col shadow-xl z-10 relative shrink-0">
@@ -881,7 +882,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.56 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.57 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
