@@ -1,4 +1,4 @@
-const CACHE_NAME = 'finpro-sync-cache-v37';
+const CACHE_NAME = 'finpro-sync-cache-v39';
 
 const CORE_ASSETS = [
   './',
@@ -9,7 +9,6 @@ const CORE_ASSETS = [
 ];
 
 const CDN_ASSETS = [
-  'https://cdn.tailwindcss.com',
   'https://fonts.googleapis.com/icon?family=Material+Icons',
   'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
   'https://cdn.jsdelivr.net/npm/chart.js',
