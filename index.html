@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.75) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.76) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -909,7 +909,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.75 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.76 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -1114,6 +1114,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                             <button type="button" onclick="testCelebration('xmas')" class="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-sm">🎅 Noel Yağmuru</button>
                             <button type="button" onclick="testCelebration('snow')" class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold shadow-sm">❄️ Kar Yağışı</button>
                             <button type="button" onclick="testCelebration('bday')" class="px-3 py-1.5 rounded-lg bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold shadow-sm">🎁 Doğum Günü</button>
+                            <button type="button" onclick="testCelebration('thanksgiving')" class="px-3 py-1.5 rounded-lg bg-amber-700 hover:bg-amber-800 text-white text-xs font-bold shadow-sm">🦃 Thanksgiving</button>
                             <button type="button" onclick="testCelebration('contract')" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm">🚢 Kontrat Bitişi</button>
                         </div>
                     </div>
@@ -2341,6 +2342,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
             xmas: { grad: 'linear-gradient(90deg, #b91c1c, #047857)', text: '🎅 Mutlu Noeller! Harika bir tatil sezonu dileriz.', icons: ['🎅', '🎄', '✨', '🎁', '⭐'] },
             snow: { grad: 'linear-gradient(90deg, #0369a1, #3730a3)', text: '❄️ Mutlu Yıllar! Yeni yılda sağlık ve bol kazançlar.', icons: ['❄️', '❅', '❆', '✨'] },
             bday: { grad: 'linear-gradient(90deg, #db2777, #9333ea)', text: '🎂 İyi ki Doğdun! Bugün senin günün, keyfini çıkar!', icons: ['🎁', '🎈', '🎉', '🎂', '✨'] },
+            thanksgiving: { grad: 'linear-gradient(90deg, #b45309, #9a3412)', text: '🦃 Mutlu Şükran Günü (Thanksgiving)! Bereketli ve güzel bir gün dileriz.', icons: ['🦃', '🦃', '🍂', '🍁', '🥧'] },
             contract: { grad: 'linear-gradient(90deg, #059669, #0f766e)', text: '🚢 Kontrat Tamamlandı! Eve dönüş ve izin dönemi kutlu olsun!', icons: ['🚢', '🎊', '🎉', '✨'] }
         };
         function getTodayCelebrationTheme() {
@@ -2353,6 +2355,9 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
             const bdD = parseInt(celebrationSettings.birthdayDay, 10);
             const bdM = parseInt(celebrationSettings.birthdayMonth, 10);
             if (bdD === d && bdM === m) return 'bday';
+            const nov1 = new Date(now.getFullYear(), 10, 1);
+            const thanksgivingDay = 1 + ((4 - nov1.getDay() + 7) % 7) + 21;
+            if (m === 11 && d === thanksgivingDay) return 'thanksgiving';
             if (m === 12 && (d === 24 || d === 25)) return 'xmas';
             if ((m === 12 && d === 31) || (m === 1 && (d === 1 || d === 2))) return 'snow';
             if (safakData && safakData.isActive && safakData.end === todayStr) return 'contract';
