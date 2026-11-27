@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.78) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.79) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -912,7 +912,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.78 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.79 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -2160,6 +2160,12 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                         <span class="text-[10px] text-slate-400 font-bold">Kutuya basarak Port seç</span>
                     </div>
                     <div id="rt-dayplan-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-44 overflow-y-auto"></div>
+                    <datalist id="cruise-port-datalist">
+                        <option value="Miami"><option value="Port Canaveral"><option value="Galveston">
+                        <option value="Cozumel"><option value="Costa Maya"><option value="Roatan">
+                        <option value="Nassau"><option value="CocoCay"><option value="Grand Cayman">
+                        <option value="Ocho Rios"><option value="Falmouth"><option value="St. Thomas">
+                    </datalist>
                 </div>
                 <div class="flex items-center gap-3"><label class="text-xs font-bold text-slate-500">Takvim Rengi</label><input type="color" id="rt-color" class="w-10 h-8 p-0 border rounded cursor-pointer"><span class="text-[10px] text-slate-400">Otomatik seçilir, istersen değiştir.</span></div>
                 <div class="bg-fuchsia-50 border border-fuchsia-200 rounded-lg p-3"><p class="text-[10px] font-bold text-fuchsia-700 uppercase">Oluşacak Cruise Kodu</p><p id="rt-preview" class="font-mono text-lg font-black text-fuchsia-800 select-all">—</p><p class="text-[10px] text-fuchsia-600 mt-0.5">Gemi kodu + gün (2 hane) + ay + gün + yıl</p></div>
@@ -2876,7 +2882,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 return `<div class="p-2 rounded-lg border ${isP ? 'bg-sky-50 border-sky-400' : 'bg-white border-slate-200'} space-y-1.5">
                     <div class="text-[10px] font-bold text-slate-500">${i + 1}. Gün</div>
                     <button type="button" onclick="toggleRouteDayType(${i})" class="w-full py-1 px-1.5 rounded text-[11px] font-bold transition ${isP ? 'bg-sky-600 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}">${isP ? '⚓ Port' : '🌊 Sea Day'}</button>
-                    ${isP ? `<input type="text" value="${String(d.port || '').replace(/"/g, '&quot;')}" oninput="updateRouteDayPort(${i}, this.value)" placeholder="Liman adı" class="w-full border border-sky-200 rounded px-1.5 py-1 text-[10px] bg-white font-semibold">` : ''}
+                    ${isP ? `<input type="text" value="${String(d.port || '').replace(/"/g, '&quot;')}" oninput="updateRouteDayPort(${i}, this.value)" list="cruise-port-datalist" placeholder="Liman adı" class="w-full border border-sky-200 rounded px-1.5 py-1 text-[10px] bg-white font-semibold">` : ''}
                 </div>`;
             }).join('');
         }
@@ -2965,6 +2971,11 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
             st.dayPlan[dIdx].type = st.dayPlan[dIdx].type === 'port' ? 'sea' : 'port';
             renderAutoCruiseSteps();
         }
+        function updateAutoCruiseStepDayPort(sIdx, dIdx, val) {
+            const st = autoCruiseSteps[sIdx];
+            if (!st || !st.dayPlan || !st.dayPlan[dIdx]) return;
+            st.dayPlan[dIdx].port = val;
+        }
         const AC_COLORS = ['#0284c7', '#9333ea', '#059669', '#d97706', '#e11d48', '#4f46e5'];
         function openAutoCruiseModal() {
             const shipEl = document.getElementById('ac-ship');
@@ -3040,7 +3051,10 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 const col = AC_COLORS[idx % AC_COLORS.length];
                 const pills = dp.map((d, di) => {
                     const isP = d.type === 'port';
-                    return `<button type="button" onclick="toggleAutoCruiseStepDay(${idx}, ${di})" class="px-1.5 py-0.5 rounded text-[10px] font-bold transition ${isP ? 'bg-sky-600 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}">${di+1}.G: ${isP ? '⚓ Port' : '🌊 Sea Day'}</button>`;
+                    return `<div class="inline-flex flex-col gap-1 p-1 rounded border ${isP ? 'bg-sky-50 border-sky-300' : 'bg-slate-50 border-slate-200'}">
+                        <button type="button" onclick="toggleAutoCruiseStepDay(${idx}, ${di})" class="px-2 py-0.5 rounded text-[10px] font-bold transition ${isP ? 'bg-sky-600 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}">${di+1}.G: ${isP ? '⚓ Port' : '🌊 Sea Day'}</button>
+                        ${isP ? `<input type="text" list="cruise-port-datalist" value="${String(d.port || '').replace(/"/g, '&quot;')}" oninput="updateAutoCruiseStepDayPort(${idx}, ${di}, this.value)" placeholder="Liman adı" class="w-24 border border-sky-200 rounded px-1.5 py-0.5 text-[10px] bg-white font-semibold">` : ''}
+                    </div>`;
                 }).join('');
                 return `<div class="w-full p-2 rounded-lg bg-white border border-slate-300 shadow-sm space-y-1.5"><div class="flex items-center justify-between text-xs font-bold text-slate-800"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:${col}"></span>Cruise ${letter} : ${days} gün</span><button type="button" onclick="removeAutoCruiseStep(${idx})" class="text-slate-400 hover:text-red-500 font-black">✕</button></div><div class="flex flex-wrap gap-1">${pills}</div></div>`;
             }).join('');
