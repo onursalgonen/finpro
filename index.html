@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.76) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.78) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -882,6 +882,9 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
 
 .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .max-w-xs { max-width: 20rem; }
+.bg-sky-800 { background-color: #075985; }
+.bg-sky-900 { background-color: #0c4a6e; }
+.hover\:bg-sky-800:hover { background-color: #075985; }
 @keyframes finpro-cel-fall {
   0% { transform: translateY(-48px) translateX(0px) rotate(0deg); opacity: 0; }
   8% { opacity: 1; }
@@ -909,7 +912,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.76 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.78 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -1258,7 +1261,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                             <span class="material-icons mr-2 text-sky-800">show_chart</span> Ödeme Dönemlerine Göre Maaş Seyri
                         </h3>
                         <div class="flex flex-wrap items-center gap-1.5">
-                            <button type="button" onclick="setPayrollTrendMode('payroll')" id="pt-btn-payroll" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-sky-800 text-white transition">Maaş (Payroll)</button>
+                            <button type="button" onclick="setPayrollTrendMode('payroll')" id="pt-btn-payroll" style="background:#075985;color:#ffffff;" class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition">Maaş (Payroll)</button>
                             <button type="button" onclick="setPayrollTrendMode('tips')" id="pt-btn-tips" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">Bahşiş (Tips)</button>
                             <button type="button" onclick="setPayrollTrendMode('both')" id="pt-btn-both" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">Maaş + Bahşiş</button>
                         </div>
@@ -1274,6 +1277,16 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                         <span class="text-[9px] text-slate-400 font-bold uppercase">Seçili Yıl & Gemi Filtresine Göre</span>
                     </div>
                     <div id="rep-shop-platform-body" class="p-4 sm:p-5 bg-white"></div>
+                </div>
+
+                <div id="rep-port-sea-card" class="card p-0 border-t-4 border-sky-600 overflow-hidden shadow-md">
+                    <div class="p-4 border-b bg-slate-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                        <h3 class="font-bold text-slate-700 flex items-center">
+                            <span class="material-icons mr-2 text-sky-600">anchor</span> Port Günü vs Sea Day Harcama Ortalaması
+                        </h3>
+                        <span class="text-[9px] text-slate-400 font-bold uppercase">Planlı Cruise Günlerine Göre (Transfer Hariç)</span>
+                    </div>
+                    <div id="rep-port-sea-body" class="p-4 sm:p-5 bg-white"></div>
                 </div>
             </section>
 
@@ -2141,6 +2154,13 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 <div><label class="block text-xs font-bold text-slate-500 mb-1">Gün Sayısı <span class="text-slate-400 font-normal">(başlangıç günü dahil)</span></label>
                     <div class="flex items-center gap-2"><input type="number" id="rt-days" min="1" oninput="routeDateSync('days')" class="w-24 border p-2.5 rounded-lg bg-slate-50 font-black text-sm text-center"><span class="text-[10px] font-bold text-slate-400 uppercase">Hızlı:</span>
                         <button type="button" onclick="setRouteDays(4)" class="text-xs font-bold px-2.5 py-1.5 rounded bg-slate-100 hover:bg-slate-200">4</button><button type="button" onclick="setRouteDays(5)" class="text-xs font-bold px-2.5 py-1.5 rounded bg-slate-100 hover:bg-slate-200">5</button><button type="button" onclick="setRouteDays(7)" class="text-xs font-bold px-2.5 py-1.5 rounded bg-slate-100 hover:bg-slate-200">7</button><button type="button" onclick="setRouteDays(10)" class="text-xs font-bold px-2.5 py-1.5 rounded bg-slate-100 hover:bg-slate-200">10</button><button type="button" onclick="setRouteDays(14)" class="text-xs font-bold px-2.5 py-1.5 rounded bg-slate-100 hover:bg-slate-200">14</button></div></div>
+                <div id="rt-dayplan-wrap" class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-bold text-slate-700">Gün Planı (Sea Day / Port)</label>
+                        <span class="text-[10px] text-slate-400 font-bold">Kutuya basarak Port seç</span>
+                    </div>
+                    <div id="rt-dayplan-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-44 overflow-y-auto"></div>
+                </div>
                 <div class="flex items-center gap-3"><label class="text-xs font-bold text-slate-500">Takvim Rengi</label><input type="color" id="rt-color" class="w-10 h-8 p-0 border rounded cursor-pointer"><span class="text-[10px] text-slate-400">Otomatik seçilir, istersen değiştir.</span></div>
                 <div class="bg-fuchsia-50 border border-fuchsia-200 rounded-lg p-3"><p class="text-[10px] font-bold text-fuchsia-700 uppercase">Oluşacak Cruise Kodu</p><p id="rt-preview" class="font-mono text-lg font-black text-fuchsia-800 select-all">—</p><p class="text-[10px] text-fuchsia-600 mt-0.5">Gemi kodu + gün (2 hane) + ay + gün + yıl</p></div>
                 <button id="rt-save-btn" onclick="createCruise()" class="w-full btn bg-fuchsia-600 hover:bg-fuchsia-500 text-white shadow-xl py-3.5 text-sm tracking-wide">Cruise Oluştur</button>
@@ -2567,6 +2587,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 try { renderWeekdaySpending(); } catch(e){}
                 try { renderPayrollTrendChart(); } catch(e){}
                 try { renderShopPlatformReport(); } catch(e){}
+                try { renderPortVsSeaReport(); } catch(e){}
             } else if(tab === 'safak') {
                 try { calcSafak(); } catch(e){}
                 try { renderPersonalCountdowns(); } catch(e){}
@@ -2802,6 +2823,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 else colEl.value = nextRouteColor();
             }
             updateRoutePreview();
+            renderRouteDayPlan();
         }
         function buildRouteCode(code, days, start, kind = 'cruise') {
             const p = String(start).split('-');
@@ -2810,7 +2832,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
         }
         function openRouteModal() {
             const shipEl = document.getElementById('rt-ship'); if(!shipEl) return;
-            editingRoute = null; setRouteKind('cruise'); document.getElementById('rt-title').innerText = 'Yeni Cruise Oluştur'; document.getElementById('rt-save-btn').innerText = 'Cruise Oluştur';
+            editingRoute = null; rtDayPlan = []; setRouteKind('cruise'); document.getElementById('rt-title').innerText = 'Yeni Cruise Oluştur'; document.getElementById('rt-save-btn').innerText = 'Cruise Oluştur';
             shipEl.value = safakData.isActive && safakData.name ? String(safakData.name).toUpperCase() : (knownCruises[0] || '');
             document.getElementById('rt-code').value = defaultShipCode(shipEl.value);
             document.getElementById('rt-start').value = dateToStr(new Date());
@@ -2821,6 +2843,107 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
         }
         function onRouteShipChange() { const n = document.getElementById('rt-ship').value; document.getElementById('rt-code').value = defaultShipCode(n); updateRoutePreview(); }
         function setRouteDays(n) { document.getElementById('rt-days').value = n; routeDateSync('days'); }
+
+        let rtDayPlan = [];
+        function syncRtDayPlanLength(days) {
+            const n = Math.max(0, Math.min(90, parseInt(days, 10) || 0));
+            const next = [];
+            for (let i = 0; i < n; i++) {
+                next.push(rtDayPlan[i] ? { type: rtDayPlan[i].type === 'port' ? 'port' : 'sea', port: rtDayPlan[i].port || '' } : { type: 'sea', port: '' });
+            }
+            rtDayPlan = next;
+        }
+        function toggleRouteDayType(idx) {
+            if (!rtDayPlan[idx]) return;
+            rtDayPlan[idx].type = rtDayPlan[idx].type === 'port' ? 'sea' : 'port';
+            renderRouteDayPlan();
+        }
+        function updateRouteDayPort(idx, val) {
+            if (!rtDayPlan[idx]) return;
+            rtDayPlan[idx].port = val;
+        }
+        function renderRouteDayPlan() {
+            const grid = document.getElementById('rt-dayplan-grid');
+            if (!grid) return;
+            const days = parseInt(document.getElementById('rt-days')?.value, 10) || 0;
+            syncRtDayPlanLength(days);
+            if (!rtDayPlan.length) {
+                grid.innerHTML = '<p class="col-span-full text-[11px] text-slate-400 italic">Gün sayısı girin.</p>';
+                return;
+            }
+            grid.innerHTML = rtDayPlan.map((d, i) => {
+                const isP = d.type === 'port';
+                return `<div class="p-2 rounded-lg border ${isP ? 'bg-sky-50 border-sky-400' : 'bg-white border-slate-200'} space-y-1.5">
+                    <div class="text-[10px] font-bold text-slate-500">${i + 1}. Gün</div>
+                    <button type="button" onclick="toggleRouteDayType(${i})" class="w-full py-1 px-1.5 rounded text-[11px] font-bold transition ${isP ? 'bg-sky-600 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}">${isP ? '⚓ Port' : '🌊 Sea Day'}</button>
+                    ${isP ? `<input type="text" value="${String(d.port || '').replace(/"/g, '&quot;')}" oninput="updateRouteDayPort(${i}, this.value)" placeholder="Liman adı" class="w-full border border-sky-200 rounded px-1.5 py-1 text-[10px] bg-white font-semibold">` : ''}
+                </div>`;
+            }).join('');
+        }
+        function getRouteDayInfo(routeName, dateStr) {
+            const m = routeMeta[routeName];
+            if (!m || !Array.isArray(m.dayPlan) || !m.start || !dateStr) return null;
+            const idx = Math.round((parseYMD(dateStr) - parseYMD(m.start)) / 86400000);
+            if (idx < 0 || idx >= m.dayPlan.length) return null;
+            return m.dayPlan[idx];
+        }
+        function renderPortVsSeaReport() {
+            const body = document.getElementById('rep-port-sea-body');
+            if (!body) return;
+            const fRecs = getFilteredRecords(records).filter(r => r.type === 'OUTGOING' && !r.isTransfer && !isTransferCategory(r) && r.date);
+            let portUsd = 0, seaUsd = 0;
+            const portDates = new Set(), seaDates = new Set();
+
+            // Count planned days in routeMeta matching ship/year filter
+            const y = document.getElementById('global-year')?.value || 'ALL';
+            const g = (document.getElementById('global-ship')?.value || '').trim().toUpperCase();
+            Object.keys(routeMeta).forEach(rn => {
+                const m = routeMeta[rn];
+                if (!m || !Array.isArray(m.dayPlan) || !m.start) return;
+                if (g && g !== 'ALL' && g !== 'TÜM GEMILER' && m.ship && m.ship.toUpperCase() !== g) return;
+                const sDt = parseYMD(m.start);
+                m.dayPlan.forEach((dp, i) => {
+                    const ds = dateToStr(new Date(sDt.getTime() + i * 86400000));
+                    if (y && y !== 'ALL' && !ds.startsWith(y)) return;
+                    if (dp && dp.type === 'port') portDates.add(ds);
+                    else seaDates.add(ds);
+                });
+            });
+
+            fRecs.forEach(r => {
+                const ds = String(r.date).substring(0, 10);
+                const rt = (r.route && r.route.trim() !== '') ? r.route.trim() : (getCruiseForDate(ds) || '');
+                if (!rt) return;
+                const info = getRouteDayInfo(rt, ds);
+                if (!info) return;
+                const v = Number(r.value) || 0;
+                if (info.type === 'port') { portUsd += v; portDates.add(ds); }
+                else { seaUsd += v; seaDates.add(ds); }
+            });
+
+            if (portDates.size === 0 && seaDates.size === 0) {
+                body.innerHTML = '<p class="text-xs text-slate-400 italic text-center py-4">Henüz Sea Day / Port planı tanımlanmış cruise verisi yok.</p>';
+                return;
+            }
+            const portAvg = portDates.size > 0 ? portUsd / portDates.size : 0;
+            const seaAvg = seaDates.size > 0 ? seaUsd / seaDates.size : 0;
+            const maxAvg = Math.max(1, portAvg, seaAvg);
+            body.innerHTML = `
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="p-3.5 rounded-xl bg-sky-50 border border-sky-200">
+                        <div class="flex justify-between items-center mb-1"><span class="text-xs font-bold text-sky-800">⚓ Port Günleri (${portDates.size} gün)</span><span class="text-lg font-black text-sky-900">$${portAvg.toFixed(2)} / gün</span></div>
+                        <div class="w-full h-2.5 bg-sky-100 rounded-full overflow-hidden mb-1.5"><div class="h-full bg-sky-600 rounded-full" style="width:${Math.round((portAvg/maxAvg)*100)}%"></div></div>
+                        <p class="text-[10px] text-slate-500 font-semibold">Toplam Harcama: $${portUsd.toFixed(2)}</p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
+                        <div class="flex justify-between items-center mb-1"><span class="text-xs font-bold text-emerald-800">🌊 Sea Day Günleri (${seaDates.size} gün)</span><span class="text-lg font-black text-emerald-900">$${seaAvg.toFixed(2)} / gün</span></div>
+                        <div class="w-full h-2.5 bg-emerald-100 rounded-full overflow-hidden mb-1.5"><div class="h-full bg-emerald-600 rounded-full" style="width:${Math.round((seaAvg/maxAvg)*100)}%"></div></div>
+                        <p class="text-[10px] text-slate-500 font-semibold">Toplam Harcama: $${seaUsd.toFixed(2)}</p>
+                    </div>
+                </div>
+            `;
+        }
+
         function routeDateSync(src) {
             const s = document.getElementById('rt-start').value, e = document.getElementById('rt-end'), dEl = document.getElementById('rt-days');
             if(src === 'end') { if(s && e.value) { const diff = Math.round((parseYMD(e.value) - parseYMD(s)) / 86400000) + 1; if(diff > 0) dEl.value = diff; } }
@@ -2828,7 +2951,20 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
             updateRoutePreview();
         }
 
-        let autoCruiseSteps = [4, 5, 5];
+        let autoCruiseSteps = [
+            { days: 4, dayPlan: [{type:'sea',port:''},{type:'sea',port:''},{type:'sea',port:''},{type:'sea',port:''}] },
+            { days: 5, dayPlan: [{type:'sea',port:''},{type:'sea',port:''},{type:'sea',port:''},{type:'sea',port:''},{type:'sea',port:''}] },
+            { days: 5, dayPlan: [{type:'sea',port:''},{type:'sea',port:''},{type:'sea',port:''},{type:'sea',port:''},{type:'sea',port:''}] }
+        ];
+        function makeDefaultDayPlan(n) {
+            return Array.from({ length: n }, () => ({ type: 'sea', port: '' }));
+        }
+        function toggleAutoCruiseStepDay(sIdx, dIdx) {
+            const st = autoCruiseSteps[sIdx];
+            if (!st || !st.dayPlan || !st.dayPlan[dIdx]) return;
+            st.dayPlan[dIdx].type = st.dayPlan[dIdx].type === 'port' ? 'sea' : 'port';
+            renderAutoCruiseSteps();
+        }
         const AC_COLORS = ['#0284c7', '#9333ea', '#059669', '#d97706', '#e11d48', '#4f46e5'];
         function openAutoCruiseModal() {
             const shipEl = document.getElementById('ac-ship');
@@ -2876,7 +3012,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
             const inp = document.getElementById('ac-step-days');
             const d = parseInt(presetDays != null ? presetDays : (inp ? inp.value : 0), 10);
             if (!d || d < 1 || d > 60) return;
-            autoCruiseSteps.push(d);
+            autoCruiseSteps.push({ days: d, dayPlan: makeDefaultDayPlan(d) });
             renderAutoCruiseSteps();
             renderAutoCruisePreview();
         }
@@ -2897,10 +3033,16 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 box.innerHTML = '<span class="text-xs text-slate-400 italic">Henüz döngü adımı eklenmedi. Yukarıdan gün seçip ekleyin.</span>';
                 return;
             }
-            box.innerHTML = autoCruiseSteps.map((days, idx) => {
+            box.innerHTML = autoCruiseSteps.map((st, idx) => {
+                const days = typeof st === 'number' ? st : st.days;
+                const dp = (typeof st === 'object' && Array.isArray(st.dayPlan)) ? st.dayPlan : makeDefaultDayPlan(days);
                 const letter = String.fromCharCode(65 + (idx % 26));
                 const col = AC_COLORS[idx % AC_COLORS.length];
-                return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-slate-300 text-xs font-bold text-slate-800 shadow-sm"><span class="w-2.5 h-2.5 rounded-full" style="background:${col}"></span>Cruise ${letter} : ${days} gün <button type="button" onclick="removeAutoCruiseStep(${idx})" class="text-slate-400 hover:text-red-500 font-black ml-0.5">✕</button></span>`;
+                const pills = dp.map((d, di) => {
+                    const isP = d.type === 'port';
+                    return `<button type="button" onclick="toggleAutoCruiseStepDay(${idx}, ${di})" class="px-1.5 py-0.5 rounded text-[10px] font-bold transition ${isP ? 'bg-sky-600 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}">${di+1}.G: ${isP ? '⚓ Port' : '🌊 Sea Day'}</button>`;
+                }).join('');
+                return `<div class="w-full p-2 rounded-lg bg-white border border-slate-300 shadow-sm space-y-1.5"><div class="flex items-center justify-between text-xs font-bold text-slate-800"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:${col}"></span>Cruise ${letter} : ${days} gün</span><button type="button" onclick="removeAutoCruiseStep(${idx})" class="text-slate-400 hover:text-red-500 font-black">✕</button></div><div class="flex flex-wrap gap-1">${pills}</div></div>`;
             }).join('');
         }
         function computeAutoCruisePlan() {
@@ -2917,7 +3059,9 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
             let idx = 0;
             while (cur <= pEnd && plan.length < 150) {
                 const stepIdx = idx % autoCruiseSteps.length;
-                const days = autoCruiseSteps[stepIdx];
+                const stObj = autoCruiseSteps[stepIdx];
+                const days = typeof stObj === 'number' ? stObj : stObj.days;
+                const dayPlan = (typeof stObj === 'object' && Array.isArray(stObj.dayPlan)) ? stObj.dayPlan.map(x => ({ type: x.type === 'port' ? 'port' : 'sea', port: x.port || '' })) : makeDefaultDayPlan(days);
                 const sStr = dateToStr(cur);
                 const endDt = new Date(cur.getTime() + (days - 1) * 86400000);
                 if (endDt > pEnd) break;
@@ -2932,7 +3076,8 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                     end: eStr,
                     days,
                     routeCode,
-                    color: AC_COLORS[stepIdx % AC_COLORS.length]
+                    color: AC_COLORS[stepIdx % AC_COLORS.length],
+                    dayPlan
                 });
                 cur = new Date(endDt.getTime() + 86400000);
                 idx++;
@@ -2965,7 +3110,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                     knownRoutes.push(p.routeCode);
                     added++;
                 }
-                routeMeta[p.routeCode] = { ship: p.ship, shipCode: p.shipCode, start: p.start, end: p.end, days: p.days, color: p.color };
+                routeMeta[p.routeCode] = { ship: p.ship, shipCode: p.shipCode, start: p.start, end: p.end, days: p.days, color: p.color, kind: 'cruise', dayPlan: p.dayPlan };
             });
             saveData();
             refreshAllViews();
@@ -2981,7 +3126,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
             const m = routeMeta[name]; if(!document.getElementById('rt-ship')) return;
             const shipEl = document.getElementById('rt-ship');
             shipEl.value = m ? m.ship : String(safakData.isActive && safakData.name ? safakData.name : (knownCruises[0] || '')).toUpperCase();
-            setRouteKind(getRouteKind(name)); document.getElementById('rt-code').value = m ? m.shipCode : defaultShipCode(shipEl.value);
+            rtDayPlan = (m && Array.isArray(m.dayPlan)) ? m.dayPlan.map(x => ({ type: x.type === 'port' ? 'port' : 'sea', port: x.port || '' })) : []; setRouteKind(getRouteKind(name)); document.getElementById('rt-code').value = m ? m.shipCode : defaultShipCode(shipEl.value);
             document.getElementById('rt-start').value = m ? m.start : dateToStr(new Date());
             document.getElementById('rt-days').value = m ? m.days : 7; routeDateSync('days');
             if(m) { document.getElementById('rt-end').value = m.end; }
@@ -3015,7 +3160,8 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                     if(lastEntryRoute === old) { lastEntryRoute = name; try { localStorage.setItem(DB_LAST_ROUTE, name); } catch(e) {} }
                     Object.keys(wasSelected).forEach(id => { if(wasSelected[id] === old) wasSelected[id] = name; });
                 } else if(!knownRoutes.includes(name)) { knownRoutes.push(name); }
-                routeMeta[name] = { ship, shipCode: code, start, end, days, color, kind };
+                syncRtDayPlanLength(days);
+            routeMeta[name] = { ship, shipCode: code, start, end, days, color, kind, dayPlan: rtDayPlan.map(x => ({ type: x.type, port: x.port || '' })) };
                 editingRoute = null;
             } else {
                 knownRoutes.push(name); routeMeta[name] = { ship, shipCode: code, start, end, days, color };
@@ -3779,8 +3925,15 @@ let qtyReportFilter = 'ALL';
             ['payroll', 'tips', 'both'].forEach(m => {
                 const b = document.getElementById('pt-btn-' + m);
                 if(!b) return;
-                if(m === mode) b.className = 'px-2.5 py-1 rounded-lg text-[11px] font-bold bg-sky-800 text-white transition';
-                else b.className = 'px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition';
+                if(m === mode) {
+                    b.className = 'px-2.5 py-1 rounded-lg text-[11px] font-bold transition';
+                    b.style.background = '#075985';
+                    b.style.color = '#ffffff';
+                } else {
+                    b.className = 'px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition';
+                    b.style.background = '';
+                    b.style.color = '';
+                }
             });
             renderPayrollTrendChart();
         }
@@ -3823,8 +3976,8 @@ let qtyReportFilter = 'ALL';
             pts.forEach((p, idx) => { if(p.val > pts[peakIdx].val) peakIdx = idx; });
             const peakPt = pts[peakIdx];
 
-            const W = 860, H = 370;
-            const padL = 82, padR = 30, padT = 46, padB = 56;
+            const W = 860, H = 445;
+            const padL = 82, padR = 30, padT = 46, padB = 132;
             const plotW = W - padL - padR, plotH = H - padT - padB;
 
             const vals = pts.map(p => p.val).concat([avgVal]);
@@ -3848,18 +4001,24 @@ let qtyReportFilter = 'ALL';
             const avgY = yOf(avgVal);
             const linePoints = pts.map((p, i) => `${xOf(i).toFixed(1)},${yOf(p.val).toFixed(1)}`).join(' ');
 
-            const labelEvery = pts.length > 14 ? Math.ceil(pts.length / 10) : 1;
+            const labelEvery = pts.length > 14 ? Math.ceil(pts.length / 8) : 1;
+            let lastXIdx = -99;
             let xAxisHtml = '';
             let nodesHtml = '';
             pts.forEach((p, i) => {
                 const xx = xOf(i), yy = yOf(p.val);
                 const isPeak = i === peakIdx;
-                if(i % labelEvery === 0 || i === pts.length - 1) {
-                    xAxisHtml += `<line x1="${xx.toFixed(1)}" y1="${padT + plotH}" x2="${xx.toFixed(1)}" y2="${padT + plotH + 5}" stroke="#94a3b8" stroke-width="1"/>`;
-                    xAxisHtml += `<text x="${xx.toFixed(1)}" y="${padT + plotH + 22}" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">${fmtAxisDate(p.date)}</text>`;
+                const nearLast = (pts.length - 1 - i) < Math.max(2, Math.ceil(labelEvery * 0.7));
+                if((i % labelEvery === 0 && !nearLast) || i === pts.length - 1) {
+                    if(i - lastXIdx >= 1) {
+                        xAxisHtml += `<line x1="${xx.toFixed(1)}" y1="${padT + plotH}" x2="${xx.toFixed(1)}" y2="${padT + plotH + 5}" stroke="#94a3b8" stroke-width="1"/>`;
+                        xAxisHtml += `<text x="${xx.toFixed(1)}" y="${padT + plotH + 22}" text-anchor="middle" fill="#1e293b" font-size="12" font-weight="600">${fmtAxisDate(p.date)}</text>`;
+                        lastXIdx = i;
+                    }
                 }
-                const placeBelow = !isPeak && (p.val < avgVal || (i === 0 && p.val < peakPt.val * 0.75));
-                const ly = isPeak ? yy - 16 : (placeBelow ? yy + 22 : yy - 14);
+                const tooCloseToAxis = yy > (padT + plotH - 28);
+                const placeBelow = !isPeak && !tooCloseToAxis && (p.val < avgVal || (i === 0 && p.val < peakPt.val * 0.75));
+                const ly = isPeak ? yy - 16 : (placeBelow ? yy + 20 : yy - 12);
                 const lblStr = '$' + Math.round(p.val).toLocaleString('en-US');
                 if(isPeak) {
                     nodesHtml += `<circle cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" r="8" fill="#d97706" stroke="#ffffff" stroke-width="2"><title>${fmtFullDate(p.date)}: $${p.val.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}</title></circle>`;
@@ -3887,7 +4046,7 @@ let qtyReportFilter = 'ALL';
                         <line x1="${padL}" y1="${avgY.toFixed(1)}" x2="${W - padR}" y2="${avgY.toFixed(1)}" stroke="#0d9488" stroke-width="2" stroke-dasharray="6,4"/>
                         <polyline fill="none" stroke="#0f3854" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" points="${linePoints}"/>
                         ${nodesHtml}
-                        <g transform="translate(${W - padR - 275}, ${padT + plotH - 90})">
+                        <g transform="translate(${W - padR - 275}, ${padT + plotH + 40})">
                             <rect x="0" y="0" width="268" height="78" rx="8" fill="rgba(255,255,255,0.95)" stroke="#e2e8f0" stroke-width="1"/>
                             <line x1="12" y1="20" x2="36" y2="20" stroke="#0f3854" stroke-width="2.6"/>
                             <circle cx="24" cy="20" r="4.5" fill="#0f3854"/>
@@ -4796,7 +4955,11 @@ let qtyReportFilter = 'ALL';
                             </div>`;
                         const topRight = remDays !== null ? `<span class="text-[9px] font-black px-1 rounded ${isToday ? 'bg-white/20 text-white' : 'bg-red-100 text-red-600'}">${remDays}g</span>` : '';
 
-                        const cruiseBadges = cruisesToday.slice(0, 1).map(n => `<div class="text-[8px] font-mono font-bold truncate px-1 py-0.5 rounded text-white" style="background:${routeMeta[n].color || '#64748b'}">${n}</div>`).join('');
+                        const cruiseBadges = cruisesToday.slice(0, 1).map(n => {
+                            const dp = getRouteDayInfo(n, dateStr);
+                            const dpBadge = dp ? (dp.type === 'port' ? `<span class="ml-1 px-1 rounded bg-sky-600 text-white">⚓${dp.port ? ' ' + dp.port : ' PORT'}</span>` : `<span class="ml-1 px-1 rounded bg-slate-200 text-slate-700">🌊 SEA</span>`) : '';
+                            return `<div class="text-[8px] font-mono font-bold truncate px-1 py-0.5 rounded text-white flex items-center justify-between" style="background:${routeMeta[n].color || '#64748b'}"><span class="truncate">${n}</span>${dpBadge}</div>`;
+                        }).join('');
                         const skts = bavulCal.sktByDate[dateStr] || [];
                         const sktBadges = skts.slice(0, 1).map(s => `<div class="text-[8px] font-bold truncate px-1 py-0.5 rounded bg-amber-100 text-amber-800">🧳 SKT: ${s.name}</div>`).join('');
                         const pcs = pcMap[dateStr] || [];
