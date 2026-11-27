@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.73) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.74) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -881,14 +881,15 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
 .peer:checked ~ .acc-opt-btn::before { content: "✓ "; font-weight: 900; }
 
 @keyframes finpro-cel-fall {
-  0% { transform: translateY(-10vh) translateX(0px) rotate(0deg); opacity: 0; }
-  10% { opacity: 0.95; }
-  90% { opacity: 0.95; }
-  100% { transform: translateY(108vh) translateX(24px) rotate(320deg); opacity: 0; }
+  0% { transform: translateY(-48px) translateX(0px) rotate(0deg); opacity: 0; }
+  8% { opacity: 1; }
+  92% { opacity: 1; }
+  100% { transform: translateY(105vh) translateX(28px) rotate(300deg); opacity: 0; }
 }
 .cel-particle {
   position: absolute;
-  top: -10vh;
+  top: 0;
+  line-height: 1;
   user-select: none;
   pointer-events: none;
   animation-name: finpro-cel-fall;
@@ -906,7 +907,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.73 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.74 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -2335,10 +2336,10 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
 
         let _activeCelOverride = null;
         const CEL_THEMES = {
-            xmas: { bannerBg: 'bg-gradient-to-r from-red-700 to-emerald-700', text: '🎅 Mutlu Noeller! Harika bir tatil sezonu dileriz.', icons: ['🎅', '🎄', '✨', '🎁', '⭐'] },
-            snow: { bannerBg: 'bg-gradient-to-r from-sky-700 to-indigo-800', text: '❄️ Mutlu Yıllar! Yeni yılda sağlık ve bol kazançlar.', icons: ['❄️', '❅', '❆', '✨'] },
-            bday: { bannerBg: 'bg-gradient-to-r from-pink-600 to-purple-600', text: '🎂 İyi ki Doğdun! Bugün senin günün, keyfini çıkar!', icons: ['🎁', '🎈', '🎉', '🎂', '✨'] },
-            contract: { bannerBg: 'bg-gradient-to-r from-emerald-600 to-teal-700', text: '🚢 Kontrat Tamamlandı! Eve dönüş ve izin dönemi kutlu olsun!', icons: ['🚢', '🎊', '🎉', '✨'] }
+            xmas: { grad: 'linear-gradient(90deg, #b91c1c, #047857)', text: '🎅 Mutlu Noeller! Harika bir tatil sezonu dileriz.', icons: ['🎅', '🎄', '✨', '🎁', '⭐'] },
+            snow: { grad: 'linear-gradient(90deg, #0369a1, #3730a3)', text: '❄️ Mutlu Yıllar! Yeni yılda sağlık ve bol kazançlar.', icons: ['❄️', '❅', '❆', '✨'] },
+            bday: { grad: 'linear-gradient(90deg, #db2777, #9333ea)', text: '🎂 İyi ki Doğdun! Bugün senin günün, keyfini çıkar!', icons: ['🎁', '🎈', '🎉', '🎂', '✨'] },
+            contract: { grad: 'linear-gradient(90deg, #059669, #0f766e)', text: '🚢 Kontrat Tamamlandı! Eve dönüş ve izin dönemi kutlu olsun!', icons: ['🚢', '🎊', '🎉', '✨'] }
         };
         function getTodayCelebrationTheme() {
             if (_activeCelOverride) return _activeCelOverride;
@@ -2378,7 +2379,8 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
             }
             const th = CEL_THEMES[themeKey];
             if (banner) {
-                banner.className = `mb-4 px-4 py-2.5 rounded-xl text-white font-bold text-sm flex items-center justify-between shadow-md ${th.bannerBg}`;
+                banner.className = 'mb-4 px-4 py-2.5 rounded-xl text-white font-bold text-sm flex items-center justify-between shadow-md';
+                banner.style.background = th.grad;
                 banner.innerHTML = `<span>${th.text}</span><button type="button" onclick="dismissCelebrationToday()" class="text-xs bg-white/20 hover:bg-white/30 px-2.5 py-1 rounded-lg ml-3">Kapat</button>`;
             }
             if (overlay && overlay.getAttribute('data-theme') !== themeKey) {
@@ -2430,6 +2432,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
             const ov = document.getElementById('celebration-overlay');
             if (ov) ov.removeAttribute('data-theme');
             switchTab('dashboard', document.getElementById('nav-dashboard'));
+            checkAndRenderCelebration();
         }
 
         function init() {
@@ -8545,8 +8548,8 @@ let qtyReportFilter = 'ALL';
         const w = window.open('', '_blank');
         if (!w) { window.print(); return; }
         w.document.write(`<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><title>Envanter & Kayıp Bagaj Raporu</title><style>body{font-family:sans-serif;padding:24px;color:#0f172a}table{width:100%;border-collapse:collapse;margin-bottom:16px}th,td{border:1px solid #cbd5e1;padding:6px 8px;font-size:12px}th{background:#f1f5f9}</style></head><body><h2>Bavul Organizatörü • Envanter & Kayıp Bagaj Raporu</h2>${bodyHtml}
-    <div id="celebration-overlay" class="hidden fixed inset-0 pointer-events-none z-40 overflow-hidden"></div>
-    <button type="button" id="celebration-stop-btn" onclick="dismissCelebrationToday()" class="hidden fixed bottom-4 right-4 z-50 px-3 py-1.5 rounded-full bg-slate-900/85 hover:bg-slate-900 text-white text-xs font-bold shadow-lg border border-white/20 backdrop-blur-sm">✕ Efekti Durdur</button>
+    <div id="celebration-overlay" style="position:fixed;inset:0;pointer-events:none;z-index:9990;overflow:hidden;" class="hidden"></div>
+    <button type="button" id="celebration-stop-btn" onclick="dismissCelebrationToday()" style="position:fixed;bottom:16px;right:16px;z-index:9995;" class="hidden px-3 py-1.5 rounded-full bg-slate-900 text-white text-xs font-bold shadow-lg border border-white/20">✕ Efekti Durdur</button>
 
 </body></html>`);
         w.document.close();
