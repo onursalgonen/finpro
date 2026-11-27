@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.74) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.75) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -880,6 +880,8 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
 .peer:checked ~ .peer-checked\:text-white { color: #ffffff; }
 .peer:checked ~ .acc-opt-btn::before { content: "✓ "; font-weight: 900; }
 
+.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.max-w-xs { max-width: 20rem; }
 @keyframes finpro-cel-fall {
   0% { transform: translateY(-48px) translateX(0px) rotate(0deg); opacity: 0; }
   8% { opacity: 1; }
@@ -907,7 +909,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.74 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.75 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -1950,17 +1952,17 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
 
     
     <!-- BASİT HESAP MAKİNESİ POPUP (BİRİM FİYAT) -->
-    <div id="entry-calc-modal" class="hidden fixed inset-0 bg-slate-900/80 z-[60] flex items-center justify-center backdrop-blur-sm p-4" onclick="if(event.target===this) closeEntryCalc()">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xs overflow-hidden border border-slate-200">
+    <div id="entry-calc-modal" style="z-index:9999;" class="hidden fixed inset-0 bg-slate-900/80 flex items-center justify-center backdrop-blur-sm p-4" onclick="if(event.target===this) closeEntryCalc()">
+        <div style="width:100%;max-width:320px;" class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200">
             <div class="p-3 bg-slate-900 text-white flex items-center justify-between">
                 <span class="text-xs font-bold flex items-center gap-1.5"><span class="material-icons text-sm text-emerald-400">calculate</span> Birim Fiyat Hesap Makinesi</span>
                 <button type="button" onclick="closeEntryCalc()" class="text-slate-400 hover:text-white"><span class="material-icons text-lg">close</span></button>
             </div>
-            <div class="p-4 bg-slate-950 text-right">
-                <div id="ec-expr" class="text-xs font-mono text-slate-400 min-h-[16px] truncate"></div>
+            <div style="background:#020617;padding:16px;text-align:right;">
+                <div id="ec-expr" style="min-height:16px;" class="text-xs font-mono text-slate-400 truncate"></div>
                 <div id="ec-display" class="text-3xl font-black font-mono text-emerald-400 tracking-tight truncate mt-0.5">0</div>
             </div>
-            <div class="p-3 bg-slate-100 grid grid-cols-4 gap-2">
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:12px;background:#f1f5f9;">
                 <button type="button" onclick="ecClear()" class="py-3 rounded-xl bg-red-100 hover:bg-red-200 text-red-700 font-black text-sm">C</button>
                 <button type="button" onclick="ecBack()" class="py-3 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-black text-sm">⌫</button>
                 <button type="button" onclick="ecInput('%')" class="py-3 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-black text-sm">%</button>
@@ -8548,9 +8550,6 @@ let qtyReportFilter = 'ALL';
         const w = window.open('', '_blank');
         if (!w) { window.print(); return; }
         w.document.write(`<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><title>Envanter & Kayıp Bagaj Raporu</title><style>body{font-family:sans-serif;padding:24px;color:#0f172a}table{width:100%;border-collapse:collapse;margin-bottom:16px}th,td{border:1px solid #cbd5e1;padding:6px 8px;font-size:12px}th{background:#f1f5f9}</style></head><body><h2>Bavul Organizatörü • Envanter & Kayıp Bagaj Raporu</h2>${bodyHtml}
-    <div id="celebration-overlay" style="position:fixed;inset:0;pointer-events:none;z-index:9990;overflow:hidden;" class="hidden"></div>
-    <button type="button" id="celebration-stop-btn" onclick="dismissCelebrationToday()" style="position:fixed;bottom:16px;right:16px;z-index:9995;" class="hidden px-3 py-1.5 rounded-full bg-slate-900 text-white text-xs font-bold shadow-lg border border-white/20">✕ Efekti Durdur</button>
-
 </body></html>`);
         w.document.close();
         w.print();
@@ -8722,5 +8721,8 @@ let qtyReportFilter = 'ALL';
     })();
 
 </script>
+
+    <div id="celebration-overlay" style="position:fixed;inset:0;pointer-events:none;z-index:9990;overflow:hidden;" class="hidden"></div>
+    <button type="button" id="celebration-stop-btn" onclick="dismissCelebrationToday()" style="position:fixed;bottom:16px;right:16px;z-index:9995;" class="hidden px-3 py-1.5 rounded-full bg-slate-900 text-white text-xs font-bold shadow-lg border border-white/20">✕ Efekti Durdur</button>
 </body>
 </html>
