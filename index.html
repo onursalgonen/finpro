@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.82) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.85) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -912,7 +912,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.82 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.85 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -1156,6 +1156,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 <div id="dash-celebration-banner" class="hidden mb-4 px-4 py-2.5 rounded-xl text-white font-bold text-sm flex items-center justify-between shadow-md"></div>
                 <div id="active-contract-banner" class="mb-6 card p-5 flex flex-col md:flex-row justify-between items-center bg-slate-900 shadow-xl border-none"></div>
                 <div id="dash-budget-alerts" class="hidden mb-6 space-y-2"></div>
+                <div id="dash-today-events-alert" class="hidden mb-6 space-y-2"></div>
                 <div id="dash-cruise-card" class="mb-6 card p-5 flex flex-col md:flex-row justify-between items-center gap-3 border-t-4 border-fuchsia-500"><div class="flex items-center w-full md:w-auto min-w-0"><span id="dash-cruise-icon" class="material-icons text-3xl mr-4 text-fuchsia-500">map</span><div class="min-w-0"><p id="dash-current-cruise-label" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Şu An Bulunduğum Cruise</p><h3 id="dash-current-cruise" class="text-lg font-bold text-slate-700">-</h3><div id="dash-current-cruise-sub" class="text-xs text-slate-500 font-semibold mt-0.5"></div></div></div><div id="dash-current-cruise-port" class="w-full md:w-auto flex justify-center"></div><div class="flex flex-col gap-1.5 items-stretch"><button onclick="openRouteModal()" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white text-sm px-6 py-2.5 rounded-lg font-bold shadow-lg transition flex items-center justify-center whitespace-nowrap"><span class="material-icons text-sm mr-2">add_location_alt</span> Yeni Cruise Ekle</button><button onclick="openAutoCruiseModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-5 py-2 rounded-lg font-bold shadow transition flex items-center justify-center whitespace-nowrap"><span class="material-icons text-sm mr-1.5">autorenew</span> Otomatik Cruise</button></div></div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div onclick="document.getElementById('nav-safak').click()" class="card bg-gradient-to-r from-red-500 to-red-600 text-white cursor-pointer hover:shadow-lg transition flex items-center justify-between p-4"><div class="flex items-center"><span class="material-icons mr-3 text-3xl">date_range</span><div><p class="text-[10px] font-bold uppercase text-red-200" id="dash-safak-title">KONTRAT ŞAFAK</p><h4 class="font-black text-xl" id="dash-safak-rem">0 GÜN KALDI</h4></div></div><div class="text-right"><p class="text-xs font-bold text-red-200" id="dash-safak-tot">0/0 Gün</p><p class="text-lg font-black text-yellow-300" id="dash-safak-pct">%0</p></div></div>
@@ -1909,7 +1910,12 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
     </section>
   
             </section>
-            <section id="view-categories" class="view-section"><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div class="card border-t-4 border-purple-500" id="cat-form-card"><h3 class="font-bold text-slate-800 mb-4 border-b pb-2 flex items-center justify-between"><span id="cat-form-title" class="flex items-center"><span class="material-icons mr-2 text-purple-500">add</span> Yeni Başlık Ekle</span><button id="btn-cancel-cat-edit" onclick="cancelCategoryEdit()" class="hidden text-xs bg-red-100 text-red-600 px-2 py-1 rounded font-bold">İptal</button></h3><input type="hidden" id="edit-cat-id"><div class="space-y-4"><div><label class="block text-xs font-bold text-slate-500 mb-1">Başlık Adı</label><input type="text" id="cat-name" placeholder="Örn: Market, Fatura" class="w-full border p-2.5 rounded-lg bg-slate-50 outline-purple-500 font-semibold text-sm"></div><div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-bold text-slate-500 mb-1">Ait Olduğu Hesap</label><select id="cat-account" class="w-full border p-2.5 rounded-lg bg-slate-50 outline-purple-500 font-semibold text-sm"><option value="FOLIO">Folio (Gemi İçi)</option><option value="BANK">Banka (ATM Kartı)</option><option value="WALLET">Cüzdan (Nakit)</option></select></div><div><label class="block text-xs font-bold text-slate-500 mb-1">İşlem Türü</label><select id="cat-type" class="w-full border p-2.5 rounded-lg bg-slate-50 outline-purple-500 font-semibold text-sm"><option value="OUTGOING">Gider (-)</option><option value="INCOME">Gelir (+)</option></select></div></div><button id="btn-save-cat" onclick="saveCategory()" class="w-full btn bg-purple-600 hover:bg-purple-500 text-white shadow-lg">Başlık Oluştur</button></div></div><div class="card p-0 overflow-hidden"><div class="p-4 border-b bg-slate-50"><h3 class="font-bold text-slate-700">Mevcut Ana Başlıklar</h3></div><div class="overflow-x-auto max-h-[400px] overflow-y-auto"><table class="w-full text-left text-sm"><thead class="bg-white sticky top-0 border-b"><tr class="text-slate-500 uppercase text-[10px] tracking-wider"><th class="p-3">Başlık Adı</th><th class="p-3">Hesap Yeri</th><th class="p-3">Türü</th><th class="p-3 text-center">İşlem</th></tr></thead><tbody id="categories-table"></tbody></table></div></div></div><div class="card p-0 overflow-hidden mt-6 border-t-4 border-indigo-500"><div class="p-4 border-b bg-slate-50 flex flex-col md:flex-row md:items-center md:justify-between gap-3"><h3 class="font-bold text-slate-700 flex items-center"><span class="material-icons mr-2 text-indigo-500">directions_boat</span> Gemi Yönetimi</h3><div class="flex gap-2"><input type="text" id="new-cruise-name" placeholder="Örn: CARNIVAL BREEZE" class="border p-2 rounded-lg bg-white font-bold uppercase text-sm w-48 outline-indigo-500"><button onclick="addKnownCruise()" class="btn bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 text-sm shadow">Ekle</button></div></div><div class="overflow-x-auto max-h-[300px] overflow-y-auto"><table class="w-full text-left text-sm"><thead class="bg-white sticky top-0 border-b"><tr class="text-slate-500 uppercase text-[10px] tracking-wider"><th class="p-3">Gemi Adı</th><th class="p-3 text-center">Gemi Kodu</th><th class="p-3 text-center">İşlem</th></tr></thead><tbody id="known-cruises-table"></tbody></table></div></div><div class="card p-0 overflow-hidden mt-6 border-t-4 border-fuchsia-500"><div class="p-4 border-b bg-slate-50 flex flex-col md:flex-row md:items-center md:justify-between gap-3"><h3 class="font-bold text-slate-700 flex items-center"><span class="material-icons mr-2 text-fuchsia-500">map</span> Cruise (Sefer/Rota) Yönetimi</h3><button onclick="openRouteModal()" class="btn bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-4 py-2 text-sm shadow flex items-center"><span class="material-icons text-sm mr-1">add</span> Yeni Cruise Oluştur</button></div><div class="overflow-x-auto max-h-[300px] overflow-y-auto"><table class="w-full text-left text-sm"><thead class="bg-white sticky top-0 border-b"><tr class="text-slate-500 uppercase text-[10px] tracking-wider"><th class="p-3">Cruise Kodu</th><th class="p-3">Gemi</th><th class="p-3">Tarih Aralığı</th><th class="p-3 text-center">Gün</th><th class="p-3 text-center">İşlem</th></tr></thead><tbody id="known-routes-table"></tbody></table></div></div>
+            <section id="view-categories" class="view-section"><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div class="card border-t-4 border-purple-500" id="cat-form-card"><h3 class="font-bold text-slate-800 mb-4 border-b pb-2 flex items-center justify-between"><span id="cat-form-title" class="flex items-center"><span class="material-icons mr-2 text-purple-500">add</span> Yeni Başlık Ekle</span><button id="btn-cancel-cat-edit" onclick="cancelCategoryEdit()" class="hidden text-xs bg-red-100 text-red-600 px-2 py-1 rounded font-bold">İptal</button></h3><input type="hidden" id="edit-cat-id"><div class="space-y-4"><div><label class="block text-xs font-bold text-slate-500 mb-1">Başlık Adı</label><input type="text" id="cat-name" placeholder="Örn: Market, Fatura" class="w-full border p-2.5 rounded-lg bg-slate-50 outline-purple-500 font-semibold text-sm"></div><div class="grid grid-cols-2 gap-3"><div><label class="block text-xs font-bold text-slate-500 mb-1">Ait Olduğu Hesap</label><select id="cat-account" class="w-full border p-2.5 rounded-lg bg-slate-50 outline-purple-500 font-semibold text-sm"><option value="FOLIO">Folio (Gemi İçi)</option><option value="BANK">Banka (ATM Kartı)</option><option value="WALLET">Cüzdan (Nakit)</option></select></div><div><label class="block text-xs font-bold text-slate-500 mb-1">İşlem Türü</label><select id="cat-type" class="w-full border p-2.5 rounded-lg bg-slate-50 outline-purple-500 font-semibold text-sm"><option value="OUTGOING">Gider (-)</option><option value="INCOME">Gelir (+)</option></select></div></div><button id="btn-save-cat" onclick="saveCategory()" class="w-full btn bg-purple-600 hover:bg-purple-500 text-white shadow-lg">Başlık Oluştur</button></div></div><div class="card p-0 overflow-hidden"><div class="p-4 border-b bg-slate-50"><h3 class="font-bold text-slate-700">Mevcut Ana Başlıklar</h3></div><div class="overflow-x-auto max-h-[400px] overflow-y-auto"><table class="w-full text-left text-sm"><thead class="bg-white sticky top-0 border-b"><tr class="text-slate-500 uppercase text-[10px] tracking-wider"><th class="p-3">Başlık Adı</th><th class="p-3">Hesap Yeri</th><th class="p-3">Türü</th><th class="p-3 text-center">İşlem</th></tr></thead><tbody id="categories-table"></tbody></table></div></div></div><div class="card p-0 overflow-hidden mt-6 border-t-4 border-indigo-500"><div class="p-4 border-b bg-slate-50 flex flex-col md:flex-row md:items-center md:justify-between gap-3"><h3 class="font-bold text-slate-700 flex items-center"><span class="material-icons mr-2 text-indigo-500">directions_boat</span> Gemi Yönetimi</h3><div class="flex gap-2"><input type="text" id="new-cruise-name" placeholder="Örn: CARNIVAL BREEZE" class="border p-2 rounded-lg bg-white font-bold uppercase text-sm w-48 outline-indigo-500"><button onclick="addKnownCruise()" class="btn bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 text-sm shadow">Ekle</button></div></div><div class="overflow-x-auto max-h-[300px] overflow-y-auto"><table class="w-full text-left text-sm"><thead class="bg-white sticky top-0 border-b"><tr class="text-slate-500 uppercase text-[10px] tracking-wider"><th class="p-3">Gemi Adı</th><th class="p-3 text-center">Gemi Kodu</th><th class="p-3 text-center">İşlem</th></tr></thead><tbody id="known-cruises-table"></tbody></table></div></div><div class="card p-0 overflow-hidden mt-6 border-t-4 border-fuchsia-500"><div class="p-4 border-b bg-slate-50 flex flex-col md:flex-row md:items-center md:justify-between gap-3"><h3 class="font-bold text-slate-700 flex items-center"><span class="material-icons mr-2 text-fuchsia-500">map</span> Cruise (Sefer/Rota) Yönetimi</h3><button onclick="openRouteModal()" class="btn bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-4 py-2 text-sm shadow flex items-center"><span class="material-icons text-sm mr-1">add</span> Yeni Cruise Oluştur</button></div>
+                    <div class="p-3 bg-slate-50/70 border-b flex flex-wrap items-center gap-2">
+                        <input type="text" id="route-search-input" oninput="renderKnownRoutes()" onkeydown="if(event.key==='Enter'){event.preventDefault();editRouteBySearch();}" placeholder="Cruise No (ör: 54), Kod (BR04...) veya Gemi ara..." class="flex-1 min-w-[210px] border p-2 rounded-lg bg-white text-xs font-bold">
+                        <button type="button" onclick="editRouteBySearch()" class="btn bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3.5 py-2 shadow-sm">No / Kod ile Düzenle</button>
+                    </div>
+                    <div class="overflow-x-auto max-h-[340px] overflow-y-auto"><table class="w-full text-left text-sm"><thead class="bg-white sticky top-0 border-b"><tr class="text-slate-500 uppercase text-[10px] tracking-wider"><th class="p-3 text-center">No</th><th class="p-3">Cruise Kodu</th><th class="p-3">Gemi</th><th class="p-3">Tarih Aralığı</th><th class="p-3 text-center">Gün</th><th class="p-3 text-center">İşlem</th></tr></thead><tbody id="known-routes-table"></tbody></table></div></div>
                 <div class="card p-0 border-t-4 border-orange-500 overflow-hidden mt-6">
                     <div class="p-4 border-b bg-slate-50 flex flex-wrap justify-between items-center gap-2">
                         <div>
@@ -1935,6 +1941,34 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                                 </tr>
                             </thead>
                             <tbody id="known-platforms-table"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card p-0 border-t-4 border-sky-600 overflow-hidden mt-6">
+                    <div class="p-4 border-b bg-slate-50 flex flex-wrap justify-between items-center gap-2">
+                        <div>
+                            <h3 class="font-bold text-slate-700 flex items-center">
+                                <span class="material-icons mr-2 text-sky-600">anchor</span> Port (Liman) Yönetimi
+                            </h3>
+                            <p class="text-[10px] text-slate-400 font-bold mt-0.5">Buraya eklediğiniz limanlar Cruise Ekle, Otomatik Cruise ve Cruise Update ekranlarında seçim listesi olarak görünür.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50/70 border-b flex flex-wrap gap-2 items-center">
+                        <input type="hidden" id="edit-known-port-old">
+                        <input type="text" id="new-known-port-name" placeholder="Liman Adı (Örn: Miami, Cozumel, Nassau)" class="flex-1 min-w-[200px] border p-2 rounded-lg bg-white text-sm font-bold">
+                        <button type="button" id="btn-save-known-port" onclick="saveKnownPort()" class="btn bg-sky-600 hover:bg-sky-700 text-white text-xs px-4 py-2 shadow">Ekle</button>
+                        <button type="button" id="btn-cancel-known-port" onclick="cancelKnownPortEdit()" class="hidden btn bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs px-3 py-2">İptal</button>
+                    </div>
+                    <div class="overflow-x-auto max-h-[260px] overflow-y-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-white sticky top-0 border-b">
+                                <tr class="text-slate-500 uppercase text-[10px] tracking-wider">
+                                    <th class="p-3">Liman Adı</th>
+                                    <th class="p-3 text-center">İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody id="known-ports-table"></tbody>
                         </table>
                     </div>
                 </div>
@@ -2059,12 +2093,16 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
     
     <!-- OTOMATİK CRUISE DÖNGÜSÜ MODAL -->
     <div id="auto-cruise-modal" class="hidden fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center backdrop-blur-sm p-3 md:p-4" onclick="if(event.target===this) closeAutoCruiseModal()">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden max-h-[92vh] overflow-y-auto">
-            <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
-                <h3 class="font-bold text-slate-800 flex items-center"><span class="material-icons mr-2 text-indigo-600">autorenew</span> Otomatik Cruise Döngüsü Oluştur</h3>
-                <button type="button" onclick="closeAutoCruiseModal()" class="text-slate-400 hover:text-red-500"><span class="material-icons">close</span></button>
+        <div style="width:100%;max-width:640px;" class="bg-white rounded-xl shadow-2xl overflow-hidden max-h-[92vh] overflow-y-auto">
+            <div class="p-4 border-b bg-slate-50 flex flex-wrap justify-between items-center gap-2">
+                <h3 class="font-bold text-slate-800 flex items-center"><span class="material-icons mr-2 text-indigo-600">autorenew</span> Otomatik Cruise &amp; Güncelleme</h3>
+                <div class="flex items-center gap-1.5">
+                    <button type="button" id="ac-tab-create" onclick="switchAutoCruiseTab('create')" style="background:#4f46e5;color:#ffffff;" class="px-3 py-1.5 rounded-lg text-xs font-bold transition">Otomatik Oluştur</button>
+                    <button type="button" id="ac-tab-update" onclick="switchAutoCruiseTab('update')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">Cruise Update</button>
+                    <button type="button" onclick="closeAutoCruiseModal()" class="ml-1 text-slate-400 hover:text-red-500"><span class="material-icons">close</span></button>
+                </div>
             </div>
-            <div class="p-5 space-y-4">
+            <div id="ac-panel-create" class="p-5 space-y-4">
                 <div class="grid grid-cols-3 gap-3">
                     <div class="col-span-2">
                         <label class="block text-xs font-bold text-slate-500 mb-1">Gemi</label>
@@ -2124,6 +2162,80 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 </div>
 
                 <button type="button" onclick="saveAutoCruises()" class="w-full btn bg-indigo-600 hover:bg-indigo-700 text-white py-3 shadow-lg font-bold">Döngüyü Oluştur ve Takvime İşle</button>
+            </div>
+
+            <!-- CRUISE UPDATE PANELİ -->
+            <div id="ac-panel-update" class="hidden p-5 space-y-4">
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-700">1. Hangi Kayıtlı Cruise'lar Güncellensin?</span>
+                        <span id="cu-match-badge" class="text-xs font-black px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800">0 Cruise</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Gemi</label>
+                            <select id="cu-ship" onchange="renderCruiseUpdatePreview()" class="w-full border p-2 rounded-lg bg-white text-xs font-bold"></select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Süre (Gün)</label>
+                            <select id="cu-days" onchange="onCruiseUpdateDaysChange()" class="w-full border p-2 rounded-lg bg-white text-xs font-bold"></select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Kapsam</label>
+                            <select id="cu-scope" onchange="renderCruiseUpdatePreview()" class="w-full border p-2 rounded-lg bg-white text-xs font-bold">
+                                <option value="future">Sadece Gelecek</option>
+                                <option value="all">Tümü (Geçmiş Dahil)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Tür</label>
+                            <select id="cu-kind" onchange="renderCruiseUpdatePreview()" class="w-full border p-2 rounded-lg bg-white text-xs font-bold">
+                                <option value="all">Tümü</option>
+                                <option value="cruise">Cruise</option>
+                                <option value="drydock">Drydock</option>
+                                <option value="wetdock">Wetdock</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-white border border-indigo-200 space-y-3">
+                    <span class="text-xs font-bold text-indigo-900 block">2. Uygulanacak Genel Değişiklikler</span>
+                    <div class="p-3 rounded-lg bg-sky-50 border border-sky-200 space-y-2">
+                        <label class="flex items-center gap-2 text-xs font-bold text-sky-900 cursor-pointer">
+                            <input type="checkbox" id="cu-apply-plan" checked onchange="renderCruiseUpdatePreview()" class="rounded">
+                            <span>Gün Planı &amp; Limanları Güncelle (Sea Day / Port)</span>
+                        </label>
+                        <div id="cu-dayplan-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
+                            <label class="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
+                                <input type="checkbox" id="cu-apply-shift" onchange="renderCruiseUpdatePreview()" class="rounded">
+                                <span>Tarihleri Kaydır (Gün)</span>
+                            </label>
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" onclick="stepCuShift(-1)" class="px-2.5 py-1 rounded bg-white border font-bold text-xs">-1</button>
+                                <input type="number" id="cu-shift-days" value="0" onchange="renderCruiseUpdatePreview()" class="w-16 border p-1 rounded bg-white text-center text-xs font-black">
+                                <button type="button" onclick="stepCuShift(1)" class="px-2.5 py-1 rounded bg-white border font-bold text-xs">+1</button>
+                            </div>
+                        </div>
+                        <div class="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
+                            <label class="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
+                                <input type="checkbox" id="cu-apply-color" onchange="renderCruiseUpdatePreview()" class="rounded">
+                                <span>Takvim Rengini Güncelle</span>
+                            </label>
+                            <input type="color" id="cu-color" value="#0284c7" onchange="renderCruiseUpdatePreview()" class="w-14 h-8 p-0 border rounded cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3">
+                    <span class="text-[10px] font-bold text-indigo-700 uppercase block mb-1.5">3. Etkilenecek Cruise Önizlemesi</span>
+                    <div id="cu-preview-list" class="max-h-32 overflow-y-auto space-y-1 text-xs font-mono text-slate-700"></div>
+                </div>
+
+                <button type="button" onclick="applyCruiseUpdate()" class="w-full btn bg-indigo-600 hover:bg-indigo-700 text-white py-3 shadow-lg font-bold">Seçili Cruise'ları Toplu Güncelle</button>
             </div>
         </div>
     </div>
@@ -2311,7 +2423,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
             else { btnT.className = "flex-1 py-3 font-bold text-sm text-indigo-600 bg-white transition"; btnN.className = "flex-1 py-3 font-bold text-sm text-slate-500 hover:bg-slate-100 border-r transition"; }
         }
 
-        const DB_REC = 'finAppV79_Records'; const DB_CAT = 'finAppV79_Categories'; const DB_SHOP = 'finAppV79_Shopping'; const DB_WAL = 'finAppV79_WalletNotes'; const DB_SIM = 'finAppV79_Sim'; const DB_SFK = 'finAppV79_Safak'; const DB_PAST = 'finAppV79_PastContracts'; const DB_EXT = 'finAppV79_ExtTransfers'; const DB_CR = 'finAppV81_CustomReports'; const DB_CRU = 'finAppV82_KnownCruises'; const DB_ROUTE = 'finAppV83_KnownRoutes'; const DB_LAST_ROUTE = 'finAppV83_LastEntryRoute'; const DB_EVENTS = 'finAppV84_CalendarEvents'; const DB_PAYDAY_SEEDED = 'finAppV84_PaydaySeeded'; const DB_EXT_FEE_FIXED = 'finAppV85_ExtFeeFixed'; const DB_ROUTE_META = 'finAppV86_RouteMeta'; const DB_ROUTE_AUTO = 'finAppV87_RouteAutoFollow'; const DB_SHIP_CODES = 'finAppV86_ShipCodes'; const DB_LIMITS = 'finAppV88_BudgetLimits'; const DB_COUNTDOWNS = 'finAppV89_PersonalCountdowns'; const DB_SIM_SCENARIOS = 'finAppV90_SimScenarios'; const DB_SIM_ACTIVE = 'finAppV90_SimActive'; const DB_SHOP_PLATFORMS = 'finAppV91_ShopPlatforms'; const DB_CELEBRATION = 'finAppV92_Celebration';
+        const DB_REC = 'finAppV79_Records'; const DB_CAT = 'finAppV79_Categories'; const DB_SHOP = 'finAppV79_Shopping'; const DB_WAL = 'finAppV79_WalletNotes'; const DB_SIM = 'finAppV79_Sim'; const DB_SFK = 'finAppV79_Safak'; const DB_PAST = 'finAppV79_PastContracts'; const DB_EXT = 'finAppV79_ExtTransfers'; const DB_CR = 'finAppV81_CustomReports'; const DB_CRU = 'finAppV82_KnownCruises'; const DB_ROUTE = 'finAppV83_KnownRoutes'; const DB_LAST_ROUTE = 'finAppV83_LastEntryRoute'; const DB_EVENTS = 'finAppV84_CalendarEvents'; const DB_PAYDAY_SEEDED = 'finAppV84_PaydaySeeded'; const DB_EXT_FEE_FIXED = 'finAppV85_ExtFeeFixed'; const DB_ROUTE_META = 'finAppV86_RouteMeta'; const DB_ROUTE_AUTO = 'finAppV87_RouteAutoFollow'; const DB_SHIP_CODES = 'finAppV86_ShipCodes'; const DB_LIMITS = 'finAppV88_BudgetLimits'; const DB_COUNTDOWNS = 'finAppV89_PersonalCountdowns'; const DB_SIM_SCENARIOS = 'finAppV90_SimScenarios'; const DB_SIM_ACTIVE = 'finAppV90_SimActive'; const DB_SHOP_PLATFORMS = 'finAppV91_ShopPlatforms'; const DB_CELEBRATION = 'finAppV92_Celebration'; const DB_PORTS = 'finAppV93_KnownPorts';
         let records = JSON.parse(localStorage.getItem(DB_REC)) || [];
         let shoppingRecords = JSON.parse(localStorage.getItem(DB_SHOP)) || [];
         let extTransfers = JSON.parse(localStorage.getItem(DB_EXT)) || [];
@@ -2329,6 +2441,8 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
         let personalCountdowns = JSON.parse(localStorage.getItem(DB_COUNTDOWNS)) || [];
         let simScenarios = JSON.parse(localStorage.getItem(DB_SIM_SCENARIOS)) || null;
         let activeSimScenarioId = localStorage.getItem(DB_SIM_ACTIVE) || 'default';
+        let knownPorts = JSON.parse(localStorage.getItem(DB_PORTS)) || ['Miami', 'Port Canaveral', 'Galveston', 'Cozumel', 'Costa Maya', 'Roatan', 'Nassau', 'CocoCay', 'Grand Cayman', 'Ocho Rios'];
+        if (!Array.isArray(knownPorts)) knownPorts = [];
         let celebrationSettings = JSON.parse(localStorage.getItem(DB_CELEBRATION)) || { enabled: true, birthdayDay: '', birthdayMonth: '' };
         let shopPlatforms = JSON.parse(localStorage.getItem(DB_SHOP_PLATFORMS)) || [
             { id: 'AMAZON', name: 'Amazon' },
@@ -2497,19 +2611,19 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
             setInterval(checkDayRollover, 300000); document.addEventListener('visibilitychange', () => { if(!document.hidden) checkDayRollover(); });
         }
         
-        function saveLocalOnly() { try { localStorage.setItem(DB_REC, JSON.stringify(records)); localStorage.setItem(DB_CAT, JSON.stringify(categories)); localStorage.setItem(DB_SHOP, JSON.stringify(shoppingRecords)); localStorage.setItem(DB_WAL, JSON.stringify(walletNotes)); localStorage.setItem(DB_SIM, JSON.stringify(simulation)); localStorage.setItem(DB_SFK, JSON.stringify(safakData)); localStorage.setItem(DB_PAST, JSON.stringify(pastContracts)); localStorage.setItem(DB_EXT, JSON.stringify(extTransfers)); localStorage.setItem(DB_CR, JSON.stringify(customReports)); localStorage.setItem(DB_CRU, JSON.stringify(knownCruises)); localStorage.setItem(DB_ROUTE, JSON.stringify(knownRoutes)); localStorage.setItem(DB_EVENTS, JSON.stringify(calendarEvents)); localStorage.setItem(DB_ROUTE_META, JSON.stringify(routeMeta)); localStorage.setItem(DB_SHIP_CODES, JSON.stringify(shipCodes)); localStorage.setItem(DB_LIMITS, JSON.stringify(budgetLimits)); localStorage.setItem(DB_COUNTDOWNS, JSON.stringify(personalCountdowns)); localStorage.setItem(DB_SIM_SCENARIOS, JSON.stringify(simScenarios)); localStorage.setItem(DB_SIM_ACTIVE, activeSimScenarioId); localStorage.setItem(DB_SHOP_PLATFORMS, JSON.stringify(shopPlatforms)); localStorage.setItem(DB_CELEBRATION, JSON.stringify(celebrationSettings)); } catch (e) {} }
+        function saveLocalOnly() { try { localStorage.setItem(DB_REC, JSON.stringify(records)); localStorage.setItem(DB_CAT, JSON.stringify(categories)); localStorage.setItem(DB_SHOP, JSON.stringify(shoppingRecords)); localStorage.setItem(DB_WAL, JSON.stringify(walletNotes)); localStorage.setItem(DB_SIM, JSON.stringify(simulation)); localStorage.setItem(DB_SFK, JSON.stringify(safakData)); localStorage.setItem(DB_PAST, JSON.stringify(pastContracts)); localStorage.setItem(DB_EXT, JSON.stringify(extTransfers)); localStorage.setItem(DB_CR, JSON.stringify(customReports)); localStorage.setItem(DB_CRU, JSON.stringify(knownCruises)); localStorage.setItem(DB_ROUTE, JSON.stringify(knownRoutes)); localStorage.setItem(DB_EVENTS, JSON.stringify(calendarEvents)); localStorage.setItem(DB_ROUTE_META, JSON.stringify(routeMeta)); localStorage.setItem(DB_SHIP_CODES, JSON.stringify(shipCodes)); localStorage.setItem(DB_LIMITS, JSON.stringify(budgetLimits)); localStorage.setItem(DB_COUNTDOWNS, JSON.stringify(personalCountdowns)); localStorage.setItem(DB_SIM_SCENARIOS, JSON.stringify(simScenarios)); localStorage.setItem(DB_SIM_ACTIVE, activeSimScenarioId); localStorage.setItem(DB_SHOP_PLATFORMS, JSON.stringify(shopPlatforms)); localStorage.setItem(DB_CELEBRATION, JSON.stringify(celebrationSettings)); localStorage.setItem(DB_PORTS, JSON.stringify(knownPorts)); } catch (e) {} }
         function saveData() { saveLocalOnly(); triggerAutoSync(); }
         let _saveTimer = null;
         function debouncedSaveData(delay = 250) { clearTimeout(_saveTimer); _saveTimer = setTimeout(() => { saveData(); }, delay); }
         
         async function exportData() {
-            const data = { records, categories, shoppingRecords, walletNotes, simulation, safakData, pastContracts, extTransfers, customReports, knownCruises, knownRoutes, routeMeta, shipCodes, calendarEvents, budgetLimits, personalCountdowns, simScenarios, activeSimScenarioId, shopPlatforms, celebrationSettings }; 
+            const data = { records, categories, shoppingRecords, walletNotes, simulation, safakData, pastContracts, extTransfers, customReports, knownCruises, knownRoutes, routeMeta, shipCodes, calendarEvents, budgetLimits, personalCountdowns, simScenarios, activeSimScenarioId, shopPlatforms, celebrationSettings, knownPorts }; 
             const jsonString = JSON.stringify(data); const fileName = "finans_yedek_v8_2.json";
             if (navigator.canShare) { const file = new File([jsonString], fileName, { type: "application/json" }); if (navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: 'FinPro Veritabanı Yedeği', text: 'FinPro JSON yedeği.' }); return; } catch (err) { console.log("Paylaşım iptal", err); } } }
             const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(jsonString); a.download = fileName; a.click(); 
         }
 
-        function importData(e) { if(!e.target.files[0]) return; const r = new FileReader(); r.onload = (evt) => { try { const d = JSON.parse(evt.target.result); if(d.records) records = d.records; if(d.shoppingRecords) shoppingRecords = d.shoppingRecords; if(d.categories) categories = d.categories; if(d.walletNotes) walletNotes = d.walletNotes; if(d.simulation) simulation = d.simulation; if(d.safakData) safakData = d.safakData; if(d.pastContracts) pastContracts = d.pastContracts; if(d.extTransfers) extTransfers = d.extTransfers; if(d.customReports) customReports = d.customReports; if(d.knownCruises) knownCruises = d.knownCruises; if(d.knownRoutes) knownRoutes = d.knownRoutes; if(d.routeMeta) routeMeta = d.routeMeta; if(d.shipCodes) shipCodes = d.shipCodes; if(d.calendarEvents) calendarEvents = d.calendarEvents; if(d.budgetLimits) budgetLimits = d.budgetLimits; if(d.personalCountdowns) personalCountdowns = d.personalCountdowns; if(Array.isArray(d.simScenarios) && d.simScenarios.length > 0) simScenarios = d.simScenarios; if(d.activeSimScenarioId) activeSimScenarioId = d.activeSimScenarioId; if(Array.isArray(d.shopPlatforms) && d.shopPlatforms.length > 0) shopPlatforms = d.shopPlatforms; if(d.celebrationSettings) celebrationSettings = d.celebrationSettings; saveData(); alert("Yedek yüklendi!"); refreshAllViews(); } catch(error) { alert("Format hatası!"); } }; r.readAsText(e.target.files[0]); e.target.value = ''; }
+        function importData(e) { if(!e.target.files[0]) return; const r = new FileReader(); r.onload = (evt) => { try { const d = JSON.parse(evt.target.result); if(d.records) records = d.records; if(d.shoppingRecords) shoppingRecords = d.shoppingRecords; if(d.categories) categories = d.categories; if(d.walletNotes) walletNotes = d.walletNotes; if(d.simulation) simulation = d.simulation; if(d.safakData) safakData = d.safakData; if(d.pastContracts) pastContracts = d.pastContracts; if(d.extTransfers) extTransfers = d.extTransfers; if(d.customReports) customReports = d.customReports; if(d.knownCruises) knownCruises = d.knownCruises; if(d.knownRoutes) knownRoutes = d.knownRoutes; if(d.routeMeta) routeMeta = d.routeMeta; if(d.shipCodes) shipCodes = d.shipCodes; if(d.calendarEvents) calendarEvents = d.calendarEvents; if(d.budgetLimits) budgetLimits = d.budgetLimits; if(d.personalCountdowns) personalCountdowns = d.personalCountdowns; if(Array.isArray(d.simScenarios) && d.simScenarios.length > 0) simScenarios = d.simScenarios; if(d.activeSimScenarioId) activeSimScenarioId = d.activeSimScenarioId; if(Array.isArray(d.shopPlatforms) && d.shopPlatforms.length > 0) shopPlatforms = d.shopPlatforms; if(d.celebrationSettings) celebrationSettings = d.celebrationSettings; if(Array.isArray(d.knownPorts)) knownPorts = d.knownPorts; saveData(); alert("Yedek yüklendi!"); refreshAllViews(); } catch(error) { alert("Format hatası!"); } }; r.readAsText(e.target.files[0]); e.target.value = ''; }
 
         async function exportAdvancedExcel(event) {
             if (typeof ExcelJS === 'undefined') { alert("ExcelJS yüklenemedi. İnternet bağlantınızı kontrol edin."); return; }
@@ -2564,6 +2678,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 try { renderPayrollIndicator('indicator-grid-payroll-dash'); } catch(e){}
                 try { renderWeeklySpendingCards(); } catch(e){}
                 try { renderDashboardBudgetAlerts(); } catch(e){}
+                try { renderDashboardTodayEventsBanner(); } catch(e){}
                 try { checkAndRenderCelebration(); } catch(e){}
             } else if(tab === 'entries') {
                 try { updateCategorySelect(); } catch(e){}
@@ -2580,6 +2695,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 try { renderKnownCruises(); } catch(e){}
                 try { renderKnownRoutes(); } catch(e){}
                 try { renderShopPlatforms(); } catch(e){}
+                try { renderKnownPorts(); } catch(e){}
             } else if(tab === 'reports') {
                 try { renderCustomReports(); } catch(e){}
                 try { renderIndicators('indicator-grid'); } catch(e){}
@@ -2850,6 +2966,224 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
         function onRouteShipChange() { const n = document.getElementById('rt-ship').value; document.getElementById('rt-code').value = defaultShipCode(n); updateRoutePreview(); }
         function setRouteDays(n) { document.getElementById('rt-days').value = n; routeDateSync('days'); }
 
+
+        function getPortOptionsHtml(selectedPort) {
+            const cur = String(selectedPort || '').trim();
+            const list = [...new Set([...(knownPorts || []), ...(cur ? [cur] : [])])].sort((a, b) => a.localeCompare(b, 'tr'));
+            return '<option value="">-- Liman Seç --</option>' + list.map(p => {
+                const esc = p.replace(/"/g, '&quot;');
+                return `<option value="${esc}" ${p === cur ? 'selected' : ''}>${p}</option>`;
+            }).join('');
+        }
+        function renderKnownPorts() {
+            const tbody = document.getElementById('known-ports-table');
+            if (!tbody) return;
+            if (!knownPorts.length) {
+                tbody.innerHTML = '<tr><td colspan="2" class="p-4 text-center text-xs text-slate-400 italic">Henüz liman eklenmedi.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = [...knownPorts].sort((a, b) => a.localeCompare(b, 'tr')).map(p => `
+                <tr class="border-b hover:bg-slate-50">
+                    <td class="p-3 font-bold text-slate-800">⚓ ${p}</td>
+                    <td class="p-3 text-center space-x-2">
+                        <button type="button" onclick="editKnownPort('${p.replace(/'/g, "\'")}')" class="text-xs font-bold text-blue-600 hover:underline">Düzenle</button>
+                        <button type="button" onclick="deleteKnownPort('${p.replace(/'/g, "\'")}')" class="text-xs font-bold text-red-500 hover:underline">Sil</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        function saveKnownPort() {
+            const inp = document.getElementById('new-known-port-name');
+            const oldEl = document.getElementById('edit-known-port-old');
+            const name = (inp?.value || '').trim();
+            if (!name) return alert('Lütfen liman adını girin.');
+            const oldName = oldEl ? oldEl.value : '';
+            if (oldName) {
+                const idx = knownPorts.indexOf(oldName);
+                if (idx > -1) knownPorts[idx] = name;
+                Object.values(routeMeta).forEach(m => {
+                    if (m && Array.isArray(m.dayPlan)) {
+                        m.dayPlan.forEach(dp => { if (dp && dp.port === oldName) dp.port = name; });
+                    }
+                });
+                cancelKnownPortEdit();
+            } else {
+                if (knownPorts.some(p => p.toLowerCase() === name.toLowerCase())) return alert('Bu liman zaten listede var.');
+                knownPorts.push(name);
+                if (inp) inp.value = '';
+            }
+            saveData();
+            renderKnownPorts();
+            refreshAllViews();
+        }
+        function editKnownPort(name) {
+            document.getElementById('edit-known-port-old').value = name;
+            document.getElementById('new-known-port-name').value = name;
+            document.getElementById('btn-save-known-port').innerText = 'Güncelle';
+            document.getElementById('btn-cancel-known-port').classList.remove('hidden');
+        }
+        function cancelKnownPortEdit() {
+            document.getElementById('edit-known-port-old').value = '';
+            document.getElementById('new-known-port-name').value = '';
+            document.getElementById('btn-save-known-port').innerText = 'Ekle';
+            document.getElementById('btn-cancel-known-port').classList.add('hidden');
+        }
+        function deleteKnownPort(name) {
+            if (!confirm(`"${name}" limanını listeden silmek istediğinize emin misiniz?`)) return;
+            knownPorts = knownPorts.filter(p => p !== name);
+            if (document.getElementById('edit-known-port-old').value === name) cancelKnownPortEdit();
+            saveData();
+            renderKnownPorts();
+        }
+
+        let cuDayPlan = [];
+        function switchAutoCruiseTab(tab) {
+            const pCreate = document.getElementById('ac-panel-create');
+            const pUpdate = document.getElementById('ac-panel-update');
+            const bCreate = document.getElementById('ac-tab-create');
+            const bUpdate = document.getElementById('ac-tab-update');
+            if (!pCreate || !pUpdate) return;
+            if (tab === 'update') {
+                pCreate.classList.add('hidden'); pUpdate.classList.remove('hidden');
+                if (bCreate) { bCreate.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition'; bCreate.style.background=''; bCreate.style.color=''; }
+                if (bUpdate) { bUpdate.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition'; bUpdate.style.background='#4f46e5'; bUpdate.style.color='#ffffff'; }
+                initCruiseUpdatePanel();
+            } else {
+                pUpdate.classList.add('hidden'); pCreate.classList.remove('hidden');
+                if (bUpdate) { bUpdate.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition'; bUpdate.style.background=''; bUpdate.style.color=''; }
+                if (bCreate) { bCreate.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition'; bCreate.style.background='#4f46e5'; bCreate.style.color='#ffffff'; }
+            }
+        }
+        function initCruiseUpdatePanel() {
+            const shipSel = document.getElementById('cu-ship');
+            const daysSel = document.getElementById('cu-days');
+            if (!shipSel || !daysSel) return;
+            const ships = [...new Set(Object.values(routeMeta).map(m => m && m.ship).filter(Boolean))].sort();
+            const curS = shipSel.value;
+            shipSel.innerHTML = '<option value="ALL">Tüm Gemiler</option>' + ships.map(s => `<option value="${s}">${s}</option>`).join('');
+            if (curS && ships.includes(curS)) shipSel.value = curS;
+            else if (safakData.isActive && safakData.name && ships.includes(safakData.name.toUpperCase())) shipSel.value = safakData.name.toUpperCase();
+
+            const dayCounts = [...new Set(Object.values(routeMeta).map(m => m && m.days).filter(Boolean))].sort((a,b) => a - b);
+            daysSel.innerHTML = '<option value="ALL">Tümü</option>' + dayCounts.map(d => `<option value="${d}">${d} Günlük</option>`).join('');
+            if (dayCounts.length) daysSel.value = String(dayCounts[0]);
+            onCruiseUpdateDaysChange();
+        }
+        function onCruiseUpdateDaysChange() {
+            const matches = getCruiseUpdateMatches();
+            const selDays = document.getElementById('cu-days')?.value || 'ALL';
+            const targetLen = selDays !== 'ALL' ? parseInt(selDays, 10) : (matches[0] && matches[0].m.days ? matches[0].m.days : 4);
+            const basePlan = (matches[0] && Array.isArray(matches[0].m.dayPlan)) ? matches[0].m.dayPlan : [];
+            cuDayPlan = Array.from({ length: Math.max(1, targetLen) }, (_, i) => basePlan[i] ? { type: basePlan[i].type === 'port' ? 'port' : 'sea', port: basePlan[i].port || '' } : { type: 'sea', port: '' });
+            renderCruiseUpdateDayPlan();
+            renderCruiseUpdatePreview();
+        }
+        function toggleCuDayType(idx) {
+            if (!cuDayPlan[idx]) return;
+            cuDayPlan[idx].type = cuDayPlan[idx].type === 'port' ? 'sea' : 'port';
+            renderCruiseUpdateDayPlan();
+            renderCruiseUpdatePreview();
+        }
+        function updateCuDayPort(idx, val) {
+            if (!cuDayPlan[idx]) return;
+            cuDayPlan[idx].port = val;
+            renderCruiseUpdatePreview();
+        }
+        function renderCruiseUpdateDayPlan() {
+            const grid = document.getElementById('cu-dayplan-grid');
+            if (!grid) return;
+            grid.innerHTML = cuDayPlan.map((d, i) => {
+                const isP = d.type === 'port';
+                return `<div class="p-1.5 rounded-lg border ${isP ? 'bg-white border-sky-400' : 'bg-white/70 border-slate-200'} space-y-1">
+                    <button type="button" onclick="toggleCuDayType(${i})" class="w-full py-1 rounded text-[10px] font-bold ${isP ? 'bg-sky-600 text-white' : 'bg-slate-200 text-slate-700'}">${i+1}.G: ${isP ? '⚓ Port' : '🌊 Sea Day'}</button>
+                    ${isP ? `<select onchange="updateCuDayPort(${i}, this.value)" class="w-full border border-sky-200 rounded px-1 py-0.5 text-[10px] bg-white font-semibold">${getPortOptionsHtml(d.port)}</select>` : ''}
+                </div>`;
+            }).join('');
+        }
+        function stepCuShift(delta) {
+            const el = document.getElementById('cu-shift-days');
+            if (!el) return;
+            el.value = (parseInt(el.value, 10) || 0) + delta;
+            renderCruiseUpdatePreview();
+        }
+        function getCruiseUpdateMatches() {
+            const ship = document.getElementById('cu-ship')?.value || 'ALL';
+            const days = document.getElementById('cu-days')?.value || 'ALL';
+            const scope = document.getElementById('cu-scope')?.value || 'future';
+            const kind = document.getElementById('cu-kind')?.value || 'all';
+            const todayStr = dateToStr(new Date());
+            return Object.keys(routeMeta).sort((a, b) => String(routeMeta[a].start || '').localeCompare(String(routeMeta[b].start || ''))).map(name => ({ name, m: routeMeta[name] })).filter(({ name, m }) => {
+                if (!m) return false;
+                if (ship !== 'ALL' && String(m.ship || '').toUpperCase() !== ship) return false;
+                if (days !== 'ALL' && String(m.days || '') !== days) return false;
+                if (scope === 'future' && m.end && m.end < todayStr) return false;
+                if (kind !== 'all' && getRouteKind(name) !== kind) return false;
+                return true;
+            });
+        }
+        function renderCruiseUpdatePreview() {
+            const badge = document.getElementById('cu-match-badge');
+            const listEl = document.getElementById('cu-preview-list');
+            const matches = getCruiseUpdateMatches();
+            if (badge) badge.innerText = `${matches.length} Cruise`;
+            if (!listEl) return;
+            if (!matches.length) {
+                listEl.innerHTML = '<p class="text-slate-400 font-sans italic">Seçili filtrelere uyan kayıtlı cruise bulunamadı.</p>';
+                return;
+            }
+            const applyPlan = document.getElementById('cu-apply-plan')?.checked;
+            const applyShift = document.getElementById('cu-apply-shift')?.checked;
+            const shiftDays = applyShift ? (parseInt(document.getElementById('cu-shift-days')?.value, 10) || 0) : 0;
+            const planTxt = applyPlan ? cuDayPlan.map(d => d.type === 'port' ? (d.port || 'Port') : 'Sea Day').join(' → ') : 'Mevcut plan korunur';
+            const noMap = new Map(getNumberedRoutes().map(x => [x.name, x.no]));
+            listEl.innerHTML = matches.map(({ name, m }) => {
+                const rNo = noMap.get(name);
+                let sStr = m.start, eStr = m.end, newCode = name;
+                if (shiftDays !== 0 && m.start && m.end) {
+                    sStr = dateToStr(new Date(parseYMD(m.start).getTime() + shiftDays * 86400000));
+                    eStr = dateToStr(new Date(parseYMD(m.end).getTime() + shiftDays * 86400000));
+                    newCode = buildRouteCode(m.shipCode || defaultShipCode(m.ship || ''), m.days || 4, sStr, getRouteKind(name));
+                }
+                return `<div class="py-0.5 border-b border-indigo-100 last:border-none">${rNo ? `<span class="inline-block px-1.5 py-0.2 rounded bg-slate-800 text-white text-[10px] font-black mr-1">#${rNo}</span>` : ''}<b>${name}${newCode !== name ? ' → ' + newCode : ''}</b> (${sStr} → ${eStr}) <span class="font-sans text-[10px] text-indigo-700">| ${planTxt}</span></div>`;
+            }).join('');
+        }
+        function applyCruiseUpdate() {
+            const matches = getCruiseUpdateMatches();
+            if (!matches.length) return alert('Güncellenecek cruise bulunamadı.');
+            const applyPlan = document.getElementById('cu-apply-plan')?.checked;
+            const applyShift = document.getElementById('cu-apply-shift')?.checked;
+            const shiftDays = applyShift ? (parseInt(document.getElementById('cu-shift-days')?.value, 10) || 0) : 0;
+            const applyColor = document.getElementById('cu-apply-color')?.checked;
+            const newColor = document.getElementById('cu-color')?.value || '#0284c7';
+            if (!applyPlan && !applyShift && !applyColor) return alert('Lütfen en az bir güncelleme seçeneğini işaretleyin.');
+
+            matches.forEach(({ name, m }) => {
+                const updated = { ...m };
+                if (applyPlan) {
+                    const len = updated.days || cuDayPlan.length;
+                    updated.dayPlan = Array.from({ length: len }, (_, i) => cuDayPlan[i] ? { type: cuDayPlan[i].type, port: cuDayPlan[i].port || '' } : { type: 'sea', port: '' });
+                }
+                if (applyColor) updated.color = newColor;
+                let finalName = name;
+                if (shiftDays !== 0 && updated.start && updated.end) {
+                    updated.start = dateToStr(new Date(parseYMD(updated.start).getTime() + shiftDays * 86400000));
+                    updated.end = dateToStr(new Date(parseYMD(updated.end).getTime() + shiftDays * 86400000));
+                    finalName = buildRouteCode(updated.shipCode || defaultShipCode(updated.ship || ''), updated.days || 4, updated.start, getRouteKind(name));
+                }
+                if (finalName !== name) {
+                    delete routeMeta[name];
+                    knownRoutes = knownRoutes.map(r => r === name ? finalName : r);
+                    records.forEach(r => { if (r.route === name) r.route = finalName; });
+                }
+                routeMeta[finalName] = updated;
+                if (!knownRoutes.includes(finalName)) knownRoutes.push(finalName);
+            });
+            saveData();
+            refreshAllViews();
+            closeAutoCruiseModal();
+            alert(`${matches.length} kayıtlı cruise başarıyla güncellendi!`);
+        }
+
         let rtDayPlan = [];
         function syncRtDayPlanLength(days) {
             const n = Math.max(0, Math.min(90, parseInt(days, 10) || 0));
@@ -2882,7 +3216,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 return `<div class="p-2 rounded-lg border ${isP ? 'bg-sky-50 border-sky-400' : 'bg-white border-slate-200'} space-y-1.5">
                     <div class="text-[10px] font-bold text-slate-500">${i + 1}. Gün</div>
                     <button type="button" onclick="toggleRouteDayType(${i})" class="w-full py-1 px-1.5 rounded text-[11px] font-bold transition ${isP ? 'bg-sky-600 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}">${isP ? '⚓ Port' : '🌊 Sea Day'}</button>
-                    ${isP ? `<input type="text" value="${String(d.port || '').replace(/"/g, '&quot;')}" oninput="updateRouteDayPort(${i}, this.value)" list="cruise-port-datalist" placeholder="Liman adı" class="w-full border border-sky-200 rounded px-1.5 py-1 text-[10px] bg-white font-semibold">` : ''}
+                    ${isP ? `<select onchange="updateRouteDayPort(${i}, this.value)" class="w-full border border-sky-200 rounded px-1 py-1 text-[10px] bg-white font-semibold">${getPortOptionsHtml(d.port)}</select>` : ''}
                 </div>`;
             }).join('');
         }
@@ -2979,6 +3313,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
         }
         const AC_COLORS = ['#0284c7', '#9333ea', '#059669', '#d97706', '#e11d48', '#4f46e5'];
         function openAutoCruiseModal() {
+            switchAutoCruiseTab('create');
             const shipEl = document.getElementById('ac-ship');
             const codeEl = document.getElementById('ac-code');
             const startEl = document.getElementById('ac-start');
@@ -3054,7 +3389,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                     const isP = d.type === 'port';
                     return `<div class="inline-flex flex-col gap-1 p-1 rounded border ${isP ? 'bg-sky-50 border-sky-300' : 'bg-slate-50 border-slate-200'}">
                         <button type="button" onclick="toggleAutoCruiseStepDay(${idx}, ${di})" class="px-2 py-0.5 rounded text-[10px] font-bold transition ${isP ? 'bg-sky-600 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}">${di+1}.G: ${isP ? '⚓ Port' : '🌊 Sea Day'}</button>
-                        ${isP ? `<input type="text" list="cruise-port-datalist" value="${String(d.port || '').replace(/"/g, '&quot;')}" oninput="updateAutoCruiseStepDayPort(${idx}, ${di}, this.value)" placeholder="Liman adı" class="w-24 border border-sky-200 rounded px-1.5 py-0.5 text-[10px] bg-white font-semibold">` : ''}
+                        ${isP ? `<select onchange="updateAutoCruiseStepDayPort(${idx}, ${di}, this.value)" class="w-24 border border-sky-200 rounded px-1 py-0.5 text-[10px] bg-white font-semibold">${getPortOptionsHtml(d.port)}</select>` : ''}
                     </div>`;
                 }).join('');
                 return `<div class="w-full p-2 rounded-lg bg-white border border-slate-300 shadow-sm space-y-1.5"><div class="flex items-center justify-between text-xs font-bold text-slate-800"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full" style="background:${col}"></span>Cruise ${letter} : ${days} gün</span><button type="button" onclick="removeAutoCruiseStep(${idx})" class="text-slate-400 hover:text-red-500 font-black">✕</button></div><div class="flex flex-wrap gap-1">${pills}</div></div>`;
@@ -3206,17 +3541,58 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 saveData(); renderKnownRoutes(); updateDatalists(); renderDashCalendar();
             }
         }
+        function getNumberedRoutes() {
+            const allRoutes = [...new Set([...knownRoutes, ...records.map(r => r.route).filter(c => c && c.trim() !== '')])];
+            const firstRecDate = {};
+            records.forEach(r => {
+                if (r.route && r.date && (!firstRecDate[r.route] || r.date < firstRecDate[r.route])) firstRecDate[r.route] = r.date;
+            });
+            allRoutes.sort((a, b) => {
+                const da = (routeMeta[a] && routeMeta[a].start) ? routeMeta[a].start : (firstRecDate[a] || '9999-99-99');
+                const db = (routeMeta[b] && routeMeta[b].start) ? routeMeta[b].start : (firstRecDate[b] || '9999-99-99');
+                if (da !== db) return da < db ? -1 : 1;
+                return a.localeCompare(b);
+            });
+            return allRoutes.map((name, idx) => ({ no: idx + 1, name, m: routeMeta[name] }));
+        }
+        function editRouteBySearch() {
+            const q = (document.getElementById('route-search-input')?.value || '').trim().toLowerCase().replace(/^no[:\s]*/i, '');
+            if (!q) return alert('Lütfen düzenlemek için Cruise No (ör: 54) veya Cruise kodu yazın.');
+            const numbered = getNumberedRoutes();
+            if (/^\d+$/.test(q)) {
+                const hitNo = numbered.find(x => String(x.no) === q);
+                if (hitNo) { openRouteEdit(hitNo.name); return; }
+            }
+            const matches = numbered.filter(x => x.name.toLowerCase().includes(q) || String(x.no) === q || (x.m && x.m.ship && x.m.ship.toLowerCase().includes(q)));
+            if (matches.length === 1) { openRouteEdit(matches[0].name); return; }
+            if (matches.length > 1) {
+                const exact = matches.find(x => x.name.toLowerCase() === q);
+                if (exact) { openRouteEdit(exact.name); return; }
+                return alert(`Birden fazla eşleşme bulundu (${matches.length} adet). Lütfen tam No girin.`);
+            }
+            alert('Eşleşen cruise bulunamadı.');
+        }
         function renderKnownRoutes() {
             const tbody = document.getElementById('known-routes-table'); if(!tbody) return;
-            const allRoutes = [...new Set([...knownRoutes, ...records.map(r => r.route).filter(c => c && c.trim() !== '')])].sort();
-            if(allRoutes.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-400 italic">Henüz cruise eklenmedi.</td></tr>'; return; }
-            tbody.innerHTML = '';
-            allRoutes.forEach(name => {
-                const m = routeMeta[name]; const recCount = records.filter(r => r.route === name).length;
+            const numbered = getNumberedRoutes();
+            if(numbered.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400 italic">Henüz cruise eklenmedi.</td></tr>'; return; }
+            const q = (document.getElementById('route-search-input')?.value || '').trim().toLowerCase().replace(/^no[:\s]*/i, '');
+            // En eski (No:1) en altta, en yeni (en büyük No) en üstte
+            let list = [...numbered].reverse();
+            if (q) {
+                list = list.filter(x => String(x.no) === q || x.name.toLowerCase().includes(q) || (x.m && x.m.ship && x.m.ship.toLowerCase().includes(q)));
+            }
+            if (list.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400 italic">Aramayla eşleşen cruise yok.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = list.map(({ no, name, m }) => {
+                const recCount = records.filter(r => r.route === name).length;
                 const canDelete = knownRoutes.includes(name);
                 const dot = m && m.color ? `<span class="inline-block w-2.5 h-2.5 rounded-full mr-1.5 align-middle" style="background:${m.color}"></span>` : '';
-                tbody.innerHTML += `<tr class="border-b hover:bg-slate-50"><td class="p-3 font-bold text-slate-700 font-mono text-xs">${dot}${name} ${getRouteKind(name)==='drydock'?'<span class="text-[9px] font-sans font-black px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 ml-1">DRYDOCK</span>':(getRouteKind(name)==='wetdock'?'<span class="text-[9px] font-sans font-black px-1.5 py-0.5 rounded bg-cyan-100 text-cyan-800 ml-1">WETDOCK</span>':'')} ${recCount > 0 ? `<span class="text-[9px] text-slate-400 font-semibold ml-1">(${recCount} kayıt)</span>` : ''}</td><td class="p-3 text-xs text-slate-600">${m ? (m.ship || '-') : '-'}</td><td class="p-3 text-xs text-slate-600 whitespace-nowrap">${m ? `${m.start} → ${m.end}` : '-'}</td><td class="p-3 text-center text-xs font-bold text-slate-600">${m ? m.days : '-'}</td><td class="p-3 text-center whitespace-nowrap"><button onclick="openRouteEdit('${name}')" class="text-indigo-600 text-[10px] font-bold border border-indigo-200 px-2 py-1 rounded hover:bg-indigo-50 mr-1">Düzenle</button>${canDelete ? `<button onclick="deleteKnownRoute('${name}')" class="text-red-500 text-[10px] font-bold border border-red-200 px-2 py-1 rounded hover:bg-red-50">Sil</button>` : `<span class="text-[9px] text-slate-400 italic">Kayıtlardan otomatik</span>`}</td></tr>`;
-            });
+                const kindBadge = getRouteKind(name)==='drydock' ? '<span class="text-[9px] font-sans font-black px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 ml-1">DRYDOCK</span>' : (getRouteKind(name)==='wetdock' ? '<span class="text-[9px] font-sans font-black px-1.5 py-0.5 rounded bg-cyan-100 text-cyan-800 ml-1">WETDOCK</span>' : '');
+                return `<tr class="border-b hover:bg-slate-50"><td class="p-3 text-center"><span class="inline-block px-2 py-0.5 rounded-full bg-slate-800 text-white font-black text-[10px]">${no}</span></td><td class="p-3 font-bold text-slate-700 font-mono text-xs">${dot}${name} ${kindBadge} ${recCount > 0 ? `<span class="text-[9px] text-slate-400 font-semibold ml-1">(${recCount} kayıt)</span>` : ''}</td><td class="p-3 text-xs text-slate-600">${m ? (m.ship || '-') : '-'}</td><td class="p-3 text-xs text-slate-600 whitespace-nowrap">${m ? `${m.start} → ${m.end}` : '-'}</td><td class="p-3 text-center text-xs font-bold text-slate-600">${m ? m.days : '-'}</td><td class="p-3 text-center whitespace-nowrap"><button onclick="openRouteEdit('${name}')" class="text-indigo-600 text-[10px] font-bold border border-indigo-200 px-2 py-1 rounded hover:bg-indigo-50 mr-1">Düzenle</button>${canDelete ? `<button onclick="deleteKnownRoute('${name}')" class="text-red-500 text-[10px] font-bold border border-red-200 px-2 py-1 rounded hover:bg-red-50">Sil</button>` : ''}</td></tr>`;
+            }).join('');
         }
         function getFilteredRecords(recs) { const y = document.getElementById('global-year').value; const moEl = document.getElementById('global-month'); const mo = moEl ? moEl.value : 'ALL'; const s = document.getElementById('global-ship').value.trim().toUpperCase(); let f = recs; if(y && y !== 'ALL') f = f.filter(r => r.date && String(r.date).startsWith(y)); if(mo && mo !== 'ALL') f = f.filter(r => r.date && String(r.date).substring(5,7) === mo); if(s && s !== '' && s !== 'TÜM GEMILER' && s !== 'TÜM GEMİLER' && s !== 'ALL') f = f.filter(r => r.cruise && String(r.cruise).toUpperCase() === s); return f; } function getFilteredRecordsNoMonth(recs) { const y = document.getElementById('global-year').value; const s = document.getElementById('global-ship').value.trim().toUpperCase(); let f = recs; if(y && y !== 'ALL') f = f.filter(r => r.date && String(r.date).startsWith(y)); if(s && s !== '' && s !== 'TÜM GEMILER' && s !== 'TÜM GEMİLER' && s !== 'ALL') f = f.filter(r => r.cruise && String(r.cruise).toUpperCase() === s); return f; }
         const monthNames = { "01":"Ocak", "02":"Şubat", "03":"Mart", "04":"Nisan", "05":"Mayıs", "06":"Haziran", "07":"Temmuz", "08":"Ağustos", "09":"Eylül", "10":"Ekim", "11":"Kasım", "12":"Aralık" };
@@ -4874,6 +5250,7 @@ let qtyReportFilter = 'ALL';
                         legendEl.innerHTML = inMonth.map(n => `<span class="flex items-center text-[7px] font-bold text-slate-500" title="${routeMeta[n].start} → ${routeMeta[n].end}"><span class="w-2 h-2 rounded-sm inline-block mr-1" style="background:${routeMeta[n].color}"></span>${n}</span>`).join('');
                     }
                     renderUpcomingEventsList();
+                    try { renderDashboardTodayEventsBanner(); } catch(e){}
                     renderCurrentCruiseCard();
                     const largeModal = document.getElementById('large-cal-modal');
                     if(largeModal && !largeModal.classList.contains('hidden')) renderLargeCalendar();
@@ -5040,7 +5417,12 @@ let qtyReportFilter = 'ALL';
                                 const isP = todayPlan.type === 'port';
                                 const mainTxt = isP ? ('⚓ ' + (todayPlan.port ? 'PORT: ' + todayPlan.port.toUpperCase() : 'PORT GÜNÜ')) : '🌊 SEA DAY';
                                 const nextTxt = tmrPlan ? ('Yarın: ' + (tmrPlan.type === 'port' ? '⚓ ' + (tmrPlan.port || 'Port') : '🌊 Sea Day')) : 'Yarın: Sonraki Dönem';
-                                portEl.innerHTML = `<div class="px-5 py-2.5 rounded-xl border text-center shadow-sm ${isP ? 'bg-sky-50 border-sky-300' : 'bg-slate-50 border-slate-300'}"><div class="text-[9px] font-bold uppercase tracking-wider ${isP ? 'text-sky-700' : 'text-slate-500'}">Bugünkü Konum</div><div class="mt-1 inline-block px-3.5 py-1 rounded-full text-xs font-black text-white shadow-sm ${isP ? 'bg-sky-600' : 'bg-slate-700'}">${mainTxt}</div><div class="text-[10px] font-bold mt-1 ${isP ? 'text-slate-600' : 'text-sky-700'}">${nextTxt}</div></div>`;
+                                const shipFilter = (m.ship || (safakData.isActive ? safakData.name : '') || '').toUpperCase();
+                                const shipRoutes = Object.values(routeMeta).filter(rm => rm && rm.end && (!shipFilter || String(rm.ship || '').toUpperCase() === shipFilter));
+                                const doneCnt = shipRoutes.filter(rm => rm.end < todayStr).length;
+                                const remCnt = shipRoutes.filter(rm => rm.end >= todayStr).length;
+                                const cntHtml = shipRoutes.length ? `<div class="text-[10px] font-bold text-slate-500 mt-1.5 pt-1.5 border-t border-slate-200/80">✓ ${doneCnt} Cruise Tamamlandı • ⏳ ${remCnt} Kaldı</div>` : '';
+                                portEl.innerHTML = `<div class="px-5 py-2.5 rounded-xl border text-center shadow-sm ${isP ? 'bg-sky-50 border-sky-300' : 'bg-slate-50 border-slate-300'}"><div class="text-[9px] font-bold uppercase tracking-wider ${isP ? 'text-sky-700' : 'text-slate-500'}">Bugünkü Konum</div><div class="mt-1 inline-block px-3.5 py-1 rounded-full text-xs font-black text-white shadow-sm ${isP ? 'bg-sky-600' : 'bg-slate-700'}">${mainTxt}</div><div class="text-[10px] font-bold mt-1 ${isP ? 'text-slate-600' : 'text-sky-700'}">${nextTxt}</div>${cntHtml}</div>`;
                             }
                         }
                         setColor(m.color);
@@ -5555,7 +5937,36 @@ let qtyReportFilter = 'ALL';
                     }).join('');
                 }
 
-                function renderDashboardBudgetAlerts() {
+                
+        function renderDashboardTodayEventsBanner() {
+            const box = document.getElementById('dash-today-events-alert');
+            if (!box) return;
+            const today = new Date(); today.setHours(0, 0, 0, 0);
+            const todayStr = dateToStr(today);
+            const events = getEventsForDate(todayStr, today) || [];
+            if (events.length === 0) {
+                box.classList.add('hidden');
+                box.innerHTML = '';
+                return;
+            }
+            const badges = events.map(e => {
+                const dotCls = (typeof EVENT_DOT_CLS !== 'undefined' && EVENT_DOT_CLS[e.color]) ? EVENT_DOT_CLS[e.color] : 'bg-indigo-500';
+                return `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white border border-indigo-200 text-xs font-bold text-slate-800 shadow-sm"><span class="w-2 h-2 rounded-full ${dotCls}"></span>${e.title}</span>`;
+            }).join('');
+            box.classList.remove('hidden');
+            box.innerHTML = `<div class="p-3.5 rounded-xl border border-indigo-200 bg-indigo-50/90 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+                <div class="flex flex-wrap items-center gap-2.5">
+                    <span class="text-xl leading-none" title="Bugünkü Etkinlikler">🛎️</span>
+                    <div>
+                        <p class="text-xs font-black text-indigo-900 uppercase tracking-wide">Bugünkü Takvim Etkinlikleri (${events.length})</p>
+                        <div class="flex flex-wrap items-center gap-1.5 mt-1">${badges}</div>
+                    </div>
+                </div>
+                <button type="button" onclick="openDayEventModal('${todayStr}')" class="text-xs font-bold text-indigo-700 hover:underline whitespace-nowrap">Etkinlikleri Düzenle</button>
+            </div>`;
+        }
+
+        function renderDashboardBudgetAlerts() {
                     const box = document.getElementById('dash-budget-alerts'); if(!box) return;
                     const keys = Object.keys(budgetLimits);
                     if(keys.length === 0) { box.classList.add('hidden'); box.innerHTML = ''; return; }
