@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.86) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.87) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -912,7 +912,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.86 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.87 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -1158,6 +1158,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 <div id="dash-budget-alerts" class="hidden mb-6 space-y-2"></div>
                 <div id="dash-today-events-alert" class="hidden mb-6 space-y-2"></div>
                 <div id="dash-cruise-card" class="mb-6 card p-5 flex flex-col md:flex-row justify-between items-center gap-3 border-t-4 border-fuchsia-500"><div class="flex items-center w-full md:w-auto min-w-0"><span id="dash-cruise-icon" class="material-icons text-3xl mr-4 text-fuchsia-500">map</span><div class="min-w-0"><p id="dash-current-cruise-label" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Şu An Bulunduğum Cruise</p><h3 id="dash-current-cruise" class="text-lg font-bold text-slate-700">-</h3><div id="dash-current-cruise-sub" class="text-xs text-slate-500 font-semibold mt-0.5"></div></div></div><div id="dash-current-cruise-port" class="w-full md:w-auto flex justify-center"></div><div class="flex flex-col gap-1.5 items-stretch"><button onclick="openRouteModal()" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white text-sm px-6 py-2.5 rounded-lg font-bold shadow-lg transition flex items-center justify-center whitespace-nowrap"><span class="material-icons text-sm mr-2">add_location_alt</span> Yeni Cruise Ekle</button><button onclick="openAutoCruiseModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-5 py-2 rounded-lg font-bold shadow transition flex items-center justify-center whitespace-nowrap"><span class="material-icons text-sm mr-1.5">autorenew</span> Otomatik Cruise</button></div></div>
+                <div id="dash-fav-buttons" class="hidden mb-6 p-3 rounded-xl bg-white border border-slate-200 shadow-sm flex flex-wrap items-center gap-2"></div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div onclick="document.getElementById('nav-safak').click()" class="card bg-gradient-to-r from-red-500 to-red-600 text-white cursor-pointer hover:shadow-lg transition flex items-center justify-between p-4"><div class="flex items-center"><span class="material-icons mr-3 text-3xl">date_range</span><div><p class="text-[10px] font-bold uppercase text-red-200" id="dash-safak-title">KONTRAT ŞAFAK</p><h4 class="font-black text-xl" id="dash-safak-rem">0 GÜN KALDI</h4></div></div><div class="text-right"><p class="text-xs font-bold text-red-200" id="dash-safak-tot">0/0 Gün</p><p class="text-lg font-black text-yellow-300" id="dash-safak-pct">%0</p></div></div>
                     <div onclick="document.getElementById('nav-wallet').click()" class="card bg-gradient-to-r from-emerald-50 to-white border-emerald-200 cursor-pointer hover:shadow-md transition flex items-center justify-between p-4"><div class="flex items-center"><span class="material-icons text-emerald-500 mr-3 text-3xl">account_balance_wallet</span><div><p class="text-[10px] font-bold uppercase text-slate-500">Sistem vs Fiziki Sayım</p><h4 class="font-black text-slate-800">Cüzdan Farkı</h4></div></div><p class="text-2xl font-black text-slate-800" id="dash-link-wallet-diff">$0.00</p></div>
@@ -1972,6 +1973,96 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                         </table>
                     </div>
                 </div>
+
+                <!-- TEK TIKLA FAVORİ İŞLEM ŞABLONLARI YÖNETİMİ -->
+                <div class="card p-0 border-t-4 border-emerald-600 overflow-hidden mt-6">
+                    <div class="p-4 border-b bg-slate-50 flex flex-wrap justify-between items-center gap-2">
+                        <div>
+                            <h3 class="font-bold text-slate-700 flex items-center">
+                                <span class="material-icons mr-2 text-emerald-600">bolt</span> Tek Tıkla Favori İşlem Şablonları
+                            </h3>
+                            <p class="text-[10px] text-slate-400 font-bold mt-0.5">Hangi işlem için ne yapılacağını seçin (Anında Kaydet veya Formu Doldur) ve isterseniz Dashboard'a buton olarak ekleyin.</p>
+                        </div>
+                        <label class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-slate-300 cursor-pointer text-xs font-bold text-slate-700 shadow-sm">
+                            <input type="checkbox" id="fav-dash-master-chk" onchange="toggleFavDashMaster()" class="rounded">
+                            <span>Dashboard'da Cruise Sayacının Altına Butonlar Koyulsun mu?</span>
+                        </label>
+                    </div>
+                    <div class="p-4 bg-slate-50/70 border-b space-y-3">
+                        <input type="hidden" id="ft-edit-id">
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Şablon Adı</label>
+                                <input type="text" id="ft-name" placeholder="Örn: Crew Bar Kahve" class="w-full border p-2 rounded-lg bg-white text-xs font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Hesap</label>
+                                <select id="ft-account" onchange="updateFavCatSelect()" class="w-full border p-2 rounded-lg bg-white text-xs font-bold">
+                                    <option value="FOLIO">Folio</option>
+                                    <option value="BANK">Banka</option>
+                                    <option value="WALLET">Cüzdan</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">İşlem Türü</label>
+                                <select id="ft-type" onchange="updateFavCatSelect()" class="w-full border p-2 rounded-lg bg-white text-xs font-bold">
+                                    <option value="OUTGOING">Gider</option>
+                                    <option value="INCOME">Gelir</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Kategori</label>
+                                <select id="ft-category" class="w-full border p-2 rounded-lg bg-white text-xs font-bold"></select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 items-end">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Alt Grup / Not</label>
+                                <input type="text" id="ft-sub" placeholder="İsteğe bağlı" class="w-full border p-2 rounded-lg bg-white text-xs font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Birim Fiyat ($)</label>
+                                <input type="number" id="ft-price" step="0.01" placeholder="3.50" class="w-full border p-2 rounded-lg bg-white text-xs font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Adet</label>
+                                <input type="number" id="ft-qty" min="1" value="1" class="w-full border p-2 rounded-lg bg-white text-xs font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Tıklayınca Ne Yapsın?</label>
+                                <select id="ft-action" class="w-full border p-2 rounded-lg bg-white text-xs font-bold">
+                                    <option value="instant">⚡ Anında Kaydet</option>
+                                    <option value="fill">✏️ Formu Doldur &amp; Aç</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label class="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-700 cursor-pointer">
+                                    <input type="checkbox" id="ft-show-dash" checked class="rounded">
+                                    <span>Dashboard'a Koy</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button type="button" id="btn-save-ft" onclick="saveFavTemplate()" class="btn bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-2 shadow">Şablon Ekle</button>
+                            <button type="button" id="btn-cancel-ft" onclick="cancelFavTemplateEdit()" class="hidden btn bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs px-3 py-2">İptal</button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto max-h-[260px] overflow-y-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-white sticky top-0 border-b">
+                                <tr class="text-slate-500 uppercase text-[10px] tracking-wider">
+                                    <th class="p-3">Şablon</th>
+                                    <th class="p-3">Hesap &amp; Kategori</th>
+                                    <th class="p-3">Tutar</th>
+                                    <th class="p-3">Davranış</th>
+                                    <th class="p-3 text-center">Dashboard</th>
+                                    <th class="p-3 text-center">İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fav-templates-table"></tbody>
+                        </table>
+                    </div>
+                </div>
             </section>
             <section id="view-safak" class="view-section"><div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><div class="lg:col-span-1 space-y-6">
                 <div class="card border-t-4 border-red-500"><h3 class="font-bold text-slate-800 mb-4 border-b pb-2 flex items-center justify-between"><span class="flex items-center"><span class="material-icons mr-2 text-red-500">date_range</span> Aktif Kontrat Bilgisi</span><button onclick="clearSafak()" class="text-xs bg-red-100 text-red-600 hover:bg-red-200 px-2 py-1 rounded font-bold transition">Sıfırla</button></h3><div class="space-y-4"><div><label class="block text-xs font-bold text-slate-500 mb-1">Kontrat / Gemi Adı</label><input type="text" id="sf-name" class="w-full border p-2.5 rounded bg-slate-50 font-bold text-sm uppercase"></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Başlama Tarihi</label><input type="date" id="sf-start" class="w-full border p-2.5 rounded bg-yellow-100 font-bold text-sm"></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Bitiş Tarihi</label><input type="date" id="sf-end" class="w-full border p-2.5 rounded bg-emerald-100 font-bold text-sm text-emerald-800"></div><button onclick="saveSafak()" class="w-full btn bg-red-600 hover:bg-red-500 text-white shadow-lg py-3">Düzenle & Kaydet</button></div></div>
@@ -2072,7 +2163,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
     <!-- YENİ İŞLEM / İÇİ TRANSFER POPUP -->
     <div id="entry-modal" class="hidden fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center backdrop-blur-sm p-3 md:p-4" onclick="if(event.target===this) closeEntryModal()">
         <div class="w-full max-w-md max-h-[92vh] overflow-y-auto rounded-xl shadow-2xl">
-            <div class="card bg-white border-t-4 border-emerald-500 p-0 overflow-hidden" id="entry-form-card"><div class="flex border-b bg-slate-50"><button class="flex-1 py-3 font-bold text-sm text-emerald-600 bg-white border-r transition" id="tab-btn-normal" onclick="switchEntryTab('normal')">Giriş / Çıkış</button><button class="flex-1 py-3 font-bold text-sm text-slate-500 hover:bg-slate-100 transition" id="tab-btn-transfer" onclick="switchEntryTab('transfer')">İçi Transfer</button><button onclick="closeEntryModal()" class="px-3 text-slate-400 hover:text-red-500 border-l transition flex items-center" title="Kapat"><span class="material-icons text-lg">close</span></button></div><div id="tab-content-normal" class="p-5 tab-content active"><h3 class="font-bold text-slate-800 mb-4 pb-2 flex items-center justify-between border-b"><span class="flex items-center" id="entry-form-title"><span class="material-icons mr-2 text-emerald-500">add_circle</span> Yeni İşlem</span><button id="btn-cancel-edit" onclick="cancelEdit()" class="hidden text-xs bg-red-100 text-red-600 px-2 py-1 rounded font-bold">İptal</button></h3><input type="hidden" id="edit-record-id"><div class="space-y-4"><div><label class="block text-xs font-bold text-slate-500 mb-1">Tarih</label><input type="date" id="entry-date" onchange="applyAutoRoute()" class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm"></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Hesap</label><div class="grid grid-cols-3 gap-2"><label class="cursor-pointer"><input type="radio" name="entry-account" value="FOLIO" checked class="peer hidden" onchange="updateCategorySelect()"><div class="acc-opt-btn acc-opt-folio text-center p-2.5 border-2 border-slate-200 rounded-lg text-xs font-bold peer-checked:bg-blue-500 peer-checked:text-white transition bg-slate-50 text-slate-600">Folio</div></label><label class="cursor-pointer"><input type="radio" name="entry-account" value="BANK" class="peer hidden" onchange="updateCategorySelect()"><div class="acc-opt-btn acc-opt-bank text-center p-2.5 border-2 border-slate-200 rounded-lg text-xs font-bold peer-checked:bg-purple-500 peer-checked:text-white transition bg-slate-50 text-slate-600">Banka</div></label><label class="cursor-pointer"><input type="radio" name="entry-account" value="WALLET" class="peer hidden" onchange="updateCategorySelect()"><div class="acc-opt-btn acc-opt-wallet text-center p-2.5 border-2 border-slate-200 rounded-lg text-xs font-bold peer-checked:bg-emerald-500 peer-checked:text-white transition bg-slate-50 text-slate-600">Cüzdan</div></label></div></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Ana Kategori</label><select id="entry-category" class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm"></select></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Alt Grup / Detay</label><input list="subcat-list" id="entry-subcat" placeholder="İsteğe Bağlı Alt Başlık" class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm"><datalist id="subcat-list"></datalist></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Gemi Adı</label><input list="ship-datalist-form" id="entry-cruise" placeholder="Seçim..." class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm uppercase transition-colors"><datalist id="ship-datalist-form"></datalist></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Cruise (Sefer/Rota)</label><select id="entry-route" onchange="rememberEntryRoute(this)" class="w-full border p-2.5 rounded-lg bg-white font-semibold text-sm uppercase text-fuchsia-700"><option value="">-- Seçim Yok --</option></select><p id="entry-route-auto" class="text-[10px] font-bold mt-1"></p></div><div class="grid grid-cols-3 gap-2"><div class="col-span-2"><label class="block text-xs font-bold text-slate-500 mb-1">Birim Fiyat ($)</label><div class="relative"><input type="number" id="entry-value" step="0.01" placeholder="0.00" oninput="calcEntryTotal()" style="padding-right:2.75rem" class="w-full border p-3 rounded-lg bg-white text-lg font-black text-slate-800 shadow-inner"><button type="button" onclick="openEntryCalc()" title="Hesap Makinesi" style="position:absolute;right:0.45rem;top:50%;transform:translateY(-50%)" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-emerald-100 text-slate-600 hover:text-emerald-700 flex items-center justify-center transition"><span class="material-icons text-lg">calculate</span></button></div></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Adet</label><input type="number" id="entry-qty" step="1" min="1" value="1" oninput="calcEntryTotal()" class="w-full border p-3 rounded-lg bg-white text-lg font-black text-slate-800 shadow-inner text-center"></div></div><div class="bg-slate-100 border rounded-lg p-2.5 flex items-center justify-between"><span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Toplam Tutar</span><span class="text-lg font-black text-emerald-600" id="entry-total-display">$0.00</span></div><button id="btn-save-entry" onclick="saveEntry()" class="w-full btn bg-slate-800 text-white hover:bg-slate-700 py-3 shadow-lg">İşlemi Kaydet</button></div></div><div id="tab-content-transfer" class="p-5 tab-content"><h3 class="font-bold text-slate-800 mb-4 pb-2 flex items-center border-b"><span class="material-icons mr-2 text-indigo-500">currency_exchange</span> Kendi Hesaplarım Arası Transfer</h3><div class="space-y-4"><div><label class="block text-xs font-bold text-slate-500 mb-1">Tarih</label><input type="date" id="tr-date" onchange="applyAutoRoute()" class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm"></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Gemi Adı</label><input list="ship-datalist-form" id="tr-cruise" placeholder="Seçim..." class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm uppercase transition-colors"></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Cruise (Sefer/Rota)</label><select id="tr-route" onchange="rememberEntryRoute(this)" class="w-full border p-2.5 rounded-lg bg-white font-semibold text-sm uppercase text-fuchsia-700"><option value="">-- Seçim Yok --</option></select></div><div class="grid grid-cols-1 gap-3 relative"><div><label class="block text-[10px] font-bold text-red-500 uppercase tracking-wider mb-1">Kimden (Çıkış)</label><select id="tr-from" class="w-full border-2 border-red-200 p-2.5 rounded-lg bg-red-50 font-bold text-sm text-red-700"><option value="BANK">Banka (Kart)</option><option value="WALLET">Cüzdan (Nakit)</option><option value="FOLIO">Folio (Gemi)</option></select></div><div class="flex justify-center -my-2 z-10"><span class="material-icons bg-white border rounded-full p-1 text-slate-400">arrow_downward</span></div><div><label class="block text-[10px] font-bold text-emerald-500 uppercase tracking-wider mb-1">Kime (Giriş)</label><select id="tr-to" class="w-full border-2 border-emerald-200 p-2.5 rounded-lg bg-emerald-50 font-bold text-sm text-emerald-700"><option value="WALLET">Cüzdan (Nakit)</option><option value="FOLIO">Folio (Gemi)</option><option value="BANK">Banka (Kart)</option></select></div></div><div><label class="block text-xs font-bold text-slate-500 mb-1 mt-2">Transfer Tutarı ($)</label><input type="number" id="tr-value" step="0.01" placeholder="0.00" class="w-full border p-3 rounded-lg bg-white text-lg font-black text-indigo-700 shadow-inner"></div><button onclick="saveTransfer()" class="w-full btn bg-indigo-600 text-white hover:bg-indigo-500 py-3 shadow-lg">Transfer Et</button></div></div></div></div>
+            <div class="card bg-white border-t-4 border-emerald-500 p-0 overflow-hidden" id="entry-form-card"><div class="flex border-b bg-slate-50"><button class="flex-1 py-3 font-bold text-sm text-emerald-600 bg-white border-r transition" id="tab-btn-normal" onclick="switchEntryTab('normal')">Giriş / Çıkış</button><button class="flex-1 py-3 font-bold text-sm text-slate-500 hover:bg-slate-100 transition" id="tab-btn-transfer" onclick="switchEntryTab('transfer')">İçi Transfer</button><button onclick="closeEntryModal()" class="px-3 text-slate-400 hover:text-red-500 border-l transition flex items-center" title="Kapat"><span class="material-icons text-lg">close</span></button></div><div id="tab-content-normal" class="p-5 tab-content active"><h3 class="font-bold text-slate-800 mb-4 pb-2 flex items-center justify-between border-b"><span class="flex items-center" id="entry-form-title"><span class="material-icons mr-2 text-emerald-500">add_circle</span> Yeni İşlem</span><button id="btn-cancel-edit" onclick="cancelEdit()" class="hidden text-xs bg-red-100 text-red-600 px-2 py-1 rounded font-bold">İptal</button></h3><div id="entry-fav-strip" class="hidden mb-3 p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex flex-wrap items-center gap-1.5"></div><input type="hidden" id="edit-record-id"><div class="space-y-4"><div><label class="block text-xs font-bold text-slate-500 mb-1">Tarih</label><input type="date" id="entry-date" onchange="applyAutoRoute()" class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm"></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Hesap</label><div class="grid grid-cols-3 gap-2"><label class="cursor-pointer"><input type="radio" name="entry-account" value="FOLIO" checked class="peer hidden" onchange="updateCategorySelect()"><div class="acc-opt-btn acc-opt-folio text-center p-2.5 border-2 border-slate-200 rounded-lg text-xs font-bold peer-checked:bg-blue-500 peer-checked:text-white transition bg-slate-50 text-slate-600">Folio</div></label><label class="cursor-pointer"><input type="radio" name="entry-account" value="BANK" class="peer hidden" onchange="updateCategorySelect()"><div class="acc-opt-btn acc-opt-bank text-center p-2.5 border-2 border-slate-200 rounded-lg text-xs font-bold peer-checked:bg-purple-500 peer-checked:text-white transition bg-slate-50 text-slate-600">Banka</div></label><label class="cursor-pointer"><input type="radio" name="entry-account" value="WALLET" class="peer hidden" onchange="updateCategorySelect()"><div class="acc-opt-btn acc-opt-wallet text-center p-2.5 border-2 border-slate-200 rounded-lg text-xs font-bold peer-checked:bg-emerald-500 peer-checked:text-white transition bg-slate-50 text-slate-600">Cüzdan</div></label></div></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Ana Kategori</label><select id="entry-category" class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm"></select></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Alt Grup / Detay</label><input list="subcat-list" id="entry-subcat" placeholder="İsteğe Bağlı Alt Başlık" class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm"><datalist id="subcat-list"></datalist></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Gemi Adı</label><input list="ship-datalist-form" id="entry-cruise" placeholder="Seçim..." class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm uppercase transition-colors"><datalist id="ship-datalist-form"></datalist></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Cruise (Sefer/Rota)</label><select id="entry-route" onchange="rememberEntryRoute(this)" class="w-full border p-2.5 rounded-lg bg-white font-semibold text-sm uppercase text-fuchsia-700"><option value="">-- Seçim Yok --</option></select><p id="entry-route-auto" class="text-[10px] font-bold mt-1"></p></div><div class="grid grid-cols-3 gap-2"><div class="col-span-2"><label class="block text-xs font-bold text-slate-500 mb-1">Birim Fiyat ($)</label><div class="relative"><input type="number" id="entry-value" step="0.01" placeholder="0.00" oninput="calcEntryTotal()" style="padding-right:2.75rem" class="w-full border p-3 rounded-lg bg-white text-lg font-black text-slate-800 shadow-inner"><button type="button" onclick="openEntryCalc()" title="Hesap Makinesi" style="position:absolute;right:0.45rem;top:50%;transform:translateY(-50%)" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-emerald-100 text-slate-600 hover:text-emerald-700 flex items-center justify-center transition"><span class="material-icons text-lg">calculate</span></button></div></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Adet</label><input type="number" id="entry-qty" step="1" min="1" value="1" oninput="calcEntryTotal()" class="w-full border p-3 rounded-lg bg-white text-lg font-black text-slate-800 shadow-inner text-center"></div></div><div class="bg-slate-100 border rounded-lg p-2.5 flex items-center justify-between"><span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Toplam Tutar</span><span class="text-lg font-black text-emerald-600" id="entry-total-display">$0.00</span></div><button id="btn-save-entry" onclick="saveEntry()" class="w-full btn bg-slate-800 text-white hover:bg-slate-700 py-3 shadow-lg">İşlemi Kaydet</button></div></div><div id="tab-content-transfer" class="p-5 tab-content"><h3 class="font-bold text-slate-800 mb-4 pb-2 flex items-center border-b"><span class="material-icons mr-2 text-indigo-500">currency_exchange</span> Kendi Hesaplarım Arası Transfer</h3><div class="space-y-4"><div><label class="block text-xs font-bold text-slate-500 mb-1">Tarih</label><input type="date" id="tr-date" onchange="applyAutoRoute()" class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm"></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Gemi Adı</label><input list="ship-datalist-form" id="tr-cruise" placeholder="Seçim..." class="w-full border p-2.5 rounded-lg bg-slate-50 font-semibold text-sm uppercase transition-colors"></div><div><label class="block text-xs font-bold text-slate-500 mb-1">Cruise (Sefer/Rota)</label><select id="tr-route" onchange="rememberEntryRoute(this)" class="w-full border p-2.5 rounded-lg bg-white font-semibold text-sm uppercase text-fuchsia-700"><option value="">-- Seçim Yok --</option></select></div><div class="grid grid-cols-1 gap-3 relative"><div><label class="block text-[10px] font-bold text-red-500 uppercase tracking-wider mb-1">Kimden (Çıkış)</label><select id="tr-from" class="w-full border-2 border-red-200 p-2.5 rounded-lg bg-red-50 font-bold text-sm text-red-700"><option value="BANK">Banka (Kart)</option><option value="WALLET">Cüzdan (Nakit)</option><option value="FOLIO">Folio (Gemi)</option></select></div><div class="flex justify-center -my-2 z-10"><span class="material-icons bg-white border rounded-full p-1 text-slate-400">arrow_downward</span></div><div><label class="block text-[10px] font-bold text-emerald-500 uppercase tracking-wider mb-1">Kime (Giriş)</label><select id="tr-to" class="w-full border-2 border-emerald-200 p-2.5 rounded-lg bg-emerald-50 font-bold text-sm text-emerald-700"><option value="WALLET">Cüzdan (Nakit)</option><option value="FOLIO">Folio (Gemi)</option><option value="BANK">Banka (Kart)</option></select></div></div><div><label class="block text-xs font-bold text-slate-500 mb-1 mt-2">Transfer Tutarı ($)</label><input type="number" id="tr-value" step="0.01" placeholder="0.00" class="w-full border p-3 rounded-lg bg-white text-lg font-black text-indigo-700 shadow-inner"></div><button onclick="saveTransfer()" class="w-full btn bg-indigo-600 text-white hover:bg-indigo-500 py-3 shadow-lg">Transfer Et</button></div></div></div></div>
         </div>
     </div>
 
@@ -2423,7 +2514,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
             else { btnT.className = "flex-1 py-3 font-bold text-sm text-indigo-600 bg-white transition"; btnN.className = "flex-1 py-3 font-bold text-sm text-slate-500 hover:bg-slate-100 border-r transition"; }
         }
 
-        const DB_REC = 'finAppV79_Records'; const DB_CAT = 'finAppV79_Categories'; const DB_SHOP = 'finAppV79_Shopping'; const DB_WAL = 'finAppV79_WalletNotes'; const DB_SIM = 'finAppV79_Sim'; const DB_SFK = 'finAppV79_Safak'; const DB_PAST = 'finAppV79_PastContracts'; const DB_EXT = 'finAppV79_ExtTransfers'; const DB_CR = 'finAppV81_CustomReports'; const DB_CRU = 'finAppV82_KnownCruises'; const DB_ROUTE = 'finAppV83_KnownRoutes'; const DB_LAST_ROUTE = 'finAppV83_LastEntryRoute'; const DB_EVENTS = 'finAppV84_CalendarEvents'; const DB_PAYDAY_SEEDED = 'finAppV84_PaydaySeeded'; const DB_EXT_FEE_FIXED = 'finAppV85_ExtFeeFixed'; const DB_ROUTE_META = 'finAppV86_RouteMeta'; const DB_ROUTE_AUTO = 'finAppV87_RouteAutoFollow'; const DB_SHIP_CODES = 'finAppV86_ShipCodes'; const DB_LIMITS = 'finAppV88_BudgetLimits'; const DB_COUNTDOWNS = 'finAppV89_PersonalCountdowns'; const DB_SIM_SCENARIOS = 'finAppV90_SimScenarios'; const DB_SIM_ACTIVE = 'finAppV90_SimActive'; const DB_SHOP_PLATFORMS = 'finAppV91_ShopPlatforms'; const DB_CELEBRATION = 'finAppV92_Celebration'; const DB_PORTS = 'finAppV93_KnownPorts';
+        const DB_REC = 'finAppV79_Records'; const DB_CAT = 'finAppV79_Categories'; const DB_SHOP = 'finAppV79_Shopping'; const DB_WAL = 'finAppV79_WalletNotes'; const DB_SIM = 'finAppV79_Sim'; const DB_SFK = 'finAppV79_Safak'; const DB_PAST = 'finAppV79_PastContracts'; const DB_EXT = 'finAppV79_ExtTransfers'; const DB_CR = 'finAppV81_CustomReports'; const DB_CRU = 'finAppV82_KnownCruises'; const DB_ROUTE = 'finAppV83_KnownRoutes'; const DB_LAST_ROUTE = 'finAppV83_LastEntryRoute'; const DB_EVENTS = 'finAppV84_CalendarEvents'; const DB_PAYDAY_SEEDED = 'finAppV84_PaydaySeeded'; const DB_EXT_FEE_FIXED = 'finAppV85_ExtFeeFixed'; const DB_ROUTE_META = 'finAppV86_RouteMeta'; const DB_ROUTE_AUTO = 'finAppV87_RouteAutoFollow'; const DB_SHIP_CODES = 'finAppV86_ShipCodes'; const DB_LIMITS = 'finAppV88_BudgetLimits'; const DB_COUNTDOWNS = 'finAppV89_PersonalCountdowns'; const DB_SIM_SCENARIOS = 'finAppV90_SimScenarios'; const DB_SIM_ACTIVE = 'finAppV90_SimActive'; const DB_SHOP_PLATFORMS = 'finAppV91_ShopPlatforms'; const DB_CELEBRATION = 'finAppV92_Celebration'; const DB_PORTS = 'finAppV93_KnownPorts'; const DB_FAV_TPL = 'finAppV94_FavTemplates'; const DB_FAV_DASH = 'finAppV94_FavDashEnabled';
         let records = JSON.parse(localStorage.getItem(DB_REC)) || [];
         let shoppingRecords = JSON.parse(localStorage.getItem(DB_SHOP)) || [];
         let extTransfers = JSON.parse(localStorage.getItem(DB_EXT)) || [];
@@ -2443,6 +2534,9 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
         let activeSimScenarioId = localStorage.getItem(DB_SIM_ACTIVE) || 'default';
         let knownPorts = JSON.parse(localStorage.getItem(DB_PORTS)) || ['Miami', 'Port Canaveral', 'Galveston', 'Cozumel', 'Costa Maya', 'Roatan', 'Nassau', 'CocoCay', 'Grand Cayman', 'Ocho Rios'];
         if (!Array.isArray(knownPorts)) knownPorts = [];
+        let favTemplates = JSON.parse(localStorage.getItem(DB_FAV_TPL)) || [];
+        if (!Array.isArray(favTemplates)) favTemplates = [];
+        let favDashEnabled = localStorage.getItem(DB_FAV_DASH) !== 'false';
         let celebrationSettings = JSON.parse(localStorage.getItem(DB_CELEBRATION)) || { enabled: true, birthdayDay: '', birthdayMonth: '' };
         let shopPlatforms = JSON.parse(localStorage.getItem(DB_SHOP_PLATFORMS)) || [
             { id: 'AMAZON', name: 'Amazon' },
@@ -2611,19 +2705,19 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
             setInterval(checkDayRollover, 300000); document.addEventListener('visibilitychange', () => { if(!document.hidden) checkDayRollover(); });
         }
         
-        function saveLocalOnly() { try { localStorage.setItem(DB_REC, JSON.stringify(records)); localStorage.setItem(DB_CAT, JSON.stringify(categories)); localStorage.setItem(DB_SHOP, JSON.stringify(shoppingRecords)); localStorage.setItem(DB_WAL, JSON.stringify(walletNotes)); localStorage.setItem(DB_SIM, JSON.stringify(simulation)); localStorage.setItem(DB_SFK, JSON.stringify(safakData)); localStorage.setItem(DB_PAST, JSON.stringify(pastContracts)); localStorage.setItem(DB_EXT, JSON.stringify(extTransfers)); localStorage.setItem(DB_CR, JSON.stringify(customReports)); localStorage.setItem(DB_CRU, JSON.stringify(knownCruises)); localStorage.setItem(DB_ROUTE, JSON.stringify(knownRoutes)); localStorage.setItem(DB_EVENTS, JSON.stringify(calendarEvents)); localStorage.setItem(DB_ROUTE_META, JSON.stringify(routeMeta)); localStorage.setItem(DB_SHIP_CODES, JSON.stringify(shipCodes)); localStorage.setItem(DB_LIMITS, JSON.stringify(budgetLimits)); localStorage.setItem(DB_COUNTDOWNS, JSON.stringify(personalCountdowns)); localStorage.setItem(DB_SIM_SCENARIOS, JSON.stringify(simScenarios)); localStorage.setItem(DB_SIM_ACTIVE, activeSimScenarioId); localStorage.setItem(DB_SHOP_PLATFORMS, JSON.stringify(shopPlatforms)); localStorage.setItem(DB_CELEBRATION, JSON.stringify(celebrationSettings)); localStorage.setItem(DB_PORTS, JSON.stringify(knownPorts)); } catch (e) {} }
+        function saveLocalOnly() { try { localStorage.setItem(DB_REC, JSON.stringify(records)); localStorage.setItem(DB_CAT, JSON.stringify(categories)); localStorage.setItem(DB_SHOP, JSON.stringify(shoppingRecords)); localStorage.setItem(DB_WAL, JSON.stringify(walletNotes)); localStorage.setItem(DB_SIM, JSON.stringify(simulation)); localStorage.setItem(DB_SFK, JSON.stringify(safakData)); localStorage.setItem(DB_PAST, JSON.stringify(pastContracts)); localStorage.setItem(DB_EXT, JSON.stringify(extTransfers)); localStorage.setItem(DB_CR, JSON.stringify(customReports)); localStorage.setItem(DB_CRU, JSON.stringify(knownCruises)); localStorage.setItem(DB_ROUTE, JSON.stringify(knownRoutes)); localStorage.setItem(DB_EVENTS, JSON.stringify(calendarEvents)); localStorage.setItem(DB_ROUTE_META, JSON.stringify(routeMeta)); localStorage.setItem(DB_SHIP_CODES, JSON.stringify(shipCodes)); localStorage.setItem(DB_LIMITS, JSON.stringify(budgetLimits)); localStorage.setItem(DB_COUNTDOWNS, JSON.stringify(personalCountdowns)); localStorage.setItem(DB_SIM_SCENARIOS, JSON.stringify(simScenarios)); localStorage.setItem(DB_SIM_ACTIVE, activeSimScenarioId); localStorage.setItem(DB_SHOP_PLATFORMS, JSON.stringify(shopPlatforms)); localStorage.setItem(DB_CELEBRATION, JSON.stringify(celebrationSettings)); localStorage.setItem(DB_PORTS, JSON.stringify(knownPorts)); localStorage.setItem(DB_FAV_TPL, JSON.stringify(favTemplates)); localStorage.setItem(DB_FAV_DASH, favDashEnabled ? 'true' : 'false'); } catch (e) {} }
         function saveData() { saveLocalOnly(); triggerAutoSync(); }
         let _saveTimer = null;
         function debouncedSaveData(delay = 250) { clearTimeout(_saveTimer); _saveTimer = setTimeout(() => { saveData(); }, delay); }
         
         async function exportData() {
-            const data = { records, categories, shoppingRecords, walletNotes, simulation, safakData, pastContracts, extTransfers, customReports, knownCruises, knownRoutes, routeMeta, shipCodes, calendarEvents, budgetLimits, personalCountdowns, simScenarios, activeSimScenarioId, shopPlatforms, celebrationSettings, knownPorts }; 
+            const data = { records, categories, shoppingRecords, walletNotes, simulation, safakData, pastContracts, extTransfers, customReports, knownCruises, knownRoutes, routeMeta, shipCodes, calendarEvents, budgetLimits, personalCountdowns, simScenarios, activeSimScenarioId, shopPlatforms, celebrationSettings, knownPorts, favTemplates, favDashEnabled }; 
             const jsonString = JSON.stringify(data); const fileName = "finans_yedek_v8_2.json";
             if (navigator.canShare) { const file = new File([jsonString], fileName, { type: "application/json" }); if (navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: 'FinPro Veritabanı Yedeği', text: 'FinPro JSON yedeği.' }); return; } catch (err) { console.log("Paylaşım iptal", err); } } }
             const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(jsonString); a.download = fileName; a.click(); 
         }
 
-        function importData(e) { if(!e.target.files[0]) return; const r = new FileReader(); r.onload = (evt) => { try { const d = JSON.parse(evt.target.result); if(d.records) records = d.records; if(d.shoppingRecords) shoppingRecords = d.shoppingRecords; if(d.categories) categories = d.categories; if(d.walletNotes) walletNotes = d.walletNotes; if(d.simulation) simulation = d.simulation; if(d.safakData) safakData = d.safakData; if(d.pastContracts) pastContracts = d.pastContracts; if(d.extTransfers) extTransfers = d.extTransfers; if(d.customReports) customReports = d.customReports; if(d.knownCruises) knownCruises = d.knownCruises; if(d.knownRoutes) knownRoutes = d.knownRoutes; if(d.routeMeta) routeMeta = d.routeMeta; if(d.shipCodes) shipCodes = d.shipCodes; if(d.calendarEvents) calendarEvents = d.calendarEvents; if(d.budgetLimits) budgetLimits = d.budgetLimits; if(d.personalCountdowns) personalCountdowns = d.personalCountdowns; if(Array.isArray(d.simScenarios) && d.simScenarios.length > 0) simScenarios = d.simScenarios; if(d.activeSimScenarioId) activeSimScenarioId = d.activeSimScenarioId; if(Array.isArray(d.shopPlatforms) && d.shopPlatforms.length > 0) shopPlatforms = d.shopPlatforms; if(d.celebrationSettings) celebrationSettings = d.celebrationSettings; if(Array.isArray(d.knownPorts)) knownPorts = d.knownPorts; saveData(); alert("Yedek yüklendi!"); refreshAllViews(); } catch(error) { alert("Format hatası!"); } }; r.readAsText(e.target.files[0]); e.target.value = ''; }
+        function importData(e) { if(!e.target.files[0]) return; const r = new FileReader(); r.onload = (evt) => { try { const d = JSON.parse(evt.target.result); if(d.records) records = d.records; if(d.shoppingRecords) shoppingRecords = d.shoppingRecords; if(d.categories) categories = d.categories; if(d.walletNotes) walletNotes = d.walletNotes; if(d.simulation) simulation = d.simulation; if(d.safakData) safakData = d.safakData; if(d.pastContracts) pastContracts = d.pastContracts; if(d.extTransfers) extTransfers = d.extTransfers; if(d.customReports) customReports = d.customReports; if(d.knownCruises) knownCruises = d.knownCruises; if(d.knownRoutes) knownRoutes = d.knownRoutes; if(d.routeMeta) routeMeta = d.routeMeta; if(d.shipCodes) shipCodes = d.shipCodes; if(d.calendarEvents) calendarEvents = d.calendarEvents; if(d.budgetLimits) budgetLimits = d.budgetLimits; if(d.personalCountdowns) personalCountdowns = d.personalCountdowns; if(Array.isArray(d.simScenarios) && d.simScenarios.length > 0) simScenarios = d.simScenarios; if(d.activeSimScenarioId) activeSimScenarioId = d.activeSimScenarioId; if(Array.isArray(d.shopPlatforms) && d.shopPlatforms.length > 0) shopPlatforms = d.shopPlatforms; if(d.celebrationSettings) celebrationSettings = d.celebrationSettings; if(Array.isArray(d.knownPorts)) knownPorts = d.knownPorts; if(Array.isArray(d.favTemplates)) favTemplates = d.favTemplates; if(typeof d.favDashEnabled === 'boolean') favDashEnabled = d.favDashEnabled; saveData(); alert("Yedek yüklendi!"); refreshAllViews(); } catch(error) { alert("Format hatası!"); } }; r.readAsText(e.target.files[0]); e.target.value = ''; }
 
         async function exportAdvancedExcel(event) {
             if (typeof ExcelJS === 'undefined') { alert("ExcelJS yüklenemedi. İnternet bağlantınızı kontrol edin."); return; }
@@ -2679,6 +2773,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 try { renderWeeklySpendingCards(); } catch(e){}
                 try { renderDashboardBudgetAlerts(); } catch(e){}
                 try { renderDashboardTodayEventsBanner(); } catch(e){}
+                try { renderFavButtons(); } catch(e){}
                 try { checkAndRenderCelebration(); } catch(e){}
             } else if(tab === 'entries') {
                 try { updateCategorySelect(); } catch(e){}
@@ -2696,6 +2791,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 try { renderKnownRoutes(); } catch(e){}
                 try { renderShopPlatforms(); } catch(e){}
                 try { renderKnownPorts(); } catch(e){}
+                try { renderFavTemplatesTable(); updateFavCatSelect(); } catch(e){}
             } else if(tab === 'reports') {
                 try { renderCustomReports(); } catch(e){}
                 try { renderIndicators('indicator-grid'); } catch(e){}
@@ -2975,6 +3071,197 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 return `<option value="${esc}" ${p === cur ? 'selected' : ''}>${p}</option>`;
             }).join('');
         }
+
+        function updateFavCatSelect() {
+            const acc = document.getElementById('ft-account')?.value || 'FOLIO';
+            const type = document.getElementById('ft-type')?.value || 'OUTGOING';
+            const sel = document.getElementById('ft-category');
+            if (!sel) return;
+            const cur = sel.value;
+            const list = (categories || []).filter(c => c.acc === acc && c.type === type);
+            sel.innerHTML = list.length
+                ? list.map(c => `<option value="${c.name.replace(/"/g, '&quot;')}">${c.name}</option>`).join('')
+                : '<option value="">-- Kategori Yok --</option>';
+            if (cur && list.some(c => c.name === cur)) sel.value = cur;
+        }
+        function toggleFavDashMaster() {
+            const chk = document.getElementById('fav-dash-master-chk');
+            favDashEnabled = chk ? chk.checked : true;
+            saveData();
+            renderFavButtons();
+        }
+        function renderFavTemplatesTable() {
+            const chk = document.getElementById('fav-dash-master-chk');
+            if (chk) chk.checked = !!favDashEnabled;
+            const tbody = document.getElementById('fav-templates-table');
+            if (!tbody) return;
+            if (!favTemplates.length) {
+                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-xs text-slate-400 italic">Henüz favori işlem şablonu eklenmedi.</td></tr>';
+                return;
+            }
+            const accLbl = { FOLIO: 'Folio', BANK: 'Banka', WALLET: 'Cüzdan' };
+            tbody.innerHTML = favTemplates.map(f => `
+                <tr class="border-b hover:bg-slate-50">
+                    <td class="p-3 font-bold text-slate-800">${f.action === 'instant' ? '⚡' : '✏️'} ${f.name}</td>
+                    <td class="p-3 text-xs font-semibold text-slate-600">${accLbl[f.account] || f.account} • ${f.type === 'INCOME' ? 'Gelir' : 'Gider'} • ${f.categoryName}${f.subCategory ? ' (' + f.subCategory + ')' : ''}</td>
+                    <td class="p-3 text-xs font-black text-slate-800">$${((Number(f.price)||0)*(Number(f.qty)||1)).toFixed(2)}</td>
+                    <td class="p-3 text-[11px] font-bold ${f.action === 'instant' ? 'text-emerald-700' : 'text-amber-700'}">${f.action === 'instant' ? 'Anında Kaydet' : 'Formu Doldur'}</td>
+                    <td class="p-3 text-center"><button type="button" onclick="toggleFavShowDash(${f.id})" class="px-2 py-0.5 rounded-full text-[10px] font-bold ${f.showOnDash ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-500'}">${f.showOnDash ? 'Açık' : 'Kapalı'}</button></td>
+                    <td class="p-3 text-center whitespace-nowrap space-x-2">
+                        <button type="button" onclick="editFavTemplate(${f.id})" class="text-xs font-bold text-blue-600 hover:underline">Düzenle</button>
+                        <button type="button" onclick="deleteFavTemplate(${f.id})" class="text-xs font-bold text-red-500 hover:underline">Sil</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        function toggleFavShowDash(id) {
+            const f = favTemplates.find(x => x.id === id);
+            if (!f) return;
+            f.showOnDash = !f.showOnDash;
+            saveData();
+            renderFavTemplatesTable();
+            renderFavButtons();
+        }
+        function saveFavTemplate() {
+            const name = (document.getElementById('ft-name')?.value || '').trim();
+            const account = document.getElementById('ft-account')?.value || 'FOLIO';
+            const type = document.getElementById('ft-type')?.value || 'OUTGOING';
+            const categoryName = document.getElementById('ft-category')?.value || '';
+            const subCategory = (document.getElementById('ft-sub')?.value || '').trim();
+            const price = Math.max(0, parseFloat(document.getElementById('ft-price')?.value) || 0);
+            const qty = Math.max(1, parseInt(document.getElementById('ft-qty')?.value, 10) || 1);
+            const action = document.getElementById('ft-action')?.value || 'instant';
+            const showOnDash = !!document.getElementById('ft-show-dash')?.checked;
+            const editId = document.getElementById('ft-edit-id')?.value || '';
+            if (!name || !categoryName) return alert('Lütfen şablon adı ve kategori seçin.');
+            if (editId) {
+                const idx = favTemplates.findIndex(x => String(x.id) === String(editId));
+                if (idx > -1) favTemplates[idx] = { id: favTemplates[idx].id, name, account, type, categoryName, subCategory, price, qty, action, showOnDash };
+                cancelFavTemplateEdit();
+            } else {
+                favTemplates.push({ id: Date.now(), name, account, type, categoryName, subCategory, price, qty, action, showOnDash });
+                document.getElementById('ft-name').value = '';
+                document.getElementById('ft-sub').value = '';
+                document.getElementById('ft-price').value = '';
+                document.getElementById('ft-qty').value = '1';
+            }
+            saveData();
+            renderFavTemplatesTable();
+            renderFavButtons();
+        }
+        function editFavTemplate(id) {
+            const f = favTemplates.find(x => x.id === id);
+            if (!f) return;
+            document.getElementById('ft-edit-id').value = f.id;
+            document.getElementById('ft-name').value = f.name;
+            document.getElementById('ft-account').value = f.account;
+            document.getElementById('ft-type').value = f.type;
+            updateFavCatSelect();
+            document.getElementById('ft-category').value = f.categoryName;
+            document.getElementById('ft-sub').value = f.subCategory || '';
+            document.getElementById('ft-price').value = f.price || '';
+            document.getElementById('ft-qty').value = f.qty || 1;
+            document.getElementById('ft-action').value = f.action || 'instant';
+            document.getElementById('ft-show-dash').checked = !!f.showOnDash;
+            document.getElementById('btn-save-ft').innerText = 'Güncelle';
+            document.getElementById('btn-cancel-ft').classList.remove('hidden');
+        }
+        function cancelFavTemplateEdit() {
+            document.getElementById('ft-edit-id').value = '';
+            document.getElementById('ft-name').value = '';
+            document.getElementById('ft-sub').value = '';
+            document.getElementById('ft-price').value = '';
+            document.getElementById('ft-qty').value = '1';
+            document.getElementById('btn-save-ft').innerText = 'Şablon Ekle';
+            document.getElementById('btn-cancel-ft').classList.add('hidden');
+        }
+        function deleteFavTemplate(id) {
+            if (!confirm('Bu favori şablonu silmek istediğinize emin misiniz?')) return;
+            favTemplates = favTemplates.filter(x => x.id !== id);
+            if (String(document.getElementById('ft-edit-id').value) === String(id)) cancelFavTemplateEdit();
+            saveData();
+            renderFavTemplatesTable();
+            renderFavButtons();
+        }
+        function renderFavButtons() {
+            const dashBox = document.getElementById('dash-fav-buttons');
+            const entryBox = document.getElementById('entry-fav-strip');
+            const makeBtn = (f) => {
+                const tot = (Number(f.price) || 0) * (Number(f.qty) || 1);
+                const cls = f.action === 'instant'
+                    ? 'bg-emerald-50 hover:bg-emerald-100 border-emerald-300 text-emerald-900'
+                    : 'bg-amber-50 hover:bg-amber-100 border-amber-300 text-amber-900';
+                return `<button type="button" onclick="runFavTemplate(${f.id})" class="px-3 py-1.5 rounded-lg border text-xs font-bold shadow-sm transition flex items-center gap-1.5 ${cls}"><span>${f.action === 'instant' ? '⚡' : '✏️'} ${f.name}</span>${tot > 0 ? `<span class="text-[10px] opacity-80">$${tot.toFixed(2)}</span>` : ''}</button>`;
+            };
+            if (dashBox) {
+                const dashList = favDashEnabled ? favTemplates.filter(f => f.showOnDash) : [];
+                if (!dashList.length) { dashBox.classList.add('hidden'); dashBox.innerHTML = ''; }
+                else {
+                    dashBox.classList.remove('hidden');
+                    dashBox.innerHTML = `<span class="text-[10px] font-black uppercase text-slate-400 mr-1">⚡ Hızlı İşlem:</span>` + dashList.map(makeBtn).join('');
+                }
+            }
+            if (entryBox) {
+                if (!favTemplates.length) { entryBox.classList.add('hidden'); entryBox.innerHTML = ''; }
+                else {
+                    entryBox.classList.remove('hidden');
+                    entryBox.innerHTML = `<span class="text-[10px] font-black uppercase text-slate-400 mr-1">⚡ Favoriler:</span>` + favTemplates.map(makeBtn).join('');
+                }
+            }
+        }
+        function runFavTemplate(id) {
+            const f = favTemplates.find(x => x.id === id);
+            if (!f) return;
+            const todayStr = dateToStr(new Date());
+            const ship = (safakData && safakData.isActive && safakData.name) ? safakData.name.toUpperCase() : 'INVALID';
+            const route = getCruiseForDate(todayStr) || '';
+            if (f.action === 'instant') {
+                const qty = Math.max(1, Number(f.qty) || 1);
+                const unitPrice = Number(f.price) || 0;
+                const total = Math.round(unitPrice * qty * 100) / 100;
+                records.push({
+                    id: Date.now(),
+                    date: todayStr,
+                    account: f.account,
+                    type: f.type,
+                    categoryName: f.categoryName,
+                    subCategory: f.subCategory || '',
+                    cruise: ship,
+                    route,
+                    refNo: '',
+                    quantity: qty,
+                    value: total,
+                    unitPrice
+                });
+                saveData();
+                refreshAllViews();
+                const toast = document.createElement('div');
+                toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;background:#0f172a;color:#fff;padding:10px 18px;border-radius:999px;font-size:12px;font-weight:700;box-shadow:0 8px 20px rgba(0,0,0,0.25);';
+                toast.innerText = `⚡ Kaydedildi: ${f.name} ($${total.toFixed(2)})`;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 2200);
+                return;
+            }
+            // 'fill' mode: open entry modal pre-populated
+            if (document.getElementById('entry-modal')?.classList.contains('hidden')) openEntryModal();
+            switchEntryTab('normal');
+            const accRadio = document.querySelector(`input[name="entry-account"][value="${f.account}"]`);
+            if (accRadio) accRadio.checked = true;
+            const typeRadio = document.querySelector(`input[name="entry-type"][value="${f.type}"]`);
+            if (typeRadio) typeRadio.checked = true;
+            updateCategorySelect();
+            const catSel = document.getElementById('entry-category');
+            if (catSel) catSel.value = f.categoryName;
+            if (document.getElementById('entry-subcat')) document.getElementById('entry-subcat').value = f.subCategory || '';
+            if (document.getElementById('entry-qty')) document.getElementById('entry-qty').value = f.qty || 1;
+            const valEl = document.getElementById('entry-value');
+            if (valEl) {
+                valEl.value = f.price > 0 ? Number(f.price).toFixed(2) : '';
+                calcEntryTotal();
+                setTimeout(() => valEl.focus(), 60);
+            }
+        }
+
         function renderKnownPorts() {
             const tbody = document.getElementById('known-ports-table');
             if (!tbody) return;
@@ -3761,7 +4048,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
         });
 
         function calcEntryTotal() { const vEl = document.getElementById('entry-value'); const qEl = document.getElementById('entry-qty'); const disp = document.getElementById('entry-total-display'); if(!vEl || !disp) return 0; const v = parseFloat(vEl.value) || 0; const q = qEl && qEl.value !== '' ? (parseFloat(qEl.value) || 1) : 1; const total = v * q; disp.innerText = '$' + total.toFixed(2); return total; }
-        function openEntryModal(tab = 'normal') {
+        function openEntryModal(tab = 'normal') { try { renderFavButtons(); } catch(e){}
             const m = document.getElementById('entry-modal'); if(!m) return;
             switchEntryTab(tab);
             if(tab === 'normal' && !editRecordId) { updateCategorySelect(); }
