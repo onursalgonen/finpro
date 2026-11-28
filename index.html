@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.87) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.88) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -912,7 +912,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.87 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.88 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -3078,7 +3078,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
             const sel = document.getElementById('ft-category');
             if (!sel) return;
             const cur = sel.value;
-            const list = (categories || []).filter(c => c.acc === acc && c.type === type);
+            const list = (categories || []).filter(c => (c.account || c.acc) === acc && c.type === type);
             sel.innerHTML = list.length
                 ? list.map(c => `<option value="${c.name.replace(/"/g, '&quot;')}">${c.name}</option>`).join('')
                 : '<option value="">-- Kategori Yok --</option>';
@@ -3219,11 +3219,13 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 const qty = Math.max(1, Number(f.qty) || 1);
                 const unitPrice = Number(f.price) || 0;
                 const total = Math.round(unitPrice * qty * 100) / 100;
+                const catObj = (categories || []).find(c => (c.account || c.acc) === f.account && c.type === f.type && c.name === f.categoryName);
                 records.push({
                     id: Date.now(),
                     date: todayStr,
                     account: f.account,
                     type: f.type,
+                    categoryId: catObj ? catObj.id : undefined,
                     categoryName: f.categoryName,
                     subCategory: f.subCategory || '',
                     cruise: ship,
@@ -3249,9 +3251,8 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
             if (accRadio) accRadio.checked = true;
             const typeRadio = document.querySelector(`input[name="entry-type"][value="${f.type}"]`);
             if (typeRadio) typeRadio.checked = true;
-            updateCategorySelect();
-            const catSel = document.getElementById('entry-category');
-            if (catSel) catSel.value = f.categoryName;
+            const catObj = (categories || []).find(c => (c.account || c.acc) === f.account && c.type === f.type && c.name === f.categoryName);
+            updateCategorySelect(catObj ? catObj.id : null);
             if (document.getElementById('entry-subcat')) document.getElementById('entry-subcat').value = f.subCategory || '';
             if (document.getElementById('entry-qty')) document.getElementById('entry-qty').value = f.qty || 1;
             const valEl = document.getElementById('entry-value');
