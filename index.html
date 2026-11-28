@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPro (V.10.85) - Ultimate Master Sync</title>
+    <title>FinPro (V.10.86) - Ultimate Master Sync</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -912,7 +912,7 @@ img, svg, video, canvas { display: block; vertical-align: middle; max-width: 100
                 <h1 class="font-bold text-2xl text-white tracking-wide truncate flex items-center">
                     <span class="material-icons mr-2 text-blue-500">account_balance_wallet</span>Fin<span class="text-blue-500">Pro</span>
                 </h1>
-                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.85 <span class="text-slate-400 font-normal ml-1">Master</span></p>
+                <p class="text-[10px] text-blue-400 mt-0.5 uppercase tracking-widest font-bold flex items-center">V.10.86 <span class="text-slate-400 font-normal ml-1">Master</span></p>
             </div>
             <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1 rounded hover:bg-slate-700"><span class="material-icons">menu</span></button>
         </div>
@@ -5938,34 +5938,81 @@ let qtyReportFilter = 'ALL';
                 }
 
                 
+        function dismissDashCalAlertToday() {
+            try { sessionStorage.setItem('finpro_cal_alert_dismissed_' + dateToStr(new Date()), '1'); } catch (e) {}
+            const box = document.getElementById('dash-today-events-alert');
+            if (box) { box.classList.add('hidden'); box.innerHTML = ''; }
+        }
         function renderDashboardTodayEventsBanner() {
             const box = document.getElementById('dash-today-events-alert');
             if (!box) return;
             const today = new Date(); today.setHours(0, 0, 0, 0);
             const todayStr = dateToStr(today);
+            if (sessionStorage.getItem('finpro_cal_alert_dismissed_' + todayStr) === '1') {
+                box.classList.add('hidden'); box.innerHTML = ''; return;
+            }
+
             const events = getEventsForDate(todayStr, today) || [];
-            if (events.length === 0) {
+
+            // Milestones (bugün veya 3 gün içinde)
+            const msAll = typeof getContractMilestones === 'function' ? getContractMilestones() : {};
+            const msAlerts = [];
+            Object.keys(msAll).sort().forEach(ds => {
+                const diff = Math.round((parseYMD(ds) - today) / 86400000);
+                if (diff >= 0 && diff <= 3) msAlerts.push({ ...msAll[ds], date: ds, diff });
+            });
+
+            // Bavul SKT (<= 30 gün)
+            const bCal = typeof getBavulCalendarSummary === 'function' ? getBavulCalendarSummary() : { sktByDate: {} };
+            const sktAlerts = [];
+            Object.keys(bCal.sktByDate || {}).sort().forEach(ds => {
+                (bCal.sktByDate[ds] || []).forEach(s => {
+                    if (s.daysLeft <= 30) sktAlerts.push({ ...s, date: ds });
+                });
+            });
+
+            if (events.length === 0 && msAlerts.length === 0 && sktAlerts.length === 0) {
                 box.classList.add('hidden');
                 box.innerHTML = '';
                 return;
             }
-            const badges = events.map(e => {
+
+            const chips = [];
+            events.forEach(e => {
                 const dotCls = (typeof EVENT_DOT_CLS !== 'undefined' && EVENT_DOT_CLS[e.color]) ? EVENT_DOT_CLS[e.color] : 'bg-indigo-500';
-                return `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white border border-indigo-200 text-xs font-bold text-slate-800 shadow-sm"><span class="w-2 h-2 rounded-full ${dotCls}"></span>${e.title}</span>`;
-            }).join('');
+                chips.push(`<button type="button" onclick="openDayEventModal('${todayStr}')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white border border-indigo-200 hover:border-indigo-400 text-xs font-bold text-slate-800 shadow-sm"><span class="w-2 h-2 rounded-full ${dotCls}"></span>${e.title}</button>`);
+            });
+            msAlerts.forEach(m => {
+                const lbl = m.diff === 0 ? `Bugün: ${m.label}` : `${m.diff} gün sonra: ${m.label}`;
+                chips.push(`<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 border border-amber-300 text-xs font-black text-amber-900 shadow-sm">${m.icon || '🏁'} ${lbl}</span>`);
+            });
+            sktAlerts.forEach(s => {
+                const isCrit = s.daysLeft <= 7;
+                const dTxt = s.daysLeft < 0 ? `${Math.abs(s.daysLeft)} gün geçti!` : (s.daysLeft === 0 ? 'Bugün SKT!' : `${s.daysLeft} gün kaldı`);
+                chips.push(`<button type="button" onclick="switchTab('luggage', document.getElementById('nav-luggage'))" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full ${isCrit ? 'bg-red-100 border-red-300 text-red-900' : 'bg-orange-100 border-orange-300 text-orange-900'} border text-xs font-bold shadow-sm hover:opacity-90">🧳 ${s.name} (${dTxt})</button>`);
+            });
+
+            const hasCrit = sktAlerts.some(s => s.daysLeft <= 7);
+            const wrapCls = hasCrit
+                ? 'p-3.5 rounded-xl border border-amber-300 bg-amber-50/90 flex flex-wrap items-center justify-between gap-3 shadow-sm'
+                : 'p-3.5 rounded-xl border border-indigo-200 bg-indigo-50/90 flex flex-wrap items-center justify-between gap-3 shadow-sm';
+            const totalCnt = events.length + msAlerts.length + sktAlerts.length;
+
             box.classList.remove('hidden');
-            box.innerHTML = `<div class="p-3.5 rounded-xl border border-indigo-200 bg-indigo-50/90 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+            box.innerHTML = `<div class="${wrapCls}">
                 <div class="flex flex-wrap items-center gap-2.5">
-                    <span class="text-xl leading-none" title="Bugünkü Etkinlikler">🛎️</span>
+                    <span class="text-xl leading-none" title="Takvim, Milestone ve SKT Uyarıları">🛎️</span>
                     <div>
-                        <p class="text-xs font-black text-indigo-900 uppercase tracking-wide">Bugünkü Takvim Etkinlikleri (${events.length})</p>
-                        <div class="flex flex-wrap items-center gap-1.5 mt-1">${badges}</div>
+                        <p class="text-xs font-black ${hasCrit ? 'text-amber-900' : 'text-indigo-900'} uppercase tracking-wide">Takvim, Milestone &amp; SKT Uyarıları (${totalCnt})</p>
+                        <div class="flex flex-wrap items-center gap-1.5 mt-1">${chips.join('')}</div>
                     </div>
                 </div>
-                <button type="button" onclick="openDayEventModal('${todayStr}')" class="text-xs font-bold text-indigo-700 hover:underline whitespace-nowrap">Etkinlikleri Düzenle</button>
+                <div class="flex items-center gap-3">
+                    <button type="button" onclick="openDayEventModal('${todayStr}')" class="text-xs font-bold text-indigo-700 hover:underline whitespace-nowrap">Etkinlikler</button>
+                    <button type="button" onclick="dismissDashCalAlertToday()" class="text-xs font-bold text-slate-500 hover:text-slate-800 whitespace-nowrap" title="Bugün Gizle">✕</button>
+                </div>
             </div>`;
         }
-
         function renderDashboardBudgetAlerts() {
                     const box = document.getElementById('dash-budget-alerts'); if(!box) return;
                     const keys = Object.keys(budgetLimits);

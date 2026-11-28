@@ -1,4 +1,4 @@
-const CACHE_NAME = 'finpro-sync-cache-v68';
+const CACHE_NAME = 'finpro-sync-cache-v69';
 
 const CORE_ASSETS = [
   './',
